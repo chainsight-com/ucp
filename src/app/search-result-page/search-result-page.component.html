@@ -1,0 +1,157 @@
+<nz-layout class="layout">
+  <nz-header>
+    <div class="logo"></div>
+    <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" style="line-height: 64px;">
+      <li nz-menu-item [nzSelected]="true">Relationship</li>
+    </ul>
+  </nz-header>
+  <nz-layout>
+    <nz-sider [nzWidth]="250" style="background:#fff">
+      <nz-skeleton [nzActive]="true" *ngIf="!searchResult"></nz-skeleton>
+      <ul *ngIf="searchResult" nz-menu [nzMode]="'inline'" style="height:100%">
+        <li nz-submenu [nzOpen]="true">
+          <span title><i nz-icon type="user"></i>Overview</span>
+          <ul>
+            <li nz-menu-item [nzSelected]="currNode === null && overviewMode==='profile'" (click)="gotoOverviewProfile()">Profile</li>
+            <li nz-menu-item [nzSelected]="currNode === null && overviewMode==='graph'" (click)="gotoOverviewGraph()">Graph</li>
+          </ul>
+        </li>
+        <li nz-submenu *ngIf="relatedBitcoinAddresses?.length>0">
+          <span title><i nz-icon type="user"></i>BTC Address</span>
+          <ul>
+            <li nz-menu-item *ngFor="let addr of relatedBitcoinAddresses">
+              <nz-tag *ngIf="addr.category" [nzColor]="getCategoryTagColor(addr.category)">{{formatCategory(addr.category)}}</nz-tag>
+              {{addr.address}}
+            </li>
+
+          </ul>
+        </li>
+        <li nz-submenu *ngIf="relatedEthAddresses?.length>0">
+          <span title><i nz-icon type="user"></i>ETH Address</span>
+          <ul>
+            <li nz-menu-item *ngFor="let addr of relatedEthAddresses">
+              <nz-tag *ngIf="addr.category" [nzColor]="getCategoryTagColor(addr.category)">{{formatCategory(addr.category)}}</nz-tag>
+              {{addr.address}}
+            </li>
+
+          </ul>
+        </li>
+        <li nz-submenu *ngIf="relatedPeople?.length>0">
+          <span title><i nz-icon type="user"></i>People</span>
+          <ul>
+            <li nz-menu-item *ngFor="let person of relatedPeople">
+              <nz-tag *ngIf="person.sanctioned" [nzColor]="'red'">Sanction</nz-tag>
+              {{person.fullName}}
+            </li>
+
+          </ul>
+        </li>
+        <li nz-submenu *ngIf="relatedCompanies?.length>0">
+          <span title><i nz-icon type="user"></i>Company</span>
+          <ul>
+            <li nz-menu-item *ngFor="let company of relatedCompanies">
+              {{company.legalName}}
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+    </nz-sider>
+    <nz-layout style="padding:0 24px 24px">
+      <nz-breadcrumb style="margin:16px 0;">
+        <nz-breadcrumb-item>Search</nz-breadcrumb-item>
+        <nz-breadcrumb-item>{{keyword}}</nz-breadcrumb-item>
+        <nz-breadcrumb-item>Relationship </nz-breadcrumb-item>
+      </nz-breadcrumb>
+      <nz-content style="background:#fff; padding: 24px; min-height: 280px;" *ngIf="currNode === null && overviewMode === 'profile' && searchResult === null">
+        <nz-skeleton [nzActive]="true"></nz-skeleton>
+      </nz-content>
+      <nz-content style="background:  #f0f2f5; padding: 24px; min-height: 280px;" *ngIf="currNode === null && overviewMode === 'profile' && searchResult !== null">
+        <div nz-row [nzGutter]="8">
+          <div nz-col nzSpan="6">
+            <nz-card nzTitle="Risk Score" [nzBordered]="false" style="text-align: center;">
+              <nz-progress [nzPercent]="riskScore" [nzFormat]="formatRiskScore" nzStatus="active" nzType="dashboard"></nz-progress>
+            </nz-card>
+          </div>
+          <div nz-col nzSpan="18">
+            <nz-card nzTitle="Profile">
+              <nz-card-tab>
+                <nz-tabset nzSize="large" [(nzSelectedIndex)]="profileTabSelectedIndex">
+                  <nz-tab nzTitle="Person" *ngIf="searchResult.root.person !== null">
+                    <nz-card style="margin-top: 16px">
+                      <nz-card-meta [nzAvatar]="avatarTemplate" [nzTitle]="titleTemplate" [nzDescription]="descTemplate">
+                        <ng-template #titleTemplate>
+                          {{searchResult.root.person.fullName}} <nz-tag [nzColor]="'red'">Sanction</nz-tag>
+                        </ng-template>
+                        <ng-template #avatarTemplate>
+                          <nz-avatar nzIcon="user"></nz-avatar>
+                        </ng-template>
+                        <ng-template #descTemplate>
+                          {{searchResult.root.person.alias}}
+                        </ng-template>
+                      </nz-card-meta>
+
+                      <nz-list style="margin-top: 16px;" nzBordered [nzItemLayout]="'horizontal'">
+                        <nz-list-item>
+                          <nz-list-item-meta [nzTitle]="'Birth Place'" [nzDescription]="searchResult.root.person.birthPlace">
+
+                          </nz-list-item-meta>
+                        </nz-list-item>
+                        <nz-list-item>
+                          <nz-list-item-meta [nzTitle]="'Birthday'" [nzDescription]="formatBirthday(searchResult.root.person.birthDate)">
+
+                          </nz-list-item-meta>
+                        </nz-list-item>
+                        <nz-list-item>
+                          <nz-list-item-meta [nzTitle]="'Main Country'" [nzDescription]="searchResult.root.person.mainCountry">
+
+                          </nz-list-item-meta>
+                        </nz-list-item>
+                        <nz-list-item>
+                          <nz-list-item-meta [nzTitle]="'Position'" [nzDescription]="searchResult.root.person.position">
+
+                          </nz-list-item-meta>
+                        </nz-list-item>
+
+                      </nz-list>
+
+
+                    </nz-card>
+                  </nz-tab>
+                  <nz-tab nzTitle="Bitcoin" *ngIf="searchResult.root.bitcoinAddress !== null">
+                    <nz-card style="margin-top: 16px" *ngFor="let addr of searchResult.root.bitcoinAddress">
+                      <nz-card-meta [nzAvatar]="avatarTemplate" [nzTitle]="addr.address" [nzDescription]="descTemplate">
+                        <ng-template #avatarTemplate>
+                          <nz-avatar nzSrc="assets/img/btc@2x.png"></nz-avatar>
+                        </ng-template>
+                        <ng-template #descTemplate>
+                          <nz-tag *ngIf="addr.category" [nzColor]="getCategoryTagColor(addr.category)">addr.category</nz-tag>
+                        </ng-template>
+                      </nz-card-meta>
+                    </nz-card>
+
+
+                  </nz-tab>
+                  <nz-tab nzTitle="Ethereum" *ngIf="searchResult.root.ethAddress !== null">
+                    <nz-card style="margin-top: 16px" *ngFor="let addr of searchResult.root.ethAddress">
+                      <nz-card-meta [nzAvatar]="avatarTemplate" [nzTitle]="addr.address">
+                        <ng-template #avatarTemplate>
+                          <nz-avatar nzSrc="assets/img/eth@2x.png"></nz-avatar>
+                        </ng-template>
+                      </nz-card-meta>
+                    </nz-card>
+                  </nz-tab>
+
+                </nz-tabset>
+              </nz-card-tab>
+            </nz-card>
+          </div>
+        </div>
+      </nz-content>
+      <nz-content style="background:  #ffffff; padding: 24px; min-height: 280px;" *ngIf="currNode === null && overviewMode === 'graph' && searchResult !== null">
+          <div id="mountNode"></div>
+      </nz-content>
+    </nz-layout>
+  </nz-layout>
+</nz-layout>

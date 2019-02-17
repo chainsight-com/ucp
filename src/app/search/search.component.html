@@ -1,0 +1,12 @@
+<div class="grandParentContaniner">
+  <div class="parentContainer">
+    <form nz-form id="searchForm">
+      <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+        <input type="text" nz-input placeholder="Search by  Address / Name">
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch><i nz-icon type="search"></i></button>
+      </ng-template>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+.grandParentContaniner {
+  display: table;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.parentContainer {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.parentContainer #searchForm {
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 500px;
+  /*  your login form width */
+}
