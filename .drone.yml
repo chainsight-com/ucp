@@ -3,13 +3,6 @@ pipeline:
     image: mkenney/npm:node-8-alpine
     commands:
       - npm install
-      - npm run postinstall
-  build-staging:
-    image: mkenney/npm:node-8-alpine
-    when:
-      branch: develop
-    commands:
-      - npm run build --prod
   build-prod:
     image: mkenney/npm:node-8-alpine
     when:
