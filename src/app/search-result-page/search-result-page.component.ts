@@ -117,7 +117,7 @@ export class SearchResultPageComponent implements OnInit {
       this.relatedPeople = null;
       this.relatedCompanies = null;
       this.searchResult = await this.httpClient.get(environment.baseApiUrl + '/api/search/' + this.keyword + '?maxDist=6').toPromise();
-      console.log(this.searchResult);
+
 
 
 
@@ -132,26 +132,58 @@ export class SearchResultPageComponent implements OnInit {
       // related
       let rootNodeIds = {};
       if (this.searchResult.root.bitcoinAddress) {
+
+        //temp fix
+        this.searchResult.root.bitcoinAddress = this.searchResult.root.bitcoinAddress.map(a => {
+          if (!a.address) {
+            const res = this.searchResult.graph.addressNodes.filter(an => an.id === a.id);
+            if (res.length > 0) {
+              return res[0]
+            }
+          }
+          return a;
+        });
         this.searchResult.root.bitcoinAddress.forEach(a => { rootNodeIds[a.id] = true; });
+
+
       }
       if (this.searchResult.root.ethAddress) {
+        //temp fix
+        this.searchResult.root.ethAddress = this.searchResult.root.ethAddress.map(a => {
+          if (!a.address) {
+            const res = this.searchResult.graph.ethAddressNodes.filter(an => an.id === a.id);
+            if (res.length > 0) {
+              return res[0]
+            }
+          }
+          return a;
+        });
         this.searchResult.root.ethAddress.forEach(a => { rootNodeIds[a.id] = true; });
       }
       if (this.searchResult.root.person) {
+        //temp fix
+        if (!this.searchResult.root.person.fullName) {
+          const res = this.searchResult.graph.personNodes.filter(pn => pn.id === this.searchResult.root.person.id);
+          if (res.length > 0) {
+            this.searchResult.root.person = res[0];
+          }
+        }
         rootNodeIds[this.searchResult.root.person.id] = true;
       }
       this.relatedBitcoinAddresses = this.searchResult.graph.addressNodes
         .filter(a => !rootNodeIds[a.id])
-        .sort(a => a.category ? 0 : 1)
-        .slice(0, 10);
+        .sort((a, b) => (a.category ? -this.categoryMetaMap[a.category].risk : 1) - (b.category ? -this.categoryMetaMap[b.category].risk : 1))
+        .slice(0, 20)
+        ;
       this.relatedEthAddresses = this.searchResult.graph.ethAddressNodes
         .filter(a => !rootNodeIds[a.id])
-        .sort(a => a.category ? 0 : 1)
-        .slice(0, 10);
+        .sort((a, b) => (a.category ? -this.categoryMetaMap[a.category].risk : 1) - (b.category ? -this.categoryMetaMap[b.category].risk : 1))
+        .slice(0, 20);
+
       this.relatedPeople = this.searchResult.graph.personNodes
         .filter(p => !rootNodeIds[p.id])
-        .sort(p => p.sanctioned ? 0 : 1)
-        .slice(0, 10);
+        .sort((a, b) => (a.sanctioned ? 0 : 1) - (b.sanctioned ? 0 : 1))
+        .slice(0, 20);
       this.relatedCompanies = this.searchResult.graph.companyNodes.slice(0, 10);
       this.networkG = new NetworkG(this.searchResult.graph);
 

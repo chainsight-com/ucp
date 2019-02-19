@@ -5,6 +5,8 @@ import { BigNumber } from 'bignumber.js';
 import { CategoryMeta } from '../search-result-page/category-meta';
 import * as moment from 'moment';
 import { NodeModel, NetworkG, EdgeModel } from '../search-result-page/network-g';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -99,7 +101,8 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
 
   private isViewInitialized: boolean = false;
 
-  constructor(protected zone: NgZone) { }
+  public isSpinning: boolean = false;
+  constructor(protected zone: NgZone, protected httpClient: HttpClient) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['graphModel'] || changes['searchRoot']) {
@@ -153,6 +156,61 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
 
   }
 
+  async expandNeibor(g, node: NodeModel): Promise<void> {
+    this.isSpinning = true;
+    try {
+      const tryAddNode = (addedNode: NodeModel) => {
+        const existed = g.find(addedNode.id);
+        if (!existed) {
+          g.add('node', addedNode);
+        }
+      };
+      const tryAddEdge = (addedEdge: EdgeModel) => {
+        const existed = g.find(addedEdge.id);
+        if (!existed) {
+          g.add('edge', { id: addedEdge.id, source: addedEdge.startNode.id, target: addedEdge.endNode.id, type: addedEdge.type });
+        }
+      };
+      const neiborGraph: Graph = await this.httpClient.get(environment.baseApiUrl + '/api/node/' + node.id + '/neibor').toPromise();
+      neiborGraph.blockNodes.forEach(tryAddNode);
+      neiborGraph.txNodes.forEach(tryAddNode);
+      neiborGraph.voutNodes.forEach(tryAddNode);
+      neiborGraph.addressNodes.forEach(tryAddNode);
+
+      neiborGraph.companyNodes.forEach(tryAddNode);
+      neiborGraph.personNodes.forEach(tryAddNode);
+      neiborGraph.transferNodes.forEach(tryAddNode);
+
+      neiborGraph.ethAddressNodes.forEach(tryAddNode);
+      neiborGraph.ethBlockNodes.forEach(tryAddNode);
+      neiborGraph.ethTxNodes.forEach(tryAddNode);
+
+      neiborGraph.nextBlockEdges.forEach(tryAddEdge);
+      neiborGraph.hasTxEdges.forEach(tryAddEdge);
+      neiborGraph.vinEdges.forEach(tryAddEdge);
+      neiborGraph.voutEdges.forEach(tryAddEdge);
+      neiborGraph.managedByEdges.forEach(tryAddEdge);
+
+      neiborGraph.remitEdges.forEach(tryAddEdge);
+      neiborGraph.toBeneficiaryEdges.forEach(tryAddEdge);
+      neiborGraph.ownEdges.forEach(tryAddEdge);
+      neiborGraph.ethOwnEdges.forEach(tryAddEdge);
+
+      neiborGraph.ethNextBlockEdges.forEach(tryAddEdge);
+      neiborGraph.ethHasTxEdges.forEach(tryAddEdge);
+      neiborGraph.ethRemitEdges.forEach(tryAddEdge);
+      neiborGraph.ethReceiveEdges.forEach(tryAddEdge);
+      g.draw();
+      g.updateNodePosition();
+      g.setFitView('cc');
+    } catch (err) {
+      console.error(err);
+    } finally {
+      this.isSpinning = false;
+    }
+
+  }
+
   renderGraph(): void {
 
     if (this.container) {
@@ -162,7 +220,7 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
       }
     }
 
-    const mSize = 20;
+    const mSize = 70;
 
     const rootIdMap = {};
 
@@ -229,42 +287,24 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
 
     const nodeColorMapper = new Mapper('node', 'type', 'color', ['#e18826', '#002a67', '#fb95af', '#A5ABB6', '#FF756E', '#6DCE9E', '#DE9BF9', '#FFD86E', '#68BDF6', '#F0D79F', '#2f54eb', '#62c737']);
 
-    const G = G6.G;
-    let simulation = void 0;
-    const graph = new G6.Graph({
-      container: this.container.nativeElement,
-      height: window.innerHeight,
-      plugins: [nodeColorMapper],
-      modes: {
-        default: ['panCanvas']
-      },
-      layout: function layout(nodes, edges) {
-        if (simulation) {
-          simulation.alphaTarget(0.3).restart();
-        } else {
-          simulation = forceSimulation(nodes).force('charge', forceManyBody().strength(-100)).force('link', forceLink(edges).id((model: any) => {
-            return model.id;
-          })).force('collision', forceCollide().radius((model: any) => {
-            return mSize / 2 * 0.6;
-          })).force('y', forceY()).force('x', forceX()).on('tick', function () {
-            graph.updateNodePosition();
-          });
-        }
-      }
-    });
-    graph.node({
-      size: 10,
-      style: function style(model) {
-        return {
-          shadowColor: 'rgba(0,0,0, 0.3)',
-          shadowBlur: 3,
-          shadowOffsetX: 3,
-          shadowOffsetY: 5,
-          stroke: null
-        };
 
+
+    const G = G6.G;
+    const MaxSpanningForestPlugin = G6.Plugins['template.maxSpanningForest'];
+    const maxSpanningForest = new MaxSpanningForestPlugin({
+      fisheye: false,
+      layoutCfg: {
+        maxIteration: 1200,
+        kg: 30,
+        kr: 90,
+        prevOverlapping: true,
+        barnesHut: true,
       },
-      label: function label(model: NodeModel) {
+      menuCfg: {
+        lists: []
+      },
+      textDisplay: false,
+      node_label: (model: NodeModel) => {
         const retVal = {
           stroke: null,
           fill: '#000000',
@@ -314,8 +354,33 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
           }
         }
         return retVal;
-
       }
+    });
+
+    let simulation = void 0;
+    const graph = new G6.Graph({
+      container: this.container.nativeElement,
+      height: window.innerHeight,
+      fitView: 'cc',
+      plugins: [nodeColorMapper, maxSpanningForest],
+      modes: {
+        default: ['panBlank', 'panNode', 'wheelZoom']
+      }
+    });
+    graph.node({
+      // size: 15,
+      style: function style(model: NodeModel) {
+        return {
+          shadowColor: 'rgba(0,0,0, 0.3)',
+          shadowBlur: 3,
+          shadowOffsetX: 3,
+          shadowOffsetY: 5,
+          stroke: null
+        };
+
+      },
+      // label: function label(model: NodeModel) {
+      // }
     });
     graph.edge({
       style: function style() {
@@ -324,76 +389,18 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
           stroke: '#b3b3b3',
           lineWidth: 1
         };
+      },
+      label: (model: EdgeModel) => {
+        if (model.type === 'vin' || model.type === 'vout' || model.type === 'ethRemit' || model.type === 'ethReceive' || model.type === 'remit' || model.type === 'toBeneficiary') {
+          return null;
+        }
+        return model.type;
       }
     });
     graph.read(data);
-    graph.translate(graph.getWidth() / 2, graph.getHeight() / 2);
-
-    // 拖拽节点交互
-    let subject = void 0; // 逼近点
-    let lastPoint = void 0;
-    graph.on('mousedown', function (ev) {
-      if (ev.domEvent.button === 0) {
-        subject = simulation.find(ev.x, ev.y, 10);
-      }
-    });
-
-    graph.on('dragstart', function (ev) {
-      graph.css({
-        cursor: '-webkit-grabbing'
-      });
-      if (subject) {
-        simulation.alphaTarget(0.3).restart();
-      }
-    });
-
-    graph.on('drag', function (ev) {
-      if (subject) {
-        subject.fx = ev.x;
-        subject.fy = ev.y;
-      } else {
-        if (lastPoint) {
-          graph.translate(ev.domX - lastPoint.x, ev.domY - lastPoint.y);
-        }
-      }
-      lastPoint = {
-        x: ev.domX,
-        y: ev.domY
-      };
-    });
-    graph.on('dragend', function () {
-      lastPoint = undefined;
-      graph.css({
-        cursor: '-webkit-grab'
-      });
-    });
 
 
-    graph.on('mouseup', () => {
-      if (subject) {
-        comp.zone.run(() => {
-          comp.openDrawer(subject);
-        });
-
-      }
-      resetState();
-    });
-    graph.on('canvas:mouseleave', () => {
-      resetState();
-    });
-
-
-    function resetState() {
-      if (subject) {
-        simulation.alphaTarget(0);
-        subject.fx = null;
-        subject.fy = null;
-        subject = null;
-      }
-    }
-
-    // 鼠标移入节点显示 label
-    function tryHideLabel(node) {
+    const tryHideNodeLabel = (node) => {
 
       const model = node.getModel();
       if (rootIdMap[model.id]) {
@@ -403,6 +410,10 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
         return;
       }
       if ((model.type === 'address' || model.type === 'ethAddress') && model.category) {
+        return;
+      }
+
+      if (this.currNode && node.id === this.currNode.id) {
         return;
       }
 
@@ -418,17 +429,24 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
 
       }
 
-    }
+    };
+
+    const tryHideEdgeLabel = (edge) => {
+      const model: EdgeModel = edge.getModel();
+      const label = edge.getLabel();
+
+    };
+
     let nodes = graph.getNodes();
     let edges = graph.getEdges();
 
     edges.forEach(function (edge) {
-      // 移除边的捕获，提升图形拾取效率
       edge.getGraphicGroup().set('capture', false);
+      // tryHideEdgeLabel(edge);
     });
 
     nodes.forEach(function (node) {
-      tryHideLabel(node);
+      tryHideNodeLabel(node);
     });
 
     graph.on('node:mouseenter', (ev) => {
@@ -440,7 +458,20 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
 
     graph.on('node:mouseleave', (ev) => {
       const item = ev.item;
-      tryHideLabel(item);
+      tryHideNodeLabel(item);
+    });
+
+    graph.on('node:dblclick', (ev) => {
+      const item = ev.item;
+      comp.zone.run(() => {
+        this.expandNeibor(graph, item.model);
+      });
+    });
+    graph.on('node:contextmenu', (ev) => {
+      const item = ev.item;
+      comp.zone.run(() => {
+        comp.openDrawer(item.model);
+      });
     });
   }
 

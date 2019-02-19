@@ -1,0 +1,39 @@
+pipeline:
+  install:
+    image: mkenney/npm:node-8-alpine
+    commands:
+      - npm install
+      - npm run postinstall
+  build-staging:
+    image: mkenney/npm:node-8-alpine
+    when:
+      branch: develop
+    commands:
+      - npm run build --prod
+  build-prod:
+    image: mkenney/npm:node-8-alpine
+    when:
+      branch: master
+    commands:
+      - npm run build-prod
+  deploy-image:
+    image: plugins/ecr
+    repo: 737688029602.dkr.ecr.us-east-1.amazonaws.com/unblock-site
+    registry: 737688029602.dkr.ecr.us-east-1.amazonaws.com
+    secrets: [ ecr_access_key, ecr_secret_key, ecr_region]
+    tags:
+      - latest
+  phase-out-prod:
+    image: xueshanf/awscli
+    when:
+      branch: master
+    secrets:
+      - source: ecr_access_key
+        target: aws_access_key_id
+      - source: ecr_secret_key
+        target: aws_secret_access_key
+      - source: ecr_region
+        target: aws_default_region
+    commands:
+      - aws ecs register-task-definition --cli-input-json file://task-definition-prod.json
+      - aws ecs update-service --cluster site-cluster --service site --task-definition unblock-site-prod

@@ -49,8 +49,6 @@ export class NetworkG {
         this.graphModel.ethRemitEdges.forEach(e => this.diGraph.addEdge(e.startNode.id, e.endNode.id, e));
         this.graphModel.ethReceiveEdges.forEach(e => this.diGraph.addEdge(e.startNode.id, e.endNode.id, e));
 
-        console.log(this.diGraph.nodes());
-        console.log(this.diGraph.edges());
     }
 
     public undirectedQuerySubgraph(startNodeId, endNodeId): NetworkG {

@@ -1,5 +1,7 @@
 <div>
-  <div #container></div>
+  <nz-spin [nzSpinning]="isSpinning">
+    <div #container></div>
+  </nz-spin>
   <nz-drawer [nzClosable]="true" [nzVisible]="drawerVisible" nzPlacement="right" [nzTitle]="drawerTitle" (nzOnClose)="closeDrawer()">
     <ng-container *ngIf="currNode">
       <ng-container *ngIf="currNode.type === 'person'">
