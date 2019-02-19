@@ -2,10 +2,10 @@
   <div class="parentContainer">
     <form nz-form id="searchForm">
       <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-        <input type="text" nz-input placeholder="Search by  Address / Name">
+        <input type="text" nz-input placeholder="Search by  Address / Name" [(ngModel)]="keyword" [ngModelOptions]="{standalone: true}">
       </nz-input-group>
       <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch><i nz-icon type="search"></i></button>
+        <button nz-button nzType="primary" nzSearch (click)="search()"><i nz-icon type="search"></i></button>
       </ng-template>
     </form>
   </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchComponent implements OnInit {
 
-  constructor() { }
+  public keyword: string;
+  constructor(protected router: Router) { }
 
   ngOnInit() {
+  }
+
+  search() {
+    this.router.navigateByUrl('/result/' + this.keyword);
   }
 
 }

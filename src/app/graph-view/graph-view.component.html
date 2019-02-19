@@ -1,0 +1,214 @@
+<div>
+  <div #container></div>
+  <nz-drawer [nzClosable]="true" [nzVisible]="drawerVisible" nzPlacement="right" [nzTitle]="drawerTitle" (nzOnClose)="closeDrawer()">
+    <ng-container *ngIf="currNode">
+      <ng-container *ngIf="currNode.type === 'person'">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <nz-tag *ngIf="currNode.sanctioned" [nzColor]="'red'">Sanction</nz-tag>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Full Name:</p>
+            {{currNode.fullName}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Alias:</p>
+            {{currNode.alias}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Birthday:</p>
+            {{ formatBirthday(currNode.birthDate) }}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Birth Place:</p>
+            {{ currNode.birthPlace }}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Main Country:</p>
+            {{ currNode.mainCountry }}
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currNode.type === 'company'">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Legal Name:</p>
+            {{currNode.legalName}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Name:</p>
+            {{currNode.name}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Industry:</p>
+            {{currNode.industry}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Market Capitalisation:</p>
+            {{currNode.marketCapitalisation}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">State:</p>
+            {{currNode.state}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Trading Currency:</p>
+            {{currNode.tradingCurrency}}
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currNode.type === 'transfer'">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Amount:</p>
+            {{currNode.amount}} {{currNode.currency}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Time:</p>
+            {{ formatTransferTime(currNode.time) }}
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currNode.type === 'tx'">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Hash:</p>
+            {{currNode.hash}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Time:</p>
+            {{ formatBlockTime(currNode.gasLimit) }}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Lock Time:</p>
+            {{currNode.lockTime}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Version:</p>
+            {{currNode.version}}
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currNode.type === 'tx'">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Hash:</p>
+            {{currNode.hash}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Time:</p>
+            {{ formatBlockTime(currNode.gasLimit) }}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Lock Time:</p>
+            {{currNode.lockTime}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Version:</p>
+            {{currNode.version}}
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currNode.type === 'address'">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <nz-tag *ngIf="currNode.category" [nzColor]="getCategoryTagColor(currNode.category)">{{formatCategory(currNode.category)}}</nz-tag>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Address:</p>
+            {{currNode.address}}
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currNode.type === 'vout'">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Amount:</p>
+            {{satoshiToBtc(currNode.value)}} BTC
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Sequence:</p>
+            {{currNode.n}}
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currNode.type === 'ethTx'">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Amount:</p>
+            {{weiToEth(currNode.value)}} ETH
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Hash:</p>
+            {{currNode.hash}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Gas Limit:</p>
+            {{currNode.gasLimit}}
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Gas Price:</p>
+            {{currNode.gasPrice}}
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="currNode.type === 'ethAddress'">
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <nz-tag *ngIf="currNode.category" [nzColor]="getCategoryTagColor(currNode.category)">{{formatCategory(currNode.category)}}</nz-tag>
+          </div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="24">
+            <p class="label">Address:</p>
+            {{currNode.address}}
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </nz-drawer>
+</div>

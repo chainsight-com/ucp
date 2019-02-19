@@ -19,6 +19,8 @@ import en from '@angular/common/locales/zh';
 import { IconDefinition } from '@ant-design/icons-angular';
 import { HttpClientModule } from '@angular/common/http';
 import G6 from '@antv/g6';
+import { GraphViewComponent } from './graph-view/graph-view.component';
+import { FormsModule } from '@angular/forms';
 registerLocaleData(en);
 G6.track(false);
 
@@ -26,7 +28,8 @@ G6.track(false);
   declarations: [
     AppComponent,
     SearchComponent,
-    SearchResultPageComponent
+    SearchResultPageComponent,
+    GraphViewComponent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +38,7 @@ G6.track(false);
     AppRoutingModule,
     NgZorroAntdModule,
     HttpClientModule,
+    FormsModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
