@@ -137,10 +137,13 @@
                   </nz-tab>
                   <nz-tab nzTitle="Ethereum" *ngIf="searchResult.root.ethAddress !== null">
                     <nz-card style="margin-top: 16px" *ngFor="let addr of searchResult.root.ethAddress">
-                      <nz-card-meta [nzAvatar]="avatarTemplate" [nzTitle]="addr.address">
+                      <nz-card-meta [nzAvatar]="avatarTemplate" [nzTitle]="addr.address" [nzDescription]="descTemplate">
                         <ng-template #avatarTemplate>
                           <nz-avatar nzSrc="assets/img/eth@2x.png"></nz-avatar>
                         </ng-template>
+                        <ng-template #descTemplate>
+                            <nz-tag *ngIf="addr.category" [nzColor]="getCategoryTagColor(addr.category)">{{formatCategory(addr.category)}}</nz-tag>
+                          </ng-template>
                       </nz-card-meta>
                     </nz-card>
                   </nz-tab>
