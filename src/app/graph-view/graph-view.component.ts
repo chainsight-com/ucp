@@ -390,7 +390,7 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
           case 'ethTx':
             return '#6DCE9E';
           case 'ethAddress':
-            return '#DE9BF9';
+            return '#68BDF6';
           case 'company':
             return '#FB95AF';
           case 'person':
