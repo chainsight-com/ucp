@@ -6,7 +6,7 @@ import { SearchResultPageComponent } from './search-result-page/search-result-pa
 
 const routes: Routes = [
   { path: 'search', component: SearchComponent },
-  { path: 'result/:keyword', component: SearchResultPageComponent },
+  { path: 'result/:keyword/:maxDist', component: SearchResultPageComponent },
   { path: '**', component: SearchComponent }
 ];
 

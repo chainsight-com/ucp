@@ -20,6 +20,7 @@ import * as jsnx from 'jsnetworkx';
 export class SearchResultPageComponent implements OnInit {
   private paramSub: Subscription;
   public keyword: string;
+  public maxDist: number;
   public searchResult: SearchResult = null;
   public networkG: NetworkG = null;
   public subNetworkG: NetworkG = null;
@@ -111,12 +112,13 @@ export class SearchResultPageComponent implements OnInit {
   ngOnInit() {
     this.paramSub = this.route.params.subscribe(async (params) => {
       this.keyword = params['keyword'];
+      this.maxDist = params['maxDist'];
       this.riskScore = 0;
       this.relatedBitcoinAddresses = null;
       this.relatedEthAddresses = null;
       this.relatedPeople = null;
       this.relatedCompanies = null;
-      this.searchResult = await this.httpClient.get(environment.baseApiUrl + '/api/search/' + this.keyword + '?maxDist=6').toPromise();
+      this.searchResult = await this.httpClient.get(environment.baseApiUrl + '/api/search/' + this.keyword + '?maxDist='+this.maxDist).toPromise();
 
 
 

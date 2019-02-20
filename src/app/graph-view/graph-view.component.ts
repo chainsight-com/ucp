@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import { BigNumber } from 'bignumber.js';
 import { CategoryMeta } from '../search-result-page/category-meta';
 import * as moment from 'moment';
-import { NodeModel, NetworkG, EdgeModel } from '../search-result-page/network-g';
+import { NodeModel, NetworkG, EdgeModel, NodeType } from '../search-result-page/network-g';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
@@ -285,7 +285,7 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
       forceY = _d.forceY,
       forceCollide = _d.forceCollide;
 
-    const nodeColorMapper = new Mapper('node', 'type', 'color', ['#e18826', '#002a67', '#fb95af', '#A5ABB6', '#FF756E', '#6DCE9E', '#DE9BF9', '#FFD86E', '#68BDF6', '#F0D79F', '#2f54eb', '#62c737']);
+    // const nodeColorMapper = new Mapper('node', 'type', 'color', ['#e18826', '#002a67', '#fb95af', '#A5ABB6', '#FF756E', '#6DCE9E', '#DE9BF9', '#FFD86E', '#68BDF6', '#F0D79F', '#2f54eb', '#62c737']);
 
 
 
@@ -317,12 +317,12 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
           const person = <Person>model;
           retVal.text = person.fullName;
           if (person.sanctioned) {
-            retVal.text += ' (Sanction)';
+            retVal.text += '\n(Sanction)';
             retVal.fill = '#ff0000';
           }
         } else if (model.type === 'transfer') {
           const transfer = <Transfer>model;
-          retVal.text = transfer.amount + ' ' + transfer.currency;
+          retVal.text = transfer.amount.toString();
         } else if (model.type === 'block') {
           const block = <Block>model;
           retVal.text = block.hash;
@@ -336,7 +336,7 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
           const address = <Address>model;
           retVal.text = address.address;
           if (address.category) {
-            retVal.text += ' (' + address.category + ')';
+            retVal.text += '\n(' + address.category + (address.entity ? ' / ' + address.entity : '') + ')';
             retVal.fill = '#ff0000';
           }
         } else if (model.type === 'ethBlock') {
@@ -349,7 +349,7 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
           const address = <EthAddress>model;
           retVal.text = address.address;
           if (address.category) {
-            retVal.text += ' (' + address.category + ')';
+            retVal.text += '\n(' + address.category + (address.entity ? ' / ' + address.entity : '') + ')';
             retVal.fill = '#ff0000';
           }
         }
@@ -362,21 +362,53 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
       container: this.container.nativeElement,
       height: window.innerHeight,
       fitView: 'cc',
-      plugins: [nodeColorMapper, maxSpanningForest],
+      plugins: [maxSpanningForest],
       modes: {
         default: ['panBlank', 'panNode', 'wheelZoom']
       }
     });
     graph.node({
-      // size: 15,
+      size: (model: NodeModel) => {
+        if (rootIdMap[model.id]) {
+          return 80;
+        }
+        return 40;
+      },
+      color: function (model: NodeModel) {
+        const type: NodeType = <NodeType>model.type;
+        switch (type) {
+          case 'block':
+            return '#68BDF6';
+          case 'tx':
+            return '#6DCE9E';
+          case 'vout':
+            return '#FFD86E';
+          case 'address':
+            return '#DE9BF9';
+          case 'ethBlock':
+            return '#68BDF6';
+          case 'ethTx':
+            return '#6DCE9E';
+          case 'ethAddress':
+            return '#DE9BF9';
+          case 'company':
+            return '#FB95AF';
+          case 'person':
+            return '#A5ABB6';
+          case 'transfer':
+            return '#FF756E';
+        }
+        return '#1890ff';
+
+      },
       style: function style(model: NodeModel) {
-        return {
+        const retVal = {
           shadowColor: 'rgba(0,0,0, 0.3)',
           shadowBlur: 3,
           shadowOffsetX: 3,
-          shadowOffsetY: 5,
-          stroke: null
+          shadowOffsetY: 5
         };
+        return retVal;
 
       },
       // label: function label(model: NodeModel) {
@@ -431,11 +463,7 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
 
     };
 
-    const tryHideEdgeLabel = (edge) => {
-      const model: EdgeModel = edge.getModel();
-      const label = edge.getLabel();
-
-    };
+  
 
     let nodes = graph.getNodes();
     let edges = graph.getEdges();

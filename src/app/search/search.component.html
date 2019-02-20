@@ -4,12 +4,22 @@
       <a href="/search"><span style="color: gray;">un</span>Block</a>
     </div>
     <form nz-form id="searchForm">
-      <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-        <input type="text" nz-input placeholder="Search by  Address / Name" [(ngModel)]="keyword" [ngModelOptions]="{standalone: true}">
-      </nz-input-group>
-      <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch (click)="search()"><i nz-icon type="search"></i></button>
-      </ng-template>
+      <div nz-row>
+        <div nz-col nzSpan="24">
+          <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+            <input type="text" nz-input placeholder="Search by  Address / Name" [(ngModel)]="keyword" [ngModelOptions]="{standalone: true}">
+          </nz-input-group>
+          <ng-template #suffixIconButton>
+            <button nz-button nzType="primary" nzSearch (click)="search()"><i nz-icon type="search"></i></button>
+          </ng-template>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col nzSpan="24">
+          <nz-slider [nzDefaultValue]="5" [nzMin]="2" [nzMax]="10" [nzStep]="1" [(ngModel)]="maxDist"></nz-slider>
+        </div>
+      </div>
+
     </form>
   </div>
 </div>

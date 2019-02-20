@@ -9,13 +9,16 @@ import { Route, Router } from '@angular/router';
 export class SearchComponent implements OnInit {
 
   public keyword: string;
-  constructor(protected router: Router) { }
+  public maxDist: number = 5;
+  constructor(protected router: Router) {
+
+  }
 
   ngOnInit() {
   }
 
   search() {
-    this.router.navigateByUrl('/result/' + this.keyword);
+    this.router.navigateByUrl('/result/' + this.keyword + '/' + this.maxDist);
   }
 
 }
