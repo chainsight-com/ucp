@@ -25,7 +25,7 @@
       "dockerLabels": {
         "traefik.frontend.rule": "Host:site.un-block.cc",
         "traefik.enable": "true",
-        "traefik.frontend.entryPoints": "public-http,public-https"
+        "traefik.frontend.entryPoints": "private-http,private-https"
       }
     }],
     "requiresCompatibilities": [
