@@ -37,6 +37,10 @@ export function provideSocialAuthConfig() {
   return config;
 }
 
+export function tokenGetter() {
+  return localStorage.getItem(LOCAL_TOKEN_KEY);
+}
+
 registerLocaleData(en);
 G6.track(false);
 
@@ -59,9 +63,7 @@ G6.track(false);
     SocialLoginModule,
     JwtModule.forRoot({
       config: {
-        tokenGetter: () => {
-          return localStorage.getItem(LOCAL_TOKEN_KEY);
-        },
+        tokenGetter,
         whitelistedDomains: ['unblock-analysis.com']
       }
     })
