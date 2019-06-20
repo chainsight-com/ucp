@@ -1,3 +1,4 @@
+<nz-page-header (nzBack)="onBack()" nzBackIcon nzTitle="Hello," [nzSubtitle]="user?.displayName"> </nz-page-header>
 <div class="grandParentContaniner">
   <div class="parentContainer">
     <div class="logo">
@@ -6,17 +7,18 @@
     <form nz-form id="searchForm">
       <div nz-row>
         <div nz-col nzSpan="24">
-          <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-            <input type="text" nz-input placeholder="Search by  Address / Name" [(ngModel)]="keyword" [ngModelOptions]="{standalone: true}">
-          </nz-input-group>
-          <ng-template #suffixIconButton>
-            <button nz-button nzType="primary" nzSearch (click)="search()"><i nz-icon type="search"></i></button>
-          </ng-template>
+          <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+              <input type="text" nz-input placeholder="Search by  Address / Name" [(ngModel)]="keyword" [ngModelOptions]="{standalone: true}">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button nz-button nzType="primary" nzSearch (click)="search()"><i nz-icon type="search"></i></button>
+            </ng-template>
+          
         </div>
       </div>
       <div nz-row>
         <div nz-col nzSpan="24">
-          <nz-slider [nzDefaultValue]="5" [nzMin]="2" [nzMax]="10" [nzStep]="1" [(ngModel)]="maxDist"></nz-slider>
+          <nz-slider [nzDefaultValue]="5" [nzMin]="2" [nzMax]="10" [nzStep]="1" [(ngModel)]="maxDist" [ngModelOptions]="{standalone: true}"></nz-slider>
         </div>
       </div>
 
