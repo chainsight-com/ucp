@@ -23,9 +23,9 @@
       "essential": true,
       "name": "unblock-site-prod",
       "dockerLabels": {
-        "traefik.frontend.rule": "Host:site.un-block.cc",
+        "traefik.frontend.rule": "Host:site.unblock-analysis.com",
         "traefik.enable": "true",
-        "traefik.frontend.entryPoints": "private-http,private-https"
+        "traefik.frontend.entryPoints": "public-http,public-https"
       }
     }],
     "requiresCompatibilities": [
