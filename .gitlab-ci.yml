@@ -1,0 +1,60 @@
+stages:
+  - validate
+  - build
+  - test
+  - deploy
+  - rollout
+image: docker:git
+variables:
+  IMAGE_NAME: unblock-ui
+build-prod:
+  stage: build
+  image: node:8.11.3-stretch
+  script:
+  - npm install
+  - npm run build-prod
+  artifacts:
+    paths:
+    - dist/
+deploy-prod:
+  stage: deploy
+  image: google/cloud-sdk:252.0.0
+  only:
+    refs:
+    - /^\d+\.\d+\.\d+/
+  except:
+    refs:
+    - /^(?!.*(master|\d+\.\d+\.\d+)$).*$/
+  dependencies:
+  - build-prod
+  before_script:
+  - export PATH=/google-cloud-sdk/bin/:$PATH
+  - echo $GCLOUD_SERVICE_KEY > $HOME/.config/gcloud/application_default_credentials.json
+  - gcloud auth activate-service-account --key-file $HOME/.config/gcloud/application_default_credentials.json
+  - gcloud auth configure-docker
+  script:
+  - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+  - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+rollout-prod:
+  stage: rollout
+  image: profyu/gcloud-sdk:218.0.0
+  variables:
+    KUBE_DEPLOY_NS: unblock-prod
+    KUBE_DEPLOY_APP: unblock-ui-prod
+    KUBE_DEPLOY_CONTAINER: nginx
+  only:
+    refs:
+    - /^\d+\.\d+\.\d+/
+  except:
+    refs:
+    - /^(?!.*(master|\d+\.\d+\.\d+)$).*$/
+  before_script:
+  - export PATH=/google-cloud-sdk/bin/:$PATH
+  - echo $GCLOUD_SERVICE_KEY > $HOME/.config/gcloud/application_default_credentials.json
+  - gcloud auth activate-service-account --key-file $HOME/.config/gcloud/application_default_credentials.json
+  - gcloud container clusters get-credentials $GCLOUD_KUBE_CLUSTER_NAME -z $GCLOUD_KUBE_ZONE --project $GCLOUD_PROJECT_ID
+  script:
+  - kubectl -n $KUBE_DEPLOY_NS set image deployment.v1.apps/$KUBE_DEPLOY_APP $KUBE_DEPLOY_CONTAINER=$GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG --record
+
+
+
