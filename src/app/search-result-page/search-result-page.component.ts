@@ -18,6 +18,7 @@ import * as jsnx from 'jsnetworkx';
   styleUrls: ['./search-result-page.component.scss']
 })
 export class SearchResultPageComponent implements OnInit {
+  isMenuCollapsed = false;
   private paramSub: Subscription;
   public keyword: string;
   public maxDist: number;

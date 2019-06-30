@@ -8,9 +8,9 @@
     </ul>
   </nz-header>
   <nz-layout>
-    <nz-sider [nzWidth]="250" style="background:#fff">
+    <nz-sider nzCollapsible [(nzCollapsed)]="isMenuCollapsed" [nzWidth]="250" style="background:#fff">
       <nz-skeleton [nzActive]="true" *ngIf="!searchResult"></nz-skeleton>
-      <ul *ngIf="searchResult" nz-menu [nzMode]="'inline'" style="height:100%">
+      <ul *ngIf="searchResult" nz-menu [nzMode]="'inline'" [nzInlineCollapsed]="isMenuCollapsed" style="height:100%">
         <li nz-submenu [nzOpen]="true">
           <span title><i nz-icon type="user"></i>Overview</span>
           <ul>
@@ -60,7 +60,7 @@
 
       </ul>
     </nz-sider>
-    <nz-layout style="padding:0 24px 24px">
+    <nz-layout style="padding:24px; height: 100vh;">
       <nz-breadcrumb style="margin:16px 0;">
         <nz-breadcrumb-item>Search</nz-breadcrumb-item>
         <nz-breadcrumb-item>{{keyword}}</nz-breadcrumb-item>
@@ -71,13 +71,13 @@
       </nz-content>
       <nz-content style="background:  #f0f2f5; padding: 24px; min-height: 280px;" *ngIf="currNode === null && overviewMode === 'profile' && searchResult !== null">
         <div nz-row [nzGutter]="8">
-          <div nz-col nzSpan="6">
-            <nz-card nzTitle="Risk Score" [nzBordered]="false" style="text-align: center;">
+          <div nz-col nzSm="24" nzMd="6">
+            <nz-card  nzTitle="Risk Score" [nzBordered]="false" style="margin-top: 8px; text-align: center;">
               <nz-progress [nzPercent]="riskScore" [nzFormat]="formatRiskScore" nzStatus="active" nzType="dashboard"></nz-progress>
             </nz-card>
           </div>
-          <div nz-col nzSpan="18">
-            <nz-card nzTitle="Profile">
+          <div nz-col nzSm="24" nzMd="18">
+            <nz-card  nzTitle="Profile" style="margin-top: 8px;">
               <nz-card-tab>
                 <nz-tabset nzSize="large" [(nzSelectedIndex)]="profileTabSelectedIndex">
                   <nz-tab nzTitle="Person" *ngIf="searchResult.root.person !== null">

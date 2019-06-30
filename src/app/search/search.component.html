@@ -7,12 +7,16 @@
     <form nz-form id="searchForm">
       <div nz-row>
         <div nz-col nzSpan="24">
-          <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+          <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" [nzAddOnBefore]="prefixIconButton">
               <input type="text" nz-input placeholder="Search by  Address / Name" [(ngModel)]="keyword" [ngModelOptions]="{standalone: true}">
             </nz-input-group>
+            <ng-template #prefixIconButton>
+              <button nz-button nzType="link" (click)="gotoScan()"><i nz-icon nzType="qrcode"></i></button>
+            </ng-template>
             <ng-template #suffixIconButton>
               <button nz-button nzType="primary" nzSearch (click)="search()"><i nz-icon type="search"></i></button>
             </ng-template>
+           
           
         </div>
       </div>

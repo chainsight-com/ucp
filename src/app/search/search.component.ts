@@ -46,6 +46,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   search() {
     this.router.navigateByUrl('/result/' + this.keyword + '/' + this.maxDist);
   }
+  gotoScan() {
+    this.router.navigateByUrl('/scan');
+  }
   async onBack() {
     await this.authService.signOut();
   }

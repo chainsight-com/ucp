@@ -5,14 +5,15 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 import { SearchComponent } from './search/search.component';
 import { SearchResultPageComponent } from './search-result-page/search-result-page.component';
 import { NgZorroAntdModule, NZ_I18N, en_US, NZ_ICONS, NzSliderModule } from 'ng-zorro-antd';
 
-import { NotificationOutline, LaptopOutline, UserOutline, MailOutline, GoogleOutline, ArrowLeftOutline } from '@ant-design/icons-angular/icons';
+import { NotificationOutline, LaptopOutline, UserOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline } from '@ant-design/icons-angular/icons';
 
-const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline];
+const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline];
 
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/zh';
@@ -25,6 +26,7 @@ import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider } from "angul
 import { LoginPageComponent } from './login-page/login-page.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { LOCAL_TOKEN_KEY } from './jwt.service';
+import { ScanPageComponent } from './scan-page/scan-page.component';
 
 let config = new AuthServiceConfig([
   {
@@ -50,7 +52,8 @@ G6.track(false);
     SearchComponent,
     SearchResultPageComponent,
     GraphViewComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    ScanPageComponent
   ],
   imports: [
     BrowserModule,
@@ -61,6 +64,7 @@ G6.track(false);
     HttpClientModule,
     FormsModule,
     SocialLoginModule,
+    ZXingScannerModule,
     JwtModule.forRoot({
       config: {
         tokenGetter,
