@@ -11,9 +11,9 @@ import { SearchComponent } from './search/search.component';
 import { SearchResultPageComponent } from './search-result-page/search-result-page.component';
 import { NgZorroAntdModule, NZ_I18N, en_US, NZ_ICONS, NzSliderModule } from 'ng-zorro-antd';
 
-import { NotificationOutline, LaptopOutline, UserOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline } from '@ant-design/icons-angular/icons';
+import { NotificationOutline, LaptopOutline, UserOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline } from '@ant-design/icons-angular/icons';
 
-const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline];
+const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline];
 
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/zh';
@@ -21,7 +21,7 @@ import { IconDefinition } from '@ant-design/icons-angular';
 import { HttpClientModule } from '@angular/common/http';
 import G6 from '@antv/g6';
 import { GraphViewComponent } from './graph-view/graph-view.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider } from "angularx-social-login";
 import { LoginPageComponent } from './login-page/login-page.component';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -63,6 +63,7 @@ G6.track(false);
     NgZorroAntdModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     SocialLoginModule,
     ZXingScannerModule,
     JwtModule.forRoot({

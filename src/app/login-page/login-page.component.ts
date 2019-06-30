@@ -7,6 +7,7 @@ import { TokenPair } from '../model/TokenPair';
 import { environment } from 'src/environments/environment';
 import { JwtService } from '../jwt.service';
 import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login-page',
@@ -17,7 +18,14 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
 
   private unsubscribe$ = new Subject<void>();
-  constructor(private authService: AuthService, private httpClient: HttpClient, private jwtService: JwtService, private router: Router) { }
+  validateForm: FormGroup;
+  constructor(private fb: FormBuilder, private authService: AuthService, private httpClient: HttpClient, private jwtService: JwtService, private router: Router) {
+    this.validateForm = this.fb.group({
+      userName: [null, [Validators.required]],
+      password: [null, [Validators.required]],
+      remember: [true]
+    });
+  }
 
   ngOnInit() {
 
@@ -25,7 +33,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$)
     ).subscribe((isAuthenticated: boolean) => {
       if (isAuthenticated) {
-          this.router.navigateByUrl('/search');
+        this.router.navigateByUrl('/search');
       }
     });
 
