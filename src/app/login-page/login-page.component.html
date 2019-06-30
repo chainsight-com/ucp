@@ -5,7 +5,7 @@
       <div class="logo">
         <a href="/login"><span style="color: gray;">un</span>Block</a>
       </div>
-      <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+      <form nz-form [formGroup]="validateForm" class="login-form">
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input your username!">
             <nz-input-group nzPrefixIcon="user">
@@ -21,7 +21,7 @@
           </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-          <nz-form-control>
+          <nz-form-control> 
             <label nz-checkbox formControlName="remember">
               <span>Remember me</span>
             </label>
