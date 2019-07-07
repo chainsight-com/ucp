@@ -490,7 +490,7 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
 
     graph.on('node:mouseleave', (ev) => {
       const item = ev.item;
-      // tryHideNodeLabel(item);
+      tryHideNodeLabel(item);
     });
 
     graph.on('node:dblclick', (ev) => {
