@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseApiUrl: 'http://localhost:8585',
+  baseApiUrl: 'https://api.unblock-analysis.com',
 };
 
 /*

@@ -304,6 +304,7 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
         lists: []
       },
       textDisplay: false,
+      node_shape: 'rect',
       node_label: (model: NodeModel) => {
         const retVal = {
           stroke: null,
@@ -463,14 +464,14 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
 
     };
 
-  
+
 
     let nodes = graph.getNodes();
     let edges = graph.getEdges();
 
     edges.forEach(function (edge) {
       edge.getGraphicGroup().set('capture', false);
-      // tryHideEdgeLabel(edge);
+      tryHideNodeLabel(edge);
     });
 
     nodes.forEach(function (node) {
@@ -480,13 +481,16 @@ export class GraphViewComponent implements OnInit, AfterViewInit {
     graph.on('node:mouseenter', (ev) => {
       const item = ev.item;
       graph.toFront(item);
-      item.getLabel().show();
+      const label = item.getLabel();
+      if (label) {
+        label.show();
+      }
       graph.draw();
     });
 
     graph.on('node:mouseleave', (ev) => {
       const item = ev.item;
-      tryHideNodeLabel(item);
+      // tryHideNodeLabel(item);
     });
 
     graph.on('node:dblclick', (ev) => {
