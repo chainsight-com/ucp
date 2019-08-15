@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'scan', component: ScanPageComponent },
   { path: 'search', component: SearchComponent },
-  { path: 'result/:keyword/:maxDist', component: SearchResultPageComponent },
+  { path: 'result/:keyword/:maxDist/:starting/:ending', component: SearchResultPageComponent },
   { path: '**', component: LoginPageComponent }
 ];
 

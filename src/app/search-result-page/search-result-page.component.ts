@@ -117,9 +117,12 @@ export class SearchResultPageComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     this.paramSub = this.route.params.subscribe(async (params) => {
       this.keyword = params['keyword'];
       this.maxDist = params['maxDist'];
+      const startingTime = params['starting'];
+      const endingTime = params['ending'];
       this.riskScore = 0;
       this.relatedBitcoinAddresses = null;
       this.relatedEthAddresses = null;
@@ -129,8 +132,8 @@ export class SearchResultPageComponent implements OnInit {
       this.isLoadingTaintResult = true;
       this.httpClient.post(environment.baseApi2Url + '/api/btc-flow-address-taint-job/run?page=0&size=30', {
         'address': this.keyword,
-        'startingTime': '2015-10-01T00:00:00.000Z',
-        'endingTime': '2015-10-31T00:00:00.000Z',
+        'startingTime': startingTime,
+        'endingTime': endingTime,
         'maxLevel': this.maxDist,
         'timeoutSecs': 3600
       }, {
