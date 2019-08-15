@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   baseApiUrl: 'https://api.unblock-analysis.com',
+  baseApi2Url: 'https://apiv2.unblock-analysis.com'
 };
 
 /*

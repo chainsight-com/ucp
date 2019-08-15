@@ -10,6 +10,8 @@ import { CategoryMeta } from './category-meta';
 import * as d3 from 'd3';
 import { NetworkG, NodeModel } from './network-g';
 import * as jsnx from 'jsnetworkx';
+import { take } from 'rxjs/operators';
+import BigNumber from 'bignumber.js';
 
 
 @Component({
@@ -18,6 +20,10 @@ import * as jsnx from 'jsnetworkx';
   styleUrls: ['./search-result-page.component.scss']
 })
 export class SearchResultPageComponent implements OnInit {
+  public isLoadingTaintResult = false;
+  public taintResult: any = {
+    records: []
+  };
   isMenuCollapsed = false;
   private paramSub: Subscription;
   public keyword: string;
@@ -119,7 +125,26 @@ export class SearchResultPageComponent implements OnInit {
       this.relatedEthAddresses = null;
       this.relatedPeople = null;
       this.relatedCompanies = null;
-      this.searchResult = await this.httpClient.get(environment.baseApiUrl + '/api/search/' + this.keyword + '?maxDist='+this.maxDist).toPromise();
+
+      this.isLoadingTaintResult = true;
+      this.httpClient.post(environment.baseApi2Url + '/api/btc-flow-address-taint-job/run?page=0&size=30', {
+        'address': this.keyword,
+        'startingTime': '2015-10-01T00:00:00.000Z',
+        'endingTime': '2015-10-31T00:00:00.000Z',
+        'maxLevel': this.maxDist,
+        'timeoutSecs': 3600
+      }, {
+          headers: {
+            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJ1bmJsb2NrLWFuYWx5c2lzLmNvbSIsImlhdCI6MTU2NDgxMjM3OSwiZXhwIjo3ODc2MTU5NTc5LCJzdWIiOiJBQ0NPVU5UX3Jvb3QifQ.coLyiv-mk1aVEZPZ_4yMTNhNT1lwcCw8lgE0bg9yufg0pd3X02NQq4IcjqfLvtIO60mZTOSxpYTbhUQk9l7YpQ'
+          }
+        }).pipe(
+          take(1)
+        ).subscribe(body => {
+          this.taintResult = body;
+        }, console.log, () => {
+          this.isLoadingTaintResult = false;
+        });
+      this.searchResult = await this.httpClient.get(environment.baseApiUrl + '/api/search/' + this.keyword + '?maxDist=' + this.maxDist).toPromise();
 
 
 
@@ -245,7 +270,9 @@ export class SearchResultPageComponent implements OnInit {
     }
     return category;
   }
-
+  satoshiToBtc(satoshi): string {
+    return new BigNumber(satoshi).multipliedBy('1e-8').toString();
+  }
 
   gotoOverviewProfile(): void {
     this.currNode = null;
