@@ -1,0 +1,26 @@
+<nz-layout class="full-height">
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'" [nzCollapsedWidth]="0"
+    [nzZeroTrigger]="zeroTrigger">
+    <div class="logo"></div>
+    <ul nz-menu nzMode="inline" nzTheme="dark">
+      <li nz-menu-item>
+        <span title><i nz-icon type="dashboard"></i><span class="nav-text">Dashboard</span></span>
+      </li>
+      <li nz-submenu>
+        <span title><i nz-icon type="security-scan"></i><span class="nav-text">Address Scan</span></span>
+        <ul>
+          <li nz-menu-item routerLink="/main-layout/new-scan">New Scan</li>
+          <li nz-menu-item routerLink="/main-layout/scan-history">Scan History</li>
+        </ul>
+      </li>
+
+    </ul>
+  </nz-sider>
+  <nz-layout style="height: 100%;">
+    <router-outlet></router-outlet>
+    <nz-footer style="text-align: center;">Unblock Analysis ©2019</nz-footer>
+  </nz-layout>
+</nz-layout>
+<ng-template #zeroTrigger>
+  <i nz-icon type="menu-fold" theme="outline"></i>
+</ng-template>
