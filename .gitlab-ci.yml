@@ -12,7 +12,7 @@ build-prod:
   image: node:8.11.3-stretch
   script:
   - npm install
-  - npm run build-prod
+  - npm run build:prod
   artifacts:
     paths:
     - dist/
@@ -22,9 +22,6 @@ deploy-prod:
   only:
     refs:
     - /^\d+\.\d+\.\d+/
-  except:
-    refs:
-    - /^(?!.*(master|\d+\.\d+\.\d+)$).*$/
   dependencies:
   - build-prod
   before_script:
@@ -39,15 +36,12 @@ rollout-prod:
   stage: rollout
   image: profyu/gcloud-sdk:218.0.0
   variables:
-    KUBE_DEPLOY_NS: unblock-prod
-    KUBE_DEPLOY_APP: unblock-ui-prod
+    KUBE_DEPLOY_NS: unblock-ui
+    KUBE_DEPLOY_APP: unblock-ui
     KUBE_DEPLOY_CONTAINER: nginx
   only:
     refs:
     - /^\d+\.\d+\.\d+/
-  except:
-    refs:
-    - /^(?!.*(master|\d+\.\d+\.\d+)$).*$/
   before_script:
   - export PATH=/google-cloud-sdk/bin/:$PATH
   - echo $GCLOUD_SERVICE_KEY > $HOME/.config/gcloud/application_default_credentials.json

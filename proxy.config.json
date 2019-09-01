@@ -1,6 +1,6 @@
 {
     "/api":{
-        "target": "http://localhost:8585/",
+        "target": "https://apiv2.unblock-analysis.com/",
         "secure": false
     }
 }
