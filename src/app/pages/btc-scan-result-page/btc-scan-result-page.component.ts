@@ -53,7 +53,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
 
 
   flowTabSelected() {
-    if(!this.myDiagram){
+    if (!this.myDiagram) {
       this.initDiagram();
     }
 
@@ -399,6 +399,10 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
     const retVal = moment(this.pipeline.startingTime).local().add(value, 'days').format('YYYY-MM-DD');
     return retVal;
 
+  }
+
+  openInV1() {
+    window.open('https://sitev1.unblock-analysis.com/result/' + this.pipeline.address + '/' + this.pipeline.maxLevel + '/' + this.pipeline.startingTime.toISOString() + '/' + this.pipeline.endingTime.toISOString())
   }
 
 

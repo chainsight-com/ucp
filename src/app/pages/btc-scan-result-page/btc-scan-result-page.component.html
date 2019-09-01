@@ -1,10 +1,20 @@
 <nz-page-header [nzTitle]="'BTC Address 一 ' + pipeline.address">
 </nz-page-header>
-<nz-breadcrumb style="margin: 16px;">
-  <nz-breadcrumb-item>Address Scan</nz-breadcrumb-item>
-  <nz-breadcrumb-item>Scan History</nz-breadcrumb-item>
-  <nz-breadcrumb-item>Result 一 {{pipeline.address}}</nz-breadcrumb-item>
-</nz-breadcrumb>
+<div nz-row>
+  <div nz-col nzSpan="23">
+    <nz-breadcrumb style="margin: 16px;">
+      <nz-breadcrumb-item>Address Scan</nz-breadcrumb-item>
+      <nz-breadcrumb-item>Scan History</nz-breadcrumb-item>
+      <nz-breadcrumb-item>Result 一 {{pipeline.address}}</nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div>
+  <div nz-col nzSpan="1" style="text-align: right;">
+    <a href="#" (click)="openInV1()"><i nz-icon nzType="experiment" nzTheme="outline"></i></a>
+  </div>
+</div>
+
+
+
 <div style="padding: 12px;">
   <nz-row [nzGutter]="16">
     <nz-col [nzSpan]="6">
@@ -70,9 +80,11 @@
 
                   <tr *ngFor="let data of basicTable.data">
                     <td>
-                      <i class="direction-icon" *ngIf="data.direction==='FORWARD'" nz-icon nzType="swap-right" nzTheme="outline"></i>
+                      <i class="direction-icon" *ngIf="data.direction==='FORWARD'" nz-icon nzType="swap-right"
+                        nzTheme="outline"></i>
                       {{ data.address }}
-                      <i class="direction-icon" *ngIf="data.direction==='BACKWARD'" nz-icon nzType="swap-right" nzTheme="outline"></i>
+                      <i class="direction-icon" *ngIf="data.direction==='BACKWARD'" nz-icon nzType="swap-right"
+                        nzTheme="outline"></i>
                     </td>
                     <td>
                       <nz-tag *ngFor="let tag of data.tags">
