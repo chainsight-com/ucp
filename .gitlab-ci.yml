@@ -38,7 +38,7 @@ rollout-prod:
   variables:
     KUBE_DEPLOY_NS: unblock-ui
     KUBE_DEPLOY_APP: unblock-ui
-    KUBE_DEPLOY_CONTAINER: nginx
+    KUBE_DEPLOY_CONTAINER: unblock-ui
   only:
     refs:
     - /^\d+\.\d+\.\d+/
