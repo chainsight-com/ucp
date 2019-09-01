@@ -9,7 +9,7 @@
   <nz-row [nzGutter]="16">
     <nz-col [nzSpan]="6">
       <nz-card>
-        <nz-statistic [nzValue]="pipeline.totalScore | number: '3.1-3'" [nzTitle]="'Total Score'"
+        <nz-statistic [nzValue]="pipeline.totalScore | number: '.1-3'" [nzTitle]="'Total Score'"
           [nzValueStyle]="{ color: '#3F8600' }">
         </nz-statistic>
         <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
@@ -17,7 +17,7 @@
     </nz-col>
     <nz-col [nzSpan]="6">
       <nz-card>
-        <nz-statistic [nzValue]="pipeline.totalScoreEv | number: '3.1-3'" [nzTitle]="'Total Score EV'"
+        <nz-statistic [nzValue]="pipeline.totalScoreEv | number: '.1-3'" [nzTitle]="'Total Score EV'"
           [nzValueStyle]="{ color: '#CF1322' }">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
@@ -25,7 +25,7 @@
     </nz-col>
     <nz-col [nzSpan]="6">
       <nz-card>
-        <nz-statistic [nzValue]="pipeline.avgScore | number: '3.1-3'" [nzTitle]="'Average Score'"
+        <nz-statistic [nzValue]="pipeline.avgScore | number: '.1-3'" [nzTitle]="'Average Score'"
           [nzValueStyle]="{ color: '#3F8600' }">
         </nz-statistic>
         <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
@@ -33,7 +33,7 @@
     </nz-col>
     <nz-col [nzSpan]="6">
       <nz-card>
-        <nz-statistic [nzValue]="pipeline.avgScoreEv | number: '3.1-3'" [nzTitle]="'Average Score EV'"
+        <nz-statistic [nzValue]="pipeline.avgScoreEv | number: '.1-3'" [nzTitle]="'Average Score EV'"
           [nzValueStyle]="{ color: '#CF1322' }">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
@@ -69,7 +69,11 @@
                 <tbody>
 
                   <tr *ngFor="let data of basicTable.data">
-                    <td>{{ data.address }}</td>
+                    <td>
+                      <i class="direction-icon" *ngIf="data.direction==='FORWARD'" nz-icon nzType="swap-right" nzTheme="outline"></i>
+                      {{ data.address }}
+                      <i class="direction-icon" *ngIf="data.direction==='BACKWARD'" nz-icon nzType="swap-right" nzTheme="outline"></i>
+                    </td>
                     <td>
                       <nz-tag *ngFor="let tag of data.tags">
                         {{tag}}
@@ -78,7 +82,7 @@
 
                     <td>{{ data.totalAmount | crypto: 'satoshi' : 'btc'}} BTC</td>
                     <td>
-                      <span>{{ data.maxScoreEv | number:'3.1-3'}}</span>
+                      <span>{{ data.maxScoreEv | number:'.1-3'}}</span>
                     </td>
 
                   </tr>
@@ -94,8 +98,8 @@
                 </div>
                 <div nz-row>
                   <div nz-col nzSpan="22" nzOffset="1" style="text-align: right;">
-                    <button (click)="initDiagram()" nz-button nzType="primary" nzShape="round"><i nz-icon nzType="reload"
-                        nzTheme="outline"></i>Reload</button>
+                    <button (click)="initDiagram()" nz-button nzType="primary" nzShape="round"><i nz-icon
+                        nzType="reload" nzTheme="outline"></i>Reload</button>
                   </div>
                 </div>
                 <div nz-row>

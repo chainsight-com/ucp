@@ -26,7 +26,7 @@ export class ScanHistoryPageComponent implements OnInit {
 
   public btcPageSize = 30;
   public btcPage = 1;
-  public isBtcLoading = true;
+  public isBtcLoading = false;
   constructor(private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService, private jwtService: JwtService) { }
 
   ngOnInit() {
@@ -39,7 +39,7 @@ export class ScanHistoryPageComponent implements OnInit {
     if (reset) {
       this.btcPage = 1;
     }
-    this.isBtcLoading = false;
+    this.isBtcLoading = true;
     this.btcAddressScanPipelineApiService.paginateBtcAddressScanPipelinesUsingGETDefault(this.btcPage - 1, this.btcPageSize, this.me.id)
       .pipe(
         take(1),

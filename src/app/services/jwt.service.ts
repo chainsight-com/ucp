@@ -50,6 +50,7 @@ export class JwtService {
   removeToken() {
     if (this.getToken()) {
       localStorage.removeItem(LOCAL_TOKEN_KEY);
+      localStorage.removeItem(LOCAL_ME);
     }
     this.loginStatus$.next(false);
     this.currentAccount$.next(null);
