@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs/operators';
 import { BtcAddressScanPipelineApiService, BtcSingleAddressRoot } from 'src/sdk';
 import { Router } from '@angular/router';
+import { QrScannerService } from 'src/app/services/qr-scanner.service';
 
 @Component({
   selector: 'app-new-scan-page',
@@ -15,7 +16,7 @@ export class NewScanPageComponent implements OnInit {
 
   public form: FormGroup;
   public isSubmitting = false;
-  constructor(private router: Router, private fb: FormBuilder, private httpClient: HttpClient, private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService) { }
+  constructor(private router: Router, private qrScannerService: QrScannerService, private fb: FormBuilder, private httpClient: HttpClient, private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService) { }
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -63,6 +64,19 @@ export class NewScanPageComponent implements OnInit {
       });
 
 
+  }
+  qrScan() {
+    this.qrScannerService.code$
+      .pipe(
+        take(1)
+      )
+      .subscribe(code => {
+        this.form.patchValue({
+          address: code
+        });
+      });
+
+    this.router.navigateByUrl('/main-layout/qr-scan');
   }
 
 }

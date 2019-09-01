@@ -54,7 +54,7 @@
               <nz-table #basicTable [nzLoading]="isAddressTaintJobLoading" [nzData]="addressTaintJobResultPage.records"
                 nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="addressTaintJobResultPageNo"
                 [(nzPageSize)]="addressTaintJobResultPageSize" [nzTotal]="addressTaintJobResultPage.totalRecords"
-                (nzPageIndexChange)="reloadAddressTaintJobResultPage()"
+                (nzPageIndexChange)="reloadAddressTaintJobResultPage(false)"
                 (nzPageSizeChange)="reloadAddressTaintJobResultPage(true)">
                 <thead>
                   <tr>

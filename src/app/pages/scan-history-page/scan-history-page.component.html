@@ -14,7 +14,7 @@
 
             <nz-table #basicTable [nzLoading]="isBtcLoading" [nzData]="btcPipelinePage.content" nzShowSizeChanger
               [nzFrontPagination]="false" [(nzPageIndex)]="btcPage" [(nzPageSize)]="btcPageSize"
-              [nzTotal]="btcPipelinePage.totalElements" (nzPageIndexChange)="reloadBtcPipelines()"
+              [nzTotal]="btcPipelinePage.totalElements" (nzPageIndexChange)="reloadBtcPipelines(false)"
               (nzPageSizeChange)="reloadBtcPipelines(true)">
               <thead>
                 <tr>

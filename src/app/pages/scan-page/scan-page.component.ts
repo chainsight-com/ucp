@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { BarcodeFormat } from '@zxing/library';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+import { QrScannerService } from 'src/app/services/qr-scanner.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-scan-page',
@@ -27,7 +29,7 @@ export class ScanPageComponent implements OnInit {
   torchEnabled = false;
   torchAvailable$ = new BehaviorSubject<boolean>(false);
   tryHarder = true;
-  constructor(protected router: Router) {
+  constructor(protected location: Location, protected qrScannerService: QrScannerService) {
 
   }
 
@@ -43,7 +45,8 @@ export class ScanPageComponent implements OnInit {
     console.log('qrcode', code);
     if (!this.hasResult) {
       this.hasResult = true;
-      this.router.navigateByUrl('/result/' + code + '/' + 5);
+      this.qrScannerService.code$.next(code);
+      this.location.back();
 
     }
 
@@ -67,6 +70,12 @@ export class ScanPageComponent implements OnInit {
 
   toggleTryHarder(): void {
     this.tryHarder = !this.tryHarder;
+  }
+
+  switchDevice() {
+    const currIdx = this.availableDevices.indexOf(this.currentDevice);
+    const nextDevice = this.availableDevices[(currIdx + 1) % this.availableDevices.length];
+    this.currentDevice = nextDevice;
   }
 
 }

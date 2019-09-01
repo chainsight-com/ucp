@@ -11,7 +11,7 @@ import { BtcScanResultPageComponent } from './pages/btc-scan-result-page/btc-sca
 
 const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
-  { path: 'scan', component: ScanPageComponent },
+
   {
     path: 'main-layout',
     component: MainLayoutPageComponent,
@@ -20,6 +20,8 @@ const routes: Routes = [
       { path: 'new-scan', component: NewScanPageComponent },
       { path: 'scan-history', component: ScanHistoryPageComponent },
       { path: 'btc-scan-result/:id', component: BtcScanResultPageComponent },
+      { path: 'qr-scan', component: ScanPageComponent},
+
     ]
   },
   // { path: 'search', component: SearchComponent },
