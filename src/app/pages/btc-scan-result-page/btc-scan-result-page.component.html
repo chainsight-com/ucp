@@ -1,15 +1,15 @@
 <nz-page-header [nzTitle]="'BTC Address 一 ' + pipeline.address">
+  <nz-page-header-extra>
+    <button (click)="openInV1()" nz-button nzType="default" nzShape="circle"><i nz-icon type="experiment"></i></button>
+  </nz-page-header-extra>
 </nz-page-header>
 <div nz-row>
-  <div nz-col nzSpan="23">
+  <div nz-col>
     <nz-breadcrumb style="margin: 16px;">
       <nz-breadcrumb-item>Address Scan</nz-breadcrumb-item>
       <nz-breadcrumb-item>Scan History</nz-breadcrumb-item>
       <nz-breadcrumb-item>Result 一 {{pipeline.address}}</nz-breadcrumb-item>
     </nz-breadcrumb>
-  </div>
-  <div nz-col nzSpan="1" style="text-align: right;">
-    <a href="#" (click)="openInV1()"><i nz-icon nzType="experiment" nzTheme="outline"></i></a>
   </div>
 </div>
 

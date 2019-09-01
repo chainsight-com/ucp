@@ -402,7 +402,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
   }
 
   openInV1() {
-    window.open('https://sitev1.unblock-analysis.com/result/' + this.pipeline.address + '/' + this.pipeline.maxLevel + '/' + this.pipeline.startingTime.toISOString() + '/' + this.pipeline.endingTime.toISOString())
+    window.open('https://sitev1.unblock-analysis.com/result/' + this.pipeline.address + '/' + this.pipeline.maxLevel + '/' + this.pipeline.startingTime + '/' + this.pipeline.endingTime)
   }
 
 
