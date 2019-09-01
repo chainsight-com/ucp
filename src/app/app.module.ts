@@ -11,9 +11,9 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
 // import { SearchResultPageComponent } from './search-result-page/search-result-page.component';
 import { NgZorroAntdModule, NZ_I18N, en_US, NZ_ICONS, NzSliderModule } from 'ng-zorro-antd';
 
-import { NotificationOutline, LaptopOutline, UserOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline } from '@ant-design/icons-angular/icons';
+import { NotificationOutline, LaptopOutline, UserOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline } from '@ant-design/icons-angular/icons';
 
-const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline];
+const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline];
 
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/zh';

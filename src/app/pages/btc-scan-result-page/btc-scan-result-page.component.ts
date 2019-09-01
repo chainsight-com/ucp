@@ -17,7 +17,7 @@ import * as moment from 'moment';
 })
 export class BtcScanResultPageComponent implements OnInit, OnDestroy {
 
-
+  public isLoadingPipeline = false;
   public pipeline: BtcAddressScanPipeline = {};
   public isAddressTaintJobLoading = false;
   public addressTaintJobResultPageNo = 0;
@@ -53,7 +53,10 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
 
 
   flowTabSelected() {
-    this.initDiagram(this.pipeline.startingTime, this.pipeline.endingTime);
+    if(!this.myDiagram){
+      this.initDiagram();
+    }
+
   }
   ngOnInit() {
 
@@ -73,6 +76,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
   }
 
   reload(id: number) {
+    this.isLoadingPipeline = true;
     this.btcAddressScanPipelineApiService.getBtcAddressScanPipelineUsingGETDefault(id)
       .pipe(
         take(1)
@@ -80,9 +84,11 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
         this.pipeline = pipeline;
         this.maxDays = moment(this.pipeline.endingTime).diff(moment(this.pipeline.startingTime), 'days');
         this.dateRangeMarks = { 0: moment(this.pipeline.startingTime).format('YYYY-MM-DD') };
-
         this.dateRangeMarks[this.maxDays] = moment(this.pipeline.endingTime).format('YYYY-MM-DD');
+        this.dateRange = [0, this.maxDays];
         this.reloadAddressTaintJobResultPage(true);
+      }, console.error, () => {
+        this.isLoadingPipeline = false;
       });
   }
   reloadAddressTaintJobResultPage(reset: boolean) {
@@ -101,10 +107,13 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
 
   }
 
+  initDiagram(tag?: string) {
+
+    const startingTime = moment(this.pipeline.startingTime).local().add(this.dateRange[0], 'days').toDate();
+    const endingTime = moment(this.pipeline.startingTime).local().add(this.dateRange[1], 'days').toDate();
+    const address = this.pipeline.address;
 
 
-
-  initDiagram(startingTime: Date, endingTime: Date, address?: string, tag?: string) {
     // const rootAddress = '12etp4a21L5ks7KKuNtEFx2r1ZqbwEampq';
 
     var colors = ['#AC193D/#BF1E4B', '#2672EC/#2E8DEF', '#8C0095/#A700AE', '#5133AB/#643EBF', '#008299/#00A0B1', '#D24726/#DC572E', '#008A00/#00A600', '#094AB2/#0A5BC4'];
@@ -392,11 +401,6 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
 
   }
 
-  dateRangeChanged(range) {
-    const startingTime = moment(this.pipeline.startingTime).local().add(range[0], 'days').toDate();
-    const endingTime = moment(this.pipeline.startingTime).local().add(range[1], 'days').toDate();
-    this.initDiagram(startingTime, endingTime);
 
-  }
 
 }
