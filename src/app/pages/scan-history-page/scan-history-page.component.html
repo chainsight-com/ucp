@@ -49,13 +49,13 @@
                     <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
                     <td>{{ data.createdTime | date: 'short' }}</td>
                     <td>
-                      <span *ngIf="data.totalScoreEv; else elseTmpl">{{ data.totalScoreEv | number:'.1-3'}}</span>
+                      <span *ngIf="data.status === 'COMPLETED'; else elseTmpl">{{ data.totalScoreEv | number:'.1-3'}}</span>
                       <ng-template #elseTmpl>
                         <i nz-icon nzType="loading" nzTheme="outline"></i>
                       </ng-template>
                     </td>
                     <td>
-                      <span *ngIf="data.avgScoreEv; else elseTmpl">{{ data.avgScoreEv | number:'.1-3'}}</span>
+                      <span *ngIf="data.status === 'COMPLETED'; else elseTmpl">{{ data.avgScoreEv | number:'.1-3'}}</span>
                       <ng-template #elseTmpl>
                         <i nz-icon nzType="loading" nzTheme="outline"></i>
                       </ng-template>
@@ -106,13 +106,13 @@
                     <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
                     <td>{{ data.createdTime | date: 'short' }}</td>
                     <td>
-                      <span *ngIf="data.totalScoreEv; else elseTmpl">{{ data.totalScoreEv | number:'.1-3'}}</span>
+                      <span *ngIf="data.status === 'COMPLETED'; else elseTmpl">{{ data.totalScoreEv | number:'.1-3'}}</span>
                       <ng-template #elseTmpl>
                         <i nz-icon nzType="loading" nzTheme="outline"></i>
                       </ng-template>
                     </td>
                     <td>
-                      <span *ngIf="data.avgScoreEv; else elseTmpl">{{ data.avgScoreEv | number:'.1-3'}}</span>
+                      <span *ngIf="data.status === 'COMPLETED'; else elseTmpl">{{ data.avgScoreEv | number:'.1-3'}}</span>
                       <ng-template #elseTmpl>
                         <i nz-icon nzType="loading" nzTheme="outline"></i>
                       </ng-template>

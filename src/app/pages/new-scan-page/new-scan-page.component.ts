@@ -78,7 +78,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigateByUrl('/main-layout/scan-history', {
+        this.router.navigate(['main-layout', 'scan-history'], {
           queryParams: {
             type: 'BTC'
           }
