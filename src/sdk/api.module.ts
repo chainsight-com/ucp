@@ -12,6 +12,13 @@ import { BtcFlowJobApiService } from './api/btc-flow-job.service';
 import { BtcFlowRiskGraphJobApiService } from './api/btc-flow-risk-graph-job.service';
 import { BtcFlowRiskJobApiService } from './api/btc-flow-risk-job.service';
 import { BtcRiskSummaryJobApiService } from './api/btc-risk-summary-job.service';
+import { EthAddressScanPipelineApiService } from './api/eth-address-scan-pipeline.service';
+import { EthFlowAddressTagJobApiService } from './api/eth-flow-address-tag-job.service';
+import { EthFlowAddressTaintJobApiService } from './api/eth-flow-address-taint-job.service';
+import { EthFlowJobApiService } from './api/eth-flow-job.service';
+import { EthFlowRiskGraphJobApiService } from './api/eth-flow-risk-graph-job.service';
+import { EthFlowRiskJobApiService } from './api/eth-flow-risk-job.service';
+import { EthRiskSummaryJobApiService } from './api/eth-risk-summary-job.service';
 
 @NgModule({
   imports:      [],
@@ -26,7 +33,14 @@ import { BtcRiskSummaryJobApiService } from './api/btc-risk-summary-job.service'
     BtcFlowJobApiService,
     BtcFlowRiskGraphJobApiService,
     BtcFlowRiskJobApiService,
-    BtcRiskSummaryJobApiService ]
+    BtcRiskSummaryJobApiService,
+    EthAddressScanPipelineApiService,
+    EthFlowAddressTagJobApiService,
+    EthFlowAddressTaintJobApiService,
+    EthFlowJobApiService,
+    EthFlowRiskGraphJobApiService,
+    EthFlowRiskJobApiService,
+    EthRiskSummaryJobApiService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {

@@ -5,7 +5,7 @@ import { takeUntil, take, mergeMap } from 'rxjs/operators';
 import { BtcAddressScanPipeline, BtcAddressScanPipelineApiService, BtcFlowAddressTaintJobApiService, BtcFlowAddressTaintJobResultPage, BtcFlowRiskGraphJobApiService, BtcFlowRiskGraph } from 'src/sdk';
 import * as go from 'gojs';
 
-import { SankeyLayout } from './sankey-layout';
+import { SankeyLayout } from '../../shared/sankey-layout';
 import { CryptoPipe } from 'src/app/pipes/crypto.pipe';
 
 import * as moment from 'moment';

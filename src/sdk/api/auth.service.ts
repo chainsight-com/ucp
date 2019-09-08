@@ -29,7 +29,7 @@ import { Configuration }                                     from '../configurat
 })
 export class AuthApiService {
 
-    protected basePath = 'http://localhost:44509';
+    protected basePath = 'http://localhost:42691';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;

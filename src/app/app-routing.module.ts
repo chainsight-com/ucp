@@ -7,6 +7,7 @@ import { NewScanPageComponent } from './pages/new-scan-page/new-scan-page.compon
 import { ScanHistoryPageComponent } from './pages/scan-history-page/scan-history-page.component';
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 import { BtcScanResultPageComponent } from './pages/btc-scan-result-page/btc-scan-result-page.component';
+import { EthScanResultPageComponent } from './pages/eth-scan-result-page/eth-scan-result-page.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: 'new-scan', component: NewScanPageComponent },
       { path: 'scan-history', component: ScanHistoryPageComponent },
       { path: 'btc-scan-result/:id', component: BtcScanResultPageComponent },
+      { path: 'eth-scan-result/:id', component: EthScanResultPageComponent },
       { path: 'qr-scan', component: ScanPageComponent},
 
     ]

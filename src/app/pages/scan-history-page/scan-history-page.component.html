@@ -7,8 +7,8 @@
 <nz-content style="margin:24px 16px 0;">
   <div style="padding:24px; background: #fff; min-height: 550px;">
     <div nz-row>
-      <div nz-col nzSpan="23" nzOffset="1">
-        <nz-tabset [nzTabPosition]="'left'" [nzType]="'line'">
+      <div nz-col nzSpan="24">
+        <nz-tabset [nzTabPosition]="'left'" [nzType]="'line'" [nzSelectedIndex]="selectedTabIndex">
           <nz-tab [nzTitle]="'BTC'">
             <div nz-row style="margin-bottom: 16px;">
               <div nz-col nzSpan="24" style="text-align: right;">
@@ -17,7 +17,7 @@
               </div>
             </div>
             <nz-spin [nzSpinning]="isBtcLoading">
-              <nz-table #basicTable [nzData]="btcPipelinePage.content" nzShowSizeChanger [nzFrontPagination]="false"
+              <nz-table #btcTable [nzData]="btcPipelinePage.content" nzShowSizeChanger [nzFrontPagination]="false"
                 [(nzPageIndex)]="btcPage" [(nzPageSize)]="btcPageSize" [nzTotal]="btcPipelinePage.totalElements"
                 (nzPageIndexChange)="reloadBtcPipelines(false)" (nzPageSizeChange)="reloadBtcPipelines(true)">
                 <thead>
@@ -37,7 +37,7 @@
                 </thead>
                 <tbody>
 
-                  <tr *ngFor="let data of basicTable.data">
+                  <tr *ngFor="let data of btcTable.data">
                     <td>
                       <nz-badge *ngIf="data.status === 'COMPLETED'" nzStatus="success" nzText="Success"></nz-badge>
                       <nz-badge *ngIf="data.status === 'PENDING' || data.status === 'RUNNING'" nzStatus="processing"
@@ -67,7 +67,60 @@
 
           </nz-tab>
           <nz-tab [nzTitle]="'ETH'">
+            <div nz-row style="margin-bottom: 16px;">
+              <div nz-col nzSpan="24" style="text-align: right;">
+                <button (click)="reloadEthPipelines(false)" nz-button nzType="primary" nzShape="round"><i nz-icon
+                    nzType="reload" nzTheme="outline"></i>Reload</button>
+              </div>
+            </div>
+            <nz-spin [nzSpinning]="isEthLoading">
+              <nz-table #ethTable [nzData]="ethPipelinePage.content" nzShowSizeChanger [nzFrontPagination]="false"
+                [(nzPageIndex)]="ethPage" [(nzPageSize)]="ethPageSize" [nzTotal]="ethPipelinePage.totalElements"
+                (nzPageIndexChange)="reloadEthPipelines(false)" (nzPageSizeChange)="reloadEthPipelines(true)">
+                <thead>
+                  <tr>
+                    <th>
+                      Status
+                    </th>
+                    <th>
+                      Address
+                    </th>
+                    <th>Max Level</th>
+                    <th>Time Range</th>
+                    <th>Created Time</th>
+                    <th>Total Score EV</th>
+                    <th>Avg. Score EV</th>
+                  </tr>
+                </thead>
+                <tbody>
 
+                  <tr *ngFor="let data of ethTable.data">
+                    <td>
+                      <nz-badge *ngIf="data.status === 'COMPLETED'" nzStatus="success" nzText="Success"></nz-badge>
+                      <nz-badge *ngIf="data.status === 'PENDING' || data.status === 'RUNNING'" nzStatus="processing"
+                        nzText="Running"></nz-badge>
+                      <nz-badge *ngIf="data.status === 'FAILED'" nzStatus="error" nzText="Error"></nz-badge>
+                    </td>
+                    <td><a [routerLink]="'/main-layout/eth-scan-result/' + data.id">{{ data.address }}</a></td>
+                    <td>{{ data.maxLevel }}</td>
+                    <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
+                    <td>{{ data.createdTime | date: 'short' }}</td>
+                    <td>
+                      <span *ngIf="data.totalScoreEv; else elseTmpl">{{ data.totalScoreEv | number:'.1-3'}}</span>
+                      <ng-template #elseTmpl>
+                        <i nz-icon nzType="loading" nzTheme="outline"></i>
+                      </ng-template>
+                    </td>
+                    <td>
+                      <span *ngIf="data.avgScoreEv; else elseTmpl">{{ data.avgScoreEv | number:'.1-3'}}</span>
+                      <ng-template #elseTmpl>
+                        <i nz-icon nzType="loading" nzTheme="outline"></i>
+                      </ng-template>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+            </nz-spin>
           </nz-tab>
           <nz-tab [nzTitle]="'XRP'">
 

@@ -35,6 +35,7 @@ export interface BtcAddressScanPipeline {
     forwardFlowJob?: BtcFlowJob;
     forwardFlowJobId?: number;
     id?: number;
+    isCached?: boolean;
     maxLevel?: number;
     riskSummaryJob?: BtcRiskSummaryJob;
     riskSummaryJobId?: number;

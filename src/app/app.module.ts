@@ -39,6 +39,7 @@ import { JwtInterceptor } from './interceptors/JwtInterceptor';
 import { BtcScanResultPageComponent } from './pages/btc-scan-result-page/btc-scan-result-page.component';
 import { CryptoPipe } from './pipes/crypto.pipe';
 import { RouteReuseStrategy } from '@angular/router';
+import { EthScanResultPageComponent } from './pages/eth-scan-result-page/eth-scan-result-page.component';
 
 
 
@@ -78,6 +79,7 @@ G6.track(false);
     NewScanPageComponent,
     DashboardPageComponent,
     BtcScanResultPageComponent,
+    EthScanResultPageComponent,
     CryptoPipe
   ],
   imports: [
