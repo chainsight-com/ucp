@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { HttpClient } from '@angular/common/http';
 import { take, takeUntil } from 'rxjs/operators';
-import { BtcAddressScanPipelineApiService, BtcSingleAddressRoot, EthAddressScanPipelineApiService, EthSingleAddressRoot } from 'src/sdk';
+import { BtcAddressScanPipelineApiService, BtcSingleAddressRoot, EthAddressScanPipelineApiService, EthSingleAddressRoot, XrpAddressScanPipelineApiService, XrpSingleAddressRoot } from 'src/sdk';
 import { Router } from '@angular/router';
 import { QrScannerService } from 'src/app/services/qr-scanner.service';
 import { Subject } from 'rxjs';
@@ -18,7 +18,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public isSubmitting = false;
   private unsubscribe$ = new Subject<void>();
-  constructor(private router: Router, private qrScannerService: QrScannerService, private fb: FormBuilder, private httpClient: HttpClient, private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService, private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService) { }
+  constructor(private router: Router, private qrScannerService: QrScannerService, private fb: FormBuilder, private httpClient: HttpClient, private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService, private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService, private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService) { }
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -55,7 +55,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
 
     const formValue = this.form.value;
 
-    const body: BtcSingleAddressRoot | EthSingleAddressRoot = {
+    const body: BtcSingleAddressRoot | EthSingleAddressRoot | XrpSingleAddressRoot = {
       address: formValue.address,
       maxLevel: formValue.maxLevel,
       startingTime: formValue.dateRange[0],
@@ -67,6 +67,8 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       this.submitBtc(body);
     } else if (formValue.scanType === 'ETH') {
       this.submitEth(body);
+    } else if (formValue.scanType === 'XRP') {
+      this.submitXrp(body);
     }
 
 
@@ -96,6 +98,21 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
         this.router.navigate(['main-layout', 'scan-history'], {
           queryParams: {
             type: 'ETH'
+          }
+        });
+      }, console.error, () => {
+        this.isSubmitting = false;
+      });
+  }
+  submitXrp(body: XrpSingleAddressRoot) {
+    this.isSubmitting = true;
+    this.xrpAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOSTDefault2(body)
+      .pipe(
+        take(1)
+      ).subscribe(pipeline => {
+        this.router.navigate(['main-layout', 'scan-history'], {
+          queryParams: {
+            type: 'XRP'
           }
         });
       }, console.error, () => {

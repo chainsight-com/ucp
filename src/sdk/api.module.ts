@@ -19,6 +19,13 @@ import { EthFlowJobApiService } from './api/eth-flow-job.service';
 import { EthFlowRiskGraphJobApiService } from './api/eth-flow-risk-graph-job.service';
 import { EthFlowRiskJobApiService } from './api/eth-flow-risk-job.service';
 import { EthRiskSummaryJobApiService } from './api/eth-risk-summary-job.service';
+import { XrpAddressScanPipelineApiService } from './api/xrp-address-scan-pipeline.service';
+import { XrpFlowAddressTagJobApiService } from './api/xrp-flow-address-tag-job.service';
+import { XrpFlowAddressTaintJobApiService } from './api/xrp-flow-address-taint-job.service';
+import { XrpFlowJobApiService } from './api/xrp-flow-job.service';
+import { XrpFlowRiskGraphJobApiService } from './api/xrp-flow-risk-graph-job.service';
+import { XrpFlowRiskJobApiService } from './api/xrp-flow-risk-job.service';
+import { XrpRiskSummaryJobApiService } from './api/xrp-risk-summary-job.service';
 
 @NgModule({
   imports:      [],
@@ -40,7 +47,14 @@ import { EthRiskSummaryJobApiService } from './api/eth-risk-summary-job.service'
     EthFlowJobApiService,
     EthFlowRiskGraphJobApiService,
     EthFlowRiskJobApiService,
-    EthRiskSummaryJobApiService ]
+    EthRiskSummaryJobApiService,
+    XrpAddressScanPipelineApiService,
+    XrpFlowAddressTagJobApiService,
+    XrpFlowAddressTaintJobApiService,
+    XrpFlowJobApiService,
+    XrpFlowRiskGraphJobApiService,
+    XrpFlowRiskJobApiService,
+    XrpRiskSummaryJobApiService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {

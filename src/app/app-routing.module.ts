@@ -8,6 +8,7 @@ import { ScanHistoryPageComponent } from './pages/scan-history-page/scan-history
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 import { BtcScanResultPageComponent } from './pages/btc-scan-result-page/btc-scan-result-page.component';
 import { EthScanResultPageComponent } from './pages/eth-scan-result-page/eth-scan-result-page.component';
+import { XrpScanResultPageComponent } from './pages/xrp-scan-result-page/xrp-scan-result-page.component';
 
 
 const routes: Routes = [
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'scan-history', component: ScanHistoryPageComponent },
       { path: 'btc-scan-result/:id', component: BtcScanResultPageComponent },
       { path: 'eth-scan-result/:id', component: EthScanResultPageComponent },
+      { path: 'xrp-scan-result/:id', component: XrpScanResultPageComponent },
       { path: 'qr-scan', component: ScanPageComponent},
 
     ]

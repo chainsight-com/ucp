@@ -40,6 +40,7 @@ import { BtcScanResultPageComponent } from './pages/btc-scan-result-page/btc-sca
 import { CryptoPipe } from './pipes/crypto.pipe';
 import { RouteReuseStrategy } from '@angular/router';
 import { EthScanResultPageComponent } from './pages/eth-scan-result-page/eth-scan-result-page.component';
+import { XrpScanResultPageComponent } from './pages/xrp-scan-result-page/xrp-scan-result-page.component';
 
 
 
@@ -80,6 +81,7 @@ G6.track(false);
     DashboardPageComponent,
     BtcScanResultPageComponent,
     EthScanResultPageComponent,
+    XrpScanResultPageComponent,
     CryptoPipe
   ],
   imports: [

@@ -1,0 +1,152 @@
+<nz-page-header [nzTitle]="'XRP Address 一 ' + pipeline.address">
+  <nz-page-header-extra>
+    <button (click)="openInV1()" nz-button nzType="default" nzShape="circle"><i nz-icon type="experiment"></i></button>
+  </nz-page-header-extra>
+</nz-page-header>
+<div nz-row>
+  <div nz-col>
+    <nz-breadcrumb style="margin: 16px;">
+      <nz-breadcrumb-item>Address Scan</nz-breadcrumb-item>
+      <nz-breadcrumb-item>Scan History</nz-breadcrumb-item>
+      <nz-breadcrumb-item>Result 一 {{pipeline.address}}</nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div>
+</div>
+
+
+
+<div style="padding: 12px;">
+  <nz-row [nzGutter]="16">
+    <nz-col [nzSpan]="6">
+      <nz-card>
+        <nz-statistic [nzValue]="pipeline.totalScore | number: '.1-3'" [nzTitle]="'Total Score'"
+          [nzValueStyle]="{ color: '#3F8600' }">
+        </nz-statistic>
+        <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="6">
+      <nz-card>
+        <nz-statistic [nzValue]="pipeline.totalScoreEv | number: '.1-3'" [nzTitle]="'Total Score EV'"
+          [nzValueStyle]="{ color: '#CF1322' }">
+        </nz-statistic>
+        <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="6">
+      <nz-card>
+        <nz-statistic [nzValue]="pipeline.avgScore | number: '.1-3'" [nzTitle]="'Average Score'"
+          [nzValueStyle]="{ color: '#3F8600' }">
+        </nz-statistic>
+        <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="6">
+      <nz-card>
+        <nz-statistic [nzValue]="pipeline.avgScoreEv | number: '.1-3'" [nzTitle]="'Average Score EV'"
+          [nzValueStyle]="{ color: '#CF1322' }">
+        </nz-statistic>
+        <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
+      </nz-card>
+    </nz-col>
+
+  </nz-row>
+</div>
+
+<nz-content style="margin:24px 16px 0;">
+  <nz-spin [nzSpinning]="isLoadingPipeline">
+    <div style="padding:24px; background: #fff; min-height: 550px;">
+      <div nz-row>
+        <div nz-col nzSpan="23">
+          <nz-tabset [nzTabPosition]="'right'" [nzType]="'line'">
+            <nz-tab [nzTitle]="'Taint'">
+              <h2>Taint Table</h2>
+              <nz-table #basicTable [nzLoading]="isAddressTaintJobLoading" [nzData]="addressTaintJobResultPage.records"
+                nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="addressTaintJobResultPageNo"
+                [(nzPageSize)]="addressTaintJobResultPageSize" [nzTotal]="addressTaintJobResultPage.totalRecords"
+                (nzPageIndexChange)="reloadAddressTaintJobResultPage(false)"
+                (nzPageSizeChange)="reloadAddressTaintJobResultPage(true)">
+                <thead>
+                  <tr>
+                    <th>
+                      Address
+                    </th>
+                    <th>Tags</th>
+                    <th>Total Amount</th>
+                    <th>Max Score EV</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr *ngFor="let data of basicTable.data">
+                    <td>
+                      <i class="direction-icon" *ngIf="data.direction==='FORWARD'" nz-icon nzType="swap-right"
+                        nzTheme="outline"></i>
+                      {{ data.address }}
+                      <i class="direction-icon" *ngIf="data.direction==='BACKWARD'" nz-icon nzType="swap-right"
+                        nzTheme="outline"></i>
+                    </td>
+                    <td>
+                      <nz-tag *ngFor="let tag of data.tags">
+                        {{tag}}
+                      </nz-tag>
+                    </td>
+
+                    <td>{{ data.totalAmount | crypto: 'wei' : 'xrp'}} XRP</td>
+                    <td>
+                      <span>{{ data.maxScoreEv | number:'.1-3'}}</span>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </nz-table>
+            </nz-tab>
+            <nz-tab [nzTitle]="'Flow'" (nzSelect)="flowTabSelected()">
+              <nz-spin [nzSpinning]="isLoadingDiagram" nzTip="Loading...">
+                <div nz-row>
+                  <div nz-col nzSpan="24">
+                    <h2>Flow Analysis</h2>
+                  </div>
+                </div>
+                <div nz-row>
+                  <div nz-col nzSpan="22" nzOffset="1" style="text-align: right;">
+                    <button (click)="initDiagram()" nz-button nzType="primary" nzShape="round"><i nz-icon
+                        nzType="reload" nzTheme="outline"></i>Reload</button>
+                  </div>
+                </div>
+                <div nz-row>
+                  <div nz-col nzSpan="22" nzOffset="1">
+                    <nz-divider></nz-divider>
+                  </div>
+                </div>
+                <div nz-row>
+                  <div nz-col nzSpan="22" nzOffset="1">
+                    <nz-slider [nzMarks]="dateRangeMarks" [nzMin]="0" [nzMax]="maxDays" [nzStep]="1" nzRange
+                      [ngModel]="dateRange" [nzTipFormatter]="dateRangeTipFormatter"></nz-slider>
+                  </div>
+                </div>
+
+                <div nz-row>
+                  <div nz-col nzSpan="22" nzOffset="1">
+                    <nz-divider></nz-divider>
+                  </div>
+                </div>
+
+                <div nz-row>
+                  <div nz-col nzSpan="24">
+                    <div class="flow-diagram" #flowDiagramDiv></div>
+                  </div>
+                </div>
+              </nz-spin>
+
+
+
+            </nz-tab>
+          </nz-tabset>
+        </div>
+      </div>
+
+    </div>
+  </nz-spin>
+
+</nz-content>

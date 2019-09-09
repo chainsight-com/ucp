@@ -31,7 +31,7 @@ import { Configuration }                                     from '../configurat
 })
 export class EthFlowRiskGraphJobApiService {
 
-    protected basePath = 'http://localhost:42691';
+    protected basePath = 'http://localhost:45531';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
