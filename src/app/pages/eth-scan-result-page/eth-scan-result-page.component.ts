@@ -404,6 +404,12 @@ export class EthScanResultPageComponent implements OnInit, OnDestroy {
   openInV1() {
     window.open('https://sitev1.unblock-analysis.com/result/' + this.pipeline.address + '/' + this.pipeline.maxLevel + '/' + this.pipeline.startingTime + '/' + this.pipeline.endingTime)
   }
+  getAvgScoreEvColor(avgScoreEv: number) {
+    if (avgScoreEv < 0.0005) {
+      return '#3F8600';
+    }
+    return '#CF1322';
+  }
 
 
 

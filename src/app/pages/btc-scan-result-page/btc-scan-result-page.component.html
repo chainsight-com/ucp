@@ -17,7 +17,7 @@
 
 <div style="padding: 12px;">
   <nz-row [nzGutter]="16">
-    <nz-col [nzSpan]="6">
+    <!-- <nz-col [nzSpan]="6">
       <nz-card>
         <nz-statistic [nzValue]="pipeline.totalScore | number: '.1-3'" [nzTitle]="'Total Score'"
           [nzValueStyle]="{ color: '#3F8600' }">
@@ -40,11 +40,11 @@
         </nz-statistic>
         <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
       </nz-card>
-    </nz-col>
+    </nz-col> -->
     <nz-col [nzSpan]="6">
       <nz-card>
         <nz-statistic [nzValue]="pipeline.avgScoreEv | number: '.1-3'" [nzTitle]="'Average Score EV'"
-          [nzValueStyle]="{ color: '#CF1322' }">
+          [nzValueStyle]="{ color: getAvgScoreEvColor(pipeline.avgScoreEv) }">
         </nz-statistic>
         <ng-template #prefixTplTwo><i nz-icon type="arrow-down"></i></ng-template>
       </nz-card>
