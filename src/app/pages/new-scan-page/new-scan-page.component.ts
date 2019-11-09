@@ -24,7 +24,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       scanType: ['BTC', [Validators.required]],
       address: ['', [Validators.required]],
-      maxLevel: [5, [Validators.required]],
+      maxLevel: [3, [Validators.required]],
       dateRange: [[]],
     });
 
