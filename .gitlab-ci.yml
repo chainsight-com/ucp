@@ -21,7 +21,7 @@ deploy-prod:
   image: google/cloud-sdk:252.0.0
   only:
     refs:
-    - /^\d+\.\d+\.\d+/
+    - /^\d+\.\d+\.\d+$/
   dependencies:
   - build-prod
   before_script:
@@ -41,7 +41,7 @@ rollout-prod:
     KUBE_DEPLOY_CONTAINER: unblock-ui
   only:
     refs:
-    - /^\d+\.\d+\.\d+/
+    - /^\d+\.\d+\.\d+$/
   before_script:
   - export PATH=/google-cloud-sdk/bin/:$PATH
   - echo $GCLOUD_SERVICE_KEY > $HOME/.config/gcloud/application_default_credentials.json
