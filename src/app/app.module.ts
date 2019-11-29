@@ -33,7 +33,7 @@ import { NewScanPageComponent } from './pages/new-scan-page/new-scan-page.compon
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 import { BASE_PATH, Configuration, ConfigurationParameters, ApiModule } from 'src/sdk';
 import { environment } from 'src/environments/environment';
-import { NoopInterceptor } from '@angular/common/http/src/interceptor';
+// import { NoopInterceptor } from '@angular/common/http/src/interceptor';
 import { LogoutInterceptor } from './interceptors/LogoutInterceptor';
 import { JwtInterceptor } from './interceptors/JwtInterceptor';
 import { BtcScanResultPageComponent } from './pages/btc-scan-result-page/btc-scan-result-page.component';

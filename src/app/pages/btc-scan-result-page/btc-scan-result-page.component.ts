@@ -35,7 +35,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
   public dateRangeMarks = {};
 
 
-  @ViewChild('flowDiagramDiv')
+  @ViewChild('flowDiagramDiv', { static: false })
   private flowDiagramRef: ElementRef;
 
   private diagram: go.Diagram;
