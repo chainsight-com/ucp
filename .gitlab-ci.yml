@@ -50,7 +50,7 @@ deploy-devel:
     refs:
     - /^\d+\.\d+\.\d+-beta$/
   dependencies:
-  - build-devel
+  - build-dev
   before_script:
   - export PATH=/google-cloud-sdk/bin/:$PATH
   - gcloud auth activate-service-account --key-file $PROFYU_GCLOUD_SERVICE_KEY
