@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject } from 'rxjs';
-import { AccountCtrlApiService } from 'src/sdk/api/account-ctrl.service';
-import { Account } from 'src/sdk/model/account';
+import { AccountApiService, Account } from '@profyu/unblock-ng-sdk';
 export const LOCAL_TOKEN_KEY = 'access_token';
 export const LOCAL_ME = 'me';
 
@@ -11,7 +10,7 @@ export const LOCAL_ME = 'me';
 })
 export class JwtService {
 
-  constructor(private jwtHelper: JwtHelperService, private accountApiService: AccountCtrlApiService) {
+  constructor(private jwtHelper: JwtHelperService, private accountApiService: AccountApiService) {
 
   }
   loginStatus$ = new BehaviorSubject<boolean>(false);

@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { HttpClient } from '@angular/common/http';
 import { take, takeUntil } from 'rxjs/operators';
-import { BtcAddressScanPipelineApiService, BtcSingleAddressRoot, EthAddressScanPipelineApiService, EthSingleAddressRoot, XrpAddressScanPipelineApiService, XrpSingleAddressRoot } from 'src/sdk';
+import { BtcAddressScanPipelineApiService, BtcSingleAddressRoot, EthAddressScanPipelineApiService, EthSingleAddressRoot, XrpAddressScanPipelineApiService, XrpSingleAddressRoot } from '@profyu/unblock-ng-sdk';
 import { Router } from '@angular/router';
 import { QrScannerService } from 'src/app/services/qr-scanner.service';
 import { Subject } from 'rxjs';

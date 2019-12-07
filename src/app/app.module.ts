@@ -31,7 +31,7 @@ import { MainLayoutPageComponent } from './pages/main-layout-page/main-layout-pa
 import { ScanHistoryPageComponent } from './pages/scan-history-page/scan-history-page.component';
 import { NewScanPageComponent } from './pages/new-scan-page/new-scan-page.component';
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
-import { BASE_PATH, Configuration, ConfigurationParameters, ApiModule } from 'src/sdk';
+import { BASE_PATH, Configuration, ConfigurationParameters, ApiModule } from '@profyu/unblock-ng-sdk';
 import { environment } from 'src/environments/environment';
 // import { NoopInterceptor } from '@angular/common/http/src/interceptor';
 import { LogoutInterceptor } from './interceptors/LogoutInterceptor';

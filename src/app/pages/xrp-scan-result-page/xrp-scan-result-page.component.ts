@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, pipe } from 'rxjs';
 import { takeUntil, take, mergeMap } from 'rxjs/operators';
 // tslint:disable-next-line: max-line-length
-import { XrpAddressScanPipeline, XrpAddressScanPipelineApiService, XrpFlowAddressTaintJobApiService, XrpFlowAddressTaintJobResultPage, XrpFlowRiskGraphJobApiService, XrpFlowRiskGraph } from 'src/sdk';
+import { XrpAddressScanPipeline, XrpAddressScanPipelineApiService, XrpFlowAddressTaintJobApiService, XrpFlowAddressTaintJobResultPage, XrpFlowRiskGraphJobApiService, XrpFlowRiskGraph } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
 import { CryptoPipe } from 'src/app/pipes/crypto.pipe';

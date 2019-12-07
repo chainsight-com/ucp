@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BtcAddressScanPipeline, BtcAddressScanPipelineApiService, PageOfBtcAddressScanPipeline, Account, EthAddressScanPipelineApiService, PageOfEthAddressScanPipeline, XrpAddressScanPipelineApiService } from 'src/sdk';
+import { BtcAddressScanPipeline, BtcAddressScanPipelineApiService, PageOfBtcAddressScanPipeline, Account, EthAddressScanPipelineApiService, PageOfEthAddressScanPipeline, XrpAddressScanPipelineApiService } from '@profyu/unblock-ng-sdk';
 import { take, filter } from 'rxjs/operators';
 import { JwtService } from 'src/app/services/jwt.service';
 import { Route, ActivatedRoute } from '@angular/router';

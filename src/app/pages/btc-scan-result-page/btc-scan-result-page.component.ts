@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Outp
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, pipe } from 'rxjs';
 import { takeUntil, take, mergeMap } from 'rxjs/operators';
-import { BtcAddressScanPipeline, BtcAddressScanPipelineApiService, BtcFlowAddressTaintJobApiService, BtcFlowAddressTaintJobResultPage, BtcFlowRiskGraphJobApiService, BtcFlowRiskGraph } from 'src/sdk';
+import { BtcAddressScanPipeline, BtcAddressScanPipelineApiService, BtcFlowAddressTaintJobApiService, BtcFlowAddressTaintJobResultPage, BtcFlowRiskGraphJobApiService, BtcFlowRiskGraph } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
 import { SankeyLayout } from '../../shared/sankey-layout';

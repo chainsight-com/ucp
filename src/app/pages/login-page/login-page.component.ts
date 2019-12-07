@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AuthApiService, TokenPair, GoogleOAuthCredential } from 'src/sdk';
+import { AuthApiService, TokenPair, GoogleOAuthCredential } from '@profyu/unblock-ng-sdk';
 import { merge } from 'd3';
 import { JwtService } from 'src/app/services/jwt.service';
 

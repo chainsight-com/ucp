@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Outp
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, pipe } from 'rxjs';
 import { takeUntil, take, mergeMap } from 'rxjs/operators';
-import { EthAddressScanPipeline, EthAddressScanPipelineApiService, EthFlowAddressTaintJobApiService, EthFlowAddressTaintJobResultPage, EthFlowRiskGraphJobApiService, EthFlowRiskGraph } from 'src/sdk';
+import { EthAddressScanPipeline, EthAddressScanPipelineApiService, EthFlowAddressTaintJobApiService, EthFlowAddressTaintJobResultPage, EthFlowRiskGraphJobApiService, EthFlowRiskGraph } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
 import { CryptoPipe } from 'src/app/pipes/crypto.pipe';
