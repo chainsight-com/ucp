@@ -12,7 +12,7 @@ build-dev:
   image: node:10.16.0-stretch
   only:
     refs:
-      - /^\d+\.\d+\.\d+-beta$/@unblock/unblock-api
+      - /^\d+\.\d+\.\d+-beta$/@unblock/unblock-ui
   script:
   - npm install
   - npm run build:dev
@@ -24,7 +24,7 @@ build-staging:
   image: node:10.16.0-stretch
   only:
     refs:
-      - /^\d+\.\d+\.\d+-ga$/@unblock/unblock-api
+      - /^\d+\.\d+\.\d+-ga$/@unblock/unblock-ui
   script:
   - npm install
   - npm run build:staging
@@ -36,7 +36,7 @@ build-prod:
   image: node:10.16.0-stretch
   only:
     refs:
-      - /^\d+\.\d+\.\d+$/@unblock/unblock-api
+      - /^\d+\.\d+\.\d+$/@unblock/unblock-ui
   script:
   - npm install
   - npm run build:prod
