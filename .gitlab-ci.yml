@@ -105,7 +105,7 @@ rollout-devel:
     refs:
     - /^\d+\.\d+\.\d+-beta$/
   script:
-  - kubectl --server=$DEV_KUBE_URL --token=$DEV_KUBE_TOKEN --insecure-skip-tls-verify=true -n $KUBE_DEPLOY_NS set image deployment.v1.apps/$KUBE_DEPLOY_APP $KUBE_DEPLOY_CONTAINER=$GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG --record
+  - kubectl --server=$DEV_KUBE_URL --token=$DEV_KUBE_TOKEN --insecure-skip-tls-verify=true -n $KUBE_DEPLOY_NS set image deployment.v1.apps/$KUBE_DEPLOY_APP $KUBE_DEPLOY_CONTAINER=$GCR_HOST/$PROFYU_GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG --record
 rollout-staging:
   stage: rollout
   image: profyu/gcloud-sdk:218.0.0
