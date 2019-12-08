@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Output, AfterViewInit, AfterViewChecked} from '@angular/core';
+import {Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Output, AfterViewInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Subject, pipe} from 'rxjs';
 import {takeUntil, take, mergeMap} from 'rxjs/operators';
@@ -9,7 +9,7 @@ import {
   BtcFlowAddressTaintJobResultPage,
   BtcFlowRiskGraphJobApiService,
   BtcFlowRiskGraph
-} from 'src/sdk';
+} from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
 import {SankeyLayout} from '../../shared/sankey-layout';
@@ -118,9 +118,10 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
     });
 
   }
+
   initDiagram(tag?: string) {
     setTimeout(() => {
-    this.isLoadingDiagram = true;
+      this.isLoadingDiagram = true;
     });
     const startingTime = moment(this.pipeline.startingTime).local().add(this.dateRange[0], 'days').toDate();
     const endingTime = moment(this.pipeline.startingTime).local().add(this.dateRange[1], 'days').toDate();
@@ -323,8 +324,6 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
             })
         );
     }
-
-
 
 
     this.btcFlowRiskGraphJobApiService.runFlowRiskGraphJobUsingPOSTDefault(0, 1000, {

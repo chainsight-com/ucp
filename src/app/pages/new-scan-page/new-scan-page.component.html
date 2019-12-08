@@ -9,13 +9,14 @@
     <div nz-row>
       <div nz-col nzSpan="12" nzOffset="6">
         <nz-card nzTitle="Start a new address scan">
-          Usage Quota:
-          <nz-progress
-            nz-tooltip
-            nzTitle="usageQuota"
-            [nzPercent]="60"
-            [nzSuccessPercent]="30"
-          ></nz-progress>
+          <div *ngIf="showQuota">
+            Usage Quota:
+            <nz-progress
+              nz-tooltip
+              [nzTitle]="usageQuota"
+              [nzPercent]="usageQuotaPercent"
+            ></nz-progress>
+          </div>
           <form nz-form [formGroup]="form">
 
             <nz-form-item>
@@ -33,7 +34,7 @@
               <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="address">Address</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                    <input nz-input formControlName="address" id="address" />
+                  <input nz-input formControlName="address" id="address"/>
                 </nz-input-group>
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch (click)="qrScan()"><i nz-icon type="qrcode"></i></button>
@@ -47,7 +48,7 @@
               <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="maxLevel">Max Level</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">
                 <nz-slider formControlName="maxLevel" id="maxLevel" [nzDefaultValue]="3" [nzTooltipVisible]="'always'"
-                  [nzMin]="2" [nzMax]="10" [nzStep]="1"></nz-slider>
+                           [nzMin]="2" [nzMax]="10" [nzStep]="1"></nz-slider>
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -58,7 +59,7 @@
             </nz-form-item>
             <nz-form-item>
               <nz-form-control [nzSm]="{ span: 16, offset: 6 }" [nzXs]="{ span: 24, offset: 0 }"
-                style="text-align: right;">
+                               style="text-align: right;">
                 <button nz-button nzType="default" (click)="clearForm()" [disabled]="isSubmitting">Reset</button>
                 <button nz-button nzType="primary" [nzLoading]="isSubmitting" (click)="submitForm()">Scan</button>
               </nz-form-control>

@@ -1,8 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { BtcAddressScanPipeline, BtcAddressScanPipelineApiService, PageOfBtcAddressScanPipeline, Account, EthAddressScanPipelineApiService, PageOfEthAddressScanPipeline, XrpAddressScanPipelineApiService } from 'src/sdk';
-import { take, filter } from 'rxjs/operators';
-import { JwtService } from 'src/app/services/jwt.service';
-import { Route, ActivatedRoute } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {
+  BtcAddressScanPipeline,
+  BtcAddressScanPipelineApiService,
+  PageOfBtcAddressScanPipeline,
+  Account,
+  EthAddressScanPipelineApiService,
+  PageOfEthAddressScanPipeline,
+  XrpAddressScanPipelineApiService
+} from '@profyu/unblock-ng-sdk';
+import {take, filter} from 'rxjs/operators';
+import {JwtService} from 'src/app/services/jwt.service';
+import {Route, ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-scan-history-page',
@@ -40,7 +48,8 @@ export class ScanHistoryPageComponent implements OnInit {
   public xrpPage = 1;
   public isXrpLoading = false;
 
-  constructor(private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService, private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService, private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService, private jwtService: JwtService, private activatedRoute: ActivatedRoute) { }
+  constructor(private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService, private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService, private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService, private jwtService: JwtService, private activatedRoute: ActivatedRoute) {
+  }
 
   ngOnInit() {
     this.me = this.jwtService.getMe();
@@ -72,13 +81,13 @@ export class ScanHistoryPageComponent implements OnInit {
     this.btcAddressScanPipelineApiService.paginateBtcAddressScanPipelinesUsingGETDefault(this.btcPage - 1, this.btcPageSize, this.me.id)
       .pipe(
         take(1),
-
       ).subscribe(page => {
-        this.btcPipelinePage = page;
-      }, console.error, () => {
-        this.isBtcLoading = false;
-      });
+      this.btcPipelinePage = page;
+    }, console.error, () => {
+      this.isBtcLoading = false;
+    });
   }
+
   reloadEthPipelines(reset: boolean) {
 
     if (reset) {
@@ -89,10 +98,10 @@ export class ScanHistoryPageComponent implements OnInit {
       .pipe(
         take(1),
       ).subscribe(page => {
-        this.ethPipelinePage = page;
-      }, console.error, () => {
-        this.isEthLoading = false;
-      });
+      this.ethPipelinePage = page;
+    }, console.error, () => {
+      this.isEthLoading = false;
+    });
   }
 
   reloadXrpPipelines(reset: boolean) {
@@ -105,10 +114,10 @@ export class ScanHistoryPageComponent implements OnInit {
       .pipe(
         take(1),
       ).subscribe(page => {
-        this.xrpPipelinePage = page;
-      }, console.error, () => {
-        this.isXrpLoading = false;
-      });
+      this.xrpPipelinePage = page;
+    }, console.error, () => {
+      this.isXrpLoading = false;
+    });
   }
 
 }

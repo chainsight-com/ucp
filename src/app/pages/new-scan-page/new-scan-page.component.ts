@@ -4,14 +4,14 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {take, takeUntil} from 'rxjs/operators';
 import {
-  AccountApiService,
-  BtcAddressScanPipelineApiService,
+  AccountApiService, BtcAddressScanPipelineApiService,
   BtcSingleAddressRoot,
   EthAddressScanPipelineApiService,
   EthSingleAddressRoot,
   XrpAddressScanPipelineApiService,
-  XrpSingleAddressRoot
-} from 'src/sdk';
+  XrpSingleAddressRoot,
+  Account
+} from '@profyu/unblock-ng-sdk';
 import {Router} from '@angular/router';
 import {QrScannerService} from 'src/app/services/qr-scanner.service';
 import {Subject} from 'rxjs';
@@ -28,6 +28,9 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
   public isSubmitting = false;
   private unsubscribe$ = new Subject<void>();
   public usageQuota = '';
+  public account: Account;
+  public showQuota = true;
+  public usageQuotaPercent: number;
 
   constructor(private router: Router,
               private qrScannerService: QrScannerService,
@@ -55,8 +58,21 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .subscribe(code => {
         this.form.controls.address.setValue(code);
       });
-    this.jwtService.getMe();
-    this.accountApiService.getAccountQuotaUsingGETDefault();
+    this.account = this.jwtService.getMe();
+    this.accountApiService.getAccountQuotaUsingGETDefault(this.account.id).pipe(
+      take(1)
+    ).subscribe(res => {
+      if (res.licenseType === 'TRIAL') {
+        this.showQuota = true;
+        this.usageQuota = '剩餘量:' + res.available + '/ 總用量:' + res.total;
+        this.usageQuotaPercent = (res.used / res.total) * 100;
+      } else if (res.licenseType === 'UNLIMITED') {
+        this.showQuota = false;
+      }
+
+    }, console.error, () => {
+
+    });
 
   }
 

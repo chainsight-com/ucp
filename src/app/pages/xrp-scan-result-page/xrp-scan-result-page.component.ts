@@ -1,15 +1,21 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Output, AfterViewInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, pipe } from 'rxjs';
-import { takeUntil, take, mergeMap } from 'rxjs/operators';
-// tslint:disable-next-line: max-line-length
-import { XrpAddressScanPipeline, XrpAddressScanPipelineApiService, XrpFlowAddressTaintJobApiService, XrpFlowAddressTaintJobResultPage, XrpFlowRiskGraphJobApiService, XrpFlowRiskGraph } from 'src/sdk';
+import {Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Output, AfterViewInit} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
+import {Subject, pipe} from 'rxjs';
+import {takeUntil, take, mergeMap} from 'rxjs/operators';
+import {
+  XrpAddressScanPipeline,
+  XrpAddressScanPipelineApiService,
+  XrpFlowAddressTaintJobApiService,
+  XrpFlowAddressTaintJobResultPage,
+  XrpFlowRiskGraphJobApiService,
+  XrpFlowRiskGraph
+} from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
-import { CryptoPipe } from 'src/app/pipes/crypto.pipe';
+import {CryptoPipe} from 'src/app/pipes/crypto.pipe';
 
 import * as moment from 'moment';
-import { SankeyLayout } from 'src/app/shared/sankey-layout';
+import {SankeyLayout} from 'src/app/shared/sankey-layout';
 
 @Component({
   selector: 'app-xrp-scan-result-page',
@@ -36,7 +42,7 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
   public dateRangeMarks = {};
 
 
-  @ViewChild('flowDiagramDiv', { static: false })
+  @ViewChild('flowDiagramDiv', {static: false})
   private flowDiagramRef: ElementRef;
 
   private diagram: go.Diagram;
@@ -46,11 +52,13 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject<void>();
   myDiagram: go.Diagram;
+
   constructor(private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService,
-    private xrpFlowAddressTaintJobApiService: XrpFlowAddressTaintJobApiService,
-    private xrpFlowRiskGraphJobApiService: XrpFlowRiskGraphJobApiService) { }
+              private activatedRoute: ActivatedRoute,
+              private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService,
+              private xrpFlowAddressTaintJobApiService: XrpFlowAddressTaintJobApiService,
+              private xrpFlowRiskGraphJobApiService: XrpFlowRiskGraphJobApiService) {
+  }
 
 
   flowTabSelected() {
@@ -59,6 +67,7 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
     }
 
   }
+
   ngOnInit() {
 
     this.activatedRoute.params
@@ -71,6 +80,7 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
         }
       });
   }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -82,16 +92,17 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.pipeline = pipeline;
-        this.maxDays = moment(this.pipeline.endingTime).diff(moment(this.pipeline.startingTime), 'days');
-        this.dateRangeMarks = { 0: moment(this.pipeline.startingTime).format('YYYY-MM-DD') };
-        this.dateRangeMarks[this.maxDays] = moment(this.pipeline.endingTime).format('YYYY-MM-DD');
-        this.dateRange = [0, this.maxDays];
-        this.reloadAddressTaintJobResultPage(true);
-      }, console.error, () => {
-        this.isLoadingPipeline = false;
-      });
+      this.pipeline = pipeline;
+      this.maxDays = moment(this.pipeline.endingTime).diff(moment(this.pipeline.startingTime), 'days');
+      this.dateRangeMarks = {0: moment(this.pipeline.startingTime).format('YYYY-MM-DD')};
+      this.dateRangeMarks[this.maxDays] = moment(this.pipeline.endingTime).format('YYYY-MM-DD');
+      this.dateRange = [0, this.maxDays];
+      this.reloadAddressTaintJobResultPage(true);
+    }, console.error, () => {
+      this.isLoadingPipeline = false;
+    });
   }
+
   reloadAddressTaintJobResultPage(reset: boolean) {
     if (reset) {
       this.addressTaintJobResultPageNo = 1;
@@ -101,10 +112,10 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1),
       ).subscribe(page => {
-        this.addressTaintJobResultPage = page;
-      }, console.error, () => {
-        this.isAddressTaintJobLoading = false;
-      });
+      this.addressTaintJobResultPage = page;
+    }, console.error, () => {
+      this.isAddressTaintJobLoading = false;
+    });
 
   }
 
@@ -121,13 +132,11 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
 
     // this function provides a common style for the TextBlocks
     function textStyle() {
-      return { font: 'bold 12pt Segoe UI, sans-serif', stroke: 'black', margin: new go.Margin(5, 5, 0, 5) };
+      return {font: 'bold 12pt Segoe UI, sans-serif', stroke: 'black', margin: new go.Margin(5, 5, 0, 5)};
     }
 
 
-
     const $ = go.GraphObject.make;  // for conciseness in defining templates
-
 
 
     if (!this.myDiagram) {
@@ -170,14 +179,18 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
               diagram.clearHighlighteds();
               node.isHighlighted = true;
               // for each Link coming out of the Node, set Link.isHighlighted
-              node.findLinksConnected().each(function (l) { l.isHighlighted = true; });
+              node.findLinksConnected().each(function (l) {
+                l.isHighlighted = true;
+              });
               // for each Node destination for the Node, set Node.isHighlighted
-              node.findNodesConnected().each(function (n) { n.isHighlighted = true; });
+              node.findNodesConnected().each(function (n) {
+                n.isHighlighted = true;
+              });
               diagram.commitTransaction('highlight');
             }
           },
           $(go.TextBlock, textStyle(),
-            { name: 'LTEXT' },
+            {name: 'LTEXT'},
             new go.Binding('text', 'ltext'),
           ),
           $(go.Shape,
@@ -193,7 +206,7 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
               height: 50,
               width: 20,
               toolTip: $('ToolTip',
-                $(go.TextBlock, { margin: 4 },
+                $(go.TextBlock, {margin: 4},
                   new go.Binding('text', 'toolTipText'))
               )
             },
@@ -209,9 +222,9 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
             }).ofObject()
           ),
           $(go.Panel, 'Vertical',
-            { defaultStretch: go.GraphObject.Horizontal },
+            {defaultStretch: go.GraphObject.Horizontal},
             $(go.TextBlock, textStyle(),
-              { name: 'TEXT' },
+              {name: 'TEXT'},
               new go.Binding('text'),
               new go.Binding('stroke', 'textColor')),
             $(go.TextBlock,
@@ -231,9 +244,7 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
               }).ofObject()
             )
           ),
-
         );
-
 
 
       // define the Link template
@@ -269,14 +280,14 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
             }
           },
           $(go.Shape, {
-            strokeWidth: 4,
-            stroke: 'rgba(173, 173, 173, 0.25)',
-            toolTip:
-              $('ToolTip',
-                $(go.TextBlock, { margin: 4 },
-                  new go.Binding('text', 'toolTipText'))
-              )
-          },
+              strokeWidth: 4,
+              stroke: 'rgba(173, 173, 173, 0.25)',
+              toolTip:
+                $('ToolTip',
+                  $(go.TextBlock, {margin: 4},
+                    new go.Binding('text', 'toolTipText'))
+                )
+            },
             new go.Binding('stroke', '', (l) => {
               if (l.isHighlighted) {
                 return 'rgba(255,0,0,0.4)';
@@ -299,11 +310,11 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
             }).ofObject(),
             new go.Binding('strokeWidth', 'width')),
           $(go.TextBlock, new go.Binding('text', '', (l) => {
-            if (l.isHighlighted) {
-              return l.data.text;
-            }
-            return null;
-          }).ofObject(),
+              if (l.isHighlighted) {
+                return l.data.text;
+              }
+              return null;
+            }).ofObject(),
             {
               segmentIndex: -1,
               segmentOffset: new go.Point(-60, 0),
@@ -313,13 +324,7 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
     }
 
 
-
-
-
-
     this.isLoadingDiagram = true;
-
-
 
 
     this.xrpFlowRiskGraphJobApiService.runFlowRiskGraphJobUsingPOSTDefault2(0, 10000, {
@@ -370,7 +375,6 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
     });
 
 
-
   }
 
 
@@ -400,10 +404,10 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
     const retVal = moment(this.pipeline.startingTime).local().add(value, 'days').format('YYYY-MM-DD');
     return retVal;
 
-  }
+  };
 
   openInV1() {
-    window.open('https://sitev1.unblock-analysis.com/result/' + this.pipeline.address + '/' + this.pipeline.maxLevel + '/' + this.pipeline.startingTime + '/' + this.pipeline.endingTime)
+    window.open('https://sitev1.unblock-analysis.com/result/' + this.pipeline.address + '/' + this.pipeline.maxLevel + '/' + this.pipeline.startingTime + '/' + this.pipeline.endingTime);
   }
 
   getAvgScoreEvColor(avgScoreEv: number) {
@@ -412,7 +416,6 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
     }
     return '#CF1322';
   }
-
 
 
 }

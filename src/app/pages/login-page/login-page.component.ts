@@ -1,14 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
-import { Subject } from 'rxjs';
-import { takeUntil, take, map, filter, switchMap, mergeMap } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AuthApiService, TokenPair, GoogleOAuthCredential } from 'src/sdk';
-import { merge } from 'd3';
-import { JwtService } from 'src/app/services/jwt.service';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {AuthService, GoogleLoginProvider} from 'angularx-social-login';
+import {Subject} from 'rxjs';
+import {takeUntil, take, map, filter, switchMap, mergeMap} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {environment} from 'src/environments/environment';
+import {Router} from '@angular/router';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {AuthApiService, TokenPair, GoogleOAuthCredential} from '@profyu/unblock-ng-sdk';
+import {merge} from 'd3';
+import {JwtService} from 'src/app/services/jwt.service';
 
 @Component({
   selector: 'app-login-page',
@@ -20,7 +20,13 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject<void>();
   validateForm: FormGroup;
-  constructor(private fb: FormBuilder, private authService: AuthService, private authApiService: AuthApiService, private httpClient: HttpClient, private jwtService: JwtService, private router: Router) {
+
+  constructor(private fb: FormBuilder,
+              private authService: AuthService,
+              private authApiService: AuthApiService,
+              private httpClient: HttpClient,
+              private jwtService: JwtService,
+              private router: Router) {
     this.validateForm = this.fb.group({
       userName: [null, [Validators.required]],
       password: [null, [Validators.required]],
