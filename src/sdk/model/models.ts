@@ -1,4 +1,5 @@
 export * from './account';
+export * from './account-quota';
 export * from './btc-address-scan-pipeline';
 export * from './btc-flow-address-tag-job';
 export * from './btc-flow-address-tag-job-result-page';

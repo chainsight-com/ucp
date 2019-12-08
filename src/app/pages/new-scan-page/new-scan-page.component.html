@@ -9,7 +9,15 @@
     <div nz-row>
       <div nz-col nzSpan="12" nzOffset="6">
         <nz-card nzTitle="Start a new address scan">
+          Usage Quota:
+          <nz-progress
+            nz-tooltip
+            nzTitle="usageQuota"
+            [nzPercent]="60"
+            [nzSuccessPercent]="30"
+          ></nz-progress>
           <form nz-form [formGroup]="form">
+
             <nz-form-item>
               <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="scanType">Type</nz-form-label>
               <nz-form-control [nzSm]="14" [nzXs]="24">

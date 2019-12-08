@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { Account } from '../model/account';
+import { AccountQuota } from '../model/account-quota';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -28,7 +29,7 @@ import { Configuration }                                     from '../configurat
 })
 export class AccountApiService {
 
-    protected basePath = 'http://localhost:45531';
+    protected basePath = 'http://localhost:43125';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
@@ -46,6 +47,42 @@ export class AccountApiService {
     }
 
 
+
+    /**
+     * 查詢試用量狀態
+     * @param id id
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAccountQuotaUsingGETDefault(id: number, observe?: 'body', reportProgress?: boolean): Observable<AccountQuota>;
+    public getAccountQuotaUsingGETDefault(id: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AccountQuota>>;
+    public getAccountQuotaUsingGETDefault(id: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AccountQuota>>;
+    public getAccountQuotaUsingGETDefault(id: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getAccountQuotaUsingGETDefault.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            '*/*'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<AccountQuota>(`${this.configuration.basePath}/api/account/${encodeURIComponent(String(id))}/quota`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 
     /**
      * getAccount

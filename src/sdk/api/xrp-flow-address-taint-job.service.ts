@@ -31,7 +31,7 @@ import { Configuration }                                     from '../configurat
 })
 export class XrpFlowAddressTaintJobApiService {
 
-    protected basePath = 'http://localhost:45531';
+    protected basePath = 'http://localhost:43125';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;

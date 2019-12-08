@@ -1,4 +1,4 @@
-## @unblock/unblock-ng-sdk@1.0.0
+## @profyu/unblock-ng-sdk@1.0.0
 
 ### Building
 
@@ -19,7 +19,7 @@ Navigate to the folder of your consuming project and run one of next commands.
 _published:_
 
 ```
-npm install @unblock/unblock-ng-sdk@1.0.0 --save
+npm install @profyu/unblock-ng-sdk@1.0.0 --save
 ```
 
 _without publishing (not recommended):_
@@ -39,7 +39,7 @@ npm link
 
 In your project:
 ```
-npm link @unblock/unblock-ng-sdk
+npm link @profyu/unblock-ng-sdk
 ```
 
 __Note for Windows users:__ The Angular CLI has troubles to use linked npm packages.
@@ -54,7 +54,7 @@ In your Angular project:
 
 ```
 // without configuring providers
-import { ApiModule } from '@unblock/unblock-ng-sdk';
+import { ApiModule } from '@profyu/unblock-ng-sdk';
 import { HttpClientModule } from '@angular/common/http';
 
 
@@ -74,7 +74,7 @@ export class AppModule {}
 
 ```
 // configuring providers
-import { ApiModule, Configuration, ConfigurationParameters } from '@unblock/unblock-ng-sdk';
+import { ApiModule, Configuration, ConfigurationParameters } from '@profyu/unblock-ng-sdk';
 
 export function apiConfigFactory (): Configuration => {
   const params: ConfigurationParameters = {
@@ -93,7 +93,7 @@ export class AppModule {}
 ```
 
 ```
-import { DefaultApi } from '@unblock/unblock-ng-sdk';
+import { DefaultApi } from '@profyu/unblock-ng-sdk';
 
 export class AppComponent {
 	 constructor(private apiGateway: DefaultApi) { }
@@ -132,7 +132,7 @@ export class AppModule {
 If different than the generated base path, during app bootstrap, you can provide the base path to your service. 
 
 ```
-import { BASE_PATH } from '@unblock/unblock-ng-sdk';
+import { BASE_PATH } from '@profyu/unblock-ng-sdk';
 
 bootstrap(AppComponent, [
     { provide: BASE_PATH, useValue: 'https://your-web-service.com' },
@@ -141,7 +141,7 @@ bootstrap(AppComponent, [
 or
 
 ```
-import { BASE_PATH } from '@unblock/unblock-ng-sdk';
+import { BASE_PATH } from '@profyu/unblock-ng-sdk';
 
 @NgModule({
     imports: [],
@@ -165,7 +165,7 @@ export const environment = {
 
 In the src/app/app.module.ts:
 ```
-import { BASE_PATH } from '@unblock/unblock-ng-sdk';
+import { BASE_PATH } from '@profyu/unblock-ng-sdk';
 import { environment } from '../environments/environment';
 
 @NgModule({

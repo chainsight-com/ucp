@@ -20,7 +20,7 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
-    "@ant-design/icons-angular": "2.0.1",
+    "@ant-design/icons-angular": "8.1.1",
     "@antv/g6": "^2.2.6",
     "@auth0/angular-jwt": "^2.1.0",
     "@types/bignumber.js": "^5.0.0",
@@ -33,7 +33,7 @@
     "gojs": "^2.0.16",
     "jsnetworkx": "^0.3.4",
     "moment": "^2.24.0",
-    "ng-zorro-antd": "^7.5.1",
+    "ng-zorro-antd": "^8.5.2",
     "rxjs": "~6.5.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

@@ -1,12 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 
-import { HttpClient } from '@angular/common/http';
-import { take, takeUntil } from 'rxjs/operators';
-import { BtcAddressScanPipelineApiService, BtcSingleAddressRoot, EthAddressScanPipelineApiService, EthSingleAddressRoot, XrpAddressScanPipelineApiService, XrpSingleAddressRoot } from 'src/sdk';
-import { Router } from '@angular/router';
-import { QrScannerService } from 'src/app/services/qr-scanner.service';
-import { Subject } from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {take, takeUntil} from 'rxjs/operators';
+import {
+  AccountApiService,
+  BtcAddressScanPipelineApiService,
+  BtcSingleAddressRoot,
+  EthAddressScanPipelineApiService,
+  EthSingleAddressRoot,
+  XrpAddressScanPipelineApiService,
+  XrpSingleAddressRoot
+} from 'src/sdk';
+import {Router} from '@angular/router';
+import {QrScannerService} from 'src/app/services/qr-scanner.service';
+import {Subject} from 'rxjs';
+import {JwtService} from '../../services/jwt.service';
 
 @Component({
   selector: 'app-new-scan-page',
@@ -18,7 +27,18 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public isSubmitting = false;
   private unsubscribe$ = new Subject<void>();
-  constructor(private router: Router, private qrScannerService: QrScannerService, private fb: FormBuilder, private httpClient: HttpClient, private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService, private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService, private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService) { }
+  public usageQuota = '';
+
+  constructor(private router: Router,
+              private qrScannerService: QrScannerService,
+              private fb: FormBuilder,
+              private httpClient: HttpClient,
+              private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService,
+              private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService,
+              private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService,
+              private accountApiService: AccountApiService,
+              private jwtService: JwtService) {
+  }
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -35,6 +55,8 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .subscribe(code => {
         this.form.controls.address.setValue(code);
       });
+    this.jwtService.getMe();
+    this.accountApiService.getAccountQuotaUsingGETDefault();
 
   }
 
@@ -72,56 +94,60 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
     }
 
 
-
   }
+
   submitBtc(body: BtcSingleAddressRoot) {
     this.isSubmitting = true;
     this.btcAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOSTDefault(body)
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
-          queryParams: {
-            type: 'BTC'
-          }
-        });
-      }, console.error, () => {
-        this.isSubmitting = false;
+      this.router.navigate(['main-layout', 'scan-history'], {
+        queryParams: {
+          type: 'BTC'
+        }
       });
+    }, console.error, () => {
+      this.isSubmitting = false;
+    });
   }
+
   submitEth(body: EthSingleAddressRoot) {
     this.isSubmitting = true;
     this.ethAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOSTDefault1(body)
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
-          queryParams: {
-            type: 'ETH'
-          }
-        });
-      }, console.error, () => {
-        this.isSubmitting = false;
+      this.router.navigate(['main-layout', 'scan-history'], {
+        queryParams: {
+          type: 'ETH'
+        }
       });
+    }, console.error, () => {
+      this.isSubmitting = false;
+    });
   }
+
   submitXrp(body: XrpSingleAddressRoot) {
     this.isSubmitting = true;
     this.xrpAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOSTDefault2(body)
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
-          queryParams: {
-            type: 'XRP'
-          }
-        });
-      }, console.error, () => {
-        this.isSubmitting = false;
+      this.router.navigate(['main-layout', 'scan-history'], {
+        queryParams: {
+          type: 'XRP'
+        }
       });
+    }, console.error, () => {
+      this.isSubmitting = false;
+    });
   }
+
   qrScan() {
     this.router.navigate(['main-layout', 'qr-scan']);
   }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

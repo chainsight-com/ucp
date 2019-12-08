@@ -1,7 +1,7 @@
 {
-  "name": "@unblock/unblock-ng-sdk",
+  "name": "@profyu/unblock-ng-sdk",
   "version": "1.0.0",
-  "description": "OpenAPI client for @unblock/unblock-ng-sdk",
+  "description": "OpenAPI client for @profyu/unblock-ng-sdk",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [
     "openapi-client",
