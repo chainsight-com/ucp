@@ -1,8 +1,8 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import {HttpClient} from '@angular/common/http';
-import {take, takeUntil} from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { take, takeUntil } from 'rxjs/operators';
 import {
   AccountApiService, BtcAddressScanPipelineApiService,
   BtcSingleAddressRoot,
@@ -10,12 +10,13 @@ import {
   EthSingleAddressRoot,
   XrpAddressScanPipelineApiService,
   XrpSingleAddressRoot,
-  Account
+  Account,
+  AccountQuota
 } from '@profyu/unblock-ng-sdk';
-import {Router} from '@angular/router';
-import {QrScannerService} from 'src/app/services/qr-scanner.service';
-import {Subject} from 'rxjs';
-import {JwtService} from '../../services/jwt.service';
+import { Router } from '@angular/router';
+import { QrScannerService } from 'src/app/services/qr-scanner.service';
+import { Subject } from 'rxjs';
+import { JwtService } from '../../services/jwt.service';
 
 @Component({
   selector: 'app-new-scan-page',
@@ -27,20 +28,41 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public isSubmitting = false;
   private unsubscribe$ = new Subject<void>();
+  public accountQuota: AccountQuota;
   public usageQuota = '';
   public account: Account;
-  public showQuota = true;
-  public usageQuotaPercent: number;
+
+  public quotaFormat = (percent: number) => `${this.quotaDisplay}`;
+
+  get showQuota(): boolean {
+    return this.isTrial;
+  }
+  get usageQuotaPercent(): number {
+    if (!this.showQuota) {
+      return null;
+    }
+    return Math.min(this.accountQuota.used / this.accountQuota.total * 100.0, 100.0);
+  }
+  get quotaDisplay(): string {
+    if (!this.showQuota) {
+      return null;
+    }
+    return `Used: ${this.accountQuota.used} / Total: ${this.accountQuota.total}`
+  }
+  get isTrial(): boolean {
+    return !!this.accountQuota && this.accountQuota.licenseType === 'TRIAL';
+  }
+
 
   constructor(private router: Router,
-              private qrScannerService: QrScannerService,
-              private fb: FormBuilder,
-              private httpClient: HttpClient,
-              private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService,
-              private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService,
-              private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService,
-              private accountApiService: AccountApiService,
-              private jwtService: JwtService) {
+    private qrScannerService: QrScannerService,
+    private fb: FormBuilder,
+    private httpClient: HttpClient,
+    private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService,
+    private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService,
+    private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService,
+    private accountApiService: AccountApiService,
+    private jwtService: JwtService) {
   }
 
   ngOnInit() {
@@ -62,19 +84,12 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
     this.accountApiService.getAccountQuotaUsingGETDefault(this.account.id).pipe(
       take(1)
     ).subscribe(res => {
-      if (res.licenseType === 'TRIAL') {
-        this.showQuota = true;
-        this.usageQuota = '剩餘量:' + res.available + '/ 總用量:' + res.total;
-        this.usageQuotaPercent = (res.used / res.total) * 100;
-      } else if (res.licenseType === 'UNLIMITED') {
-        this.showQuota = false;
-      }
-
-    }, console.error, () => {
-
-    });
+      this.accountQuota = res;
+    }, console.error);
 
   }
+
+
 
   clearForm() {
     this.form.reset();
@@ -118,14 +133,14 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-      this.router.navigate(['main-layout', 'scan-history'], {
-        queryParams: {
-          type: 'BTC'
-        }
+        this.router.navigate(['main-layout', 'scan-history'], {
+          queryParams: {
+            type: 'BTC'
+          }
+        });
+      }, console.error, () => {
+        this.isSubmitting = false;
       });
-    }, console.error, () => {
-      this.isSubmitting = false;
-    });
   }
 
   submitEth(body: EthSingleAddressRoot) {
@@ -134,14 +149,14 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-      this.router.navigate(['main-layout', 'scan-history'], {
-        queryParams: {
-          type: 'ETH'
-        }
+        this.router.navigate(['main-layout', 'scan-history'], {
+          queryParams: {
+            type: 'ETH'
+          }
+        });
+      }, console.error, () => {
+        this.isSubmitting = false;
       });
-    }, console.error, () => {
-      this.isSubmitting = false;
-    });
   }
 
   submitXrp(body: XrpSingleAddressRoot) {
@@ -150,14 +165,14 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-      this.router.navigate(['main-layout', 'scan-history'], {
-        queryParams: {
-          type: 'XRP'
-        }
+        this.router.navigate(['main-layout', 'scan-history'], {
+          queryParams: {
+            type: 'XRP'
+          }
+        });
+      }, console.error, () => {
+        this.isSubmitting = false;
       });
-    }, console.error, () => {
-      this.isSubmitting = false;
-    });
   }
 
   qrScan() {
@@ -168,5 +183,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
+
 
 }
