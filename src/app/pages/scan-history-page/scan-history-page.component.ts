@@ -11,6 +11,7 @@ import {
 import {take, filter} from 'rxjs/operators';
 import {JwtService} from 'src/app/services/jwt.service';
 import {Route, ActivatedRoute} from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-scan-history-page',

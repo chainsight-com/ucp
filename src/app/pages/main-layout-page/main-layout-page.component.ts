@@ -17,9 +17,15 @@ export class MainLayoutPageComponent implements OnInit {
   ngOnInit() {
   }
 
-  logout() {
+  async logout() {
     this.jwtService.removeToken();
-    this.authService.signOut(true);
+    try {
+      await this.authService.signOut(true);
+    } catch (err) {
+      console.error(err);
+    }
+
+
     this.router.navigateByUrl('/login');
   }
 

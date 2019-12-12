@@ -1,14 +1,15 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {AuthService, GoogleLoginProvider} from 'angularx-social-login';
-import {Subject} from 'rxjs';
-import {takeUntil, take, map, filter, switchMap, mergeMap} from 'rxjs/operators';
-import {HttpClient} from '@angular/common/http';
-import {environment} from 'src/environments/environment';
-import {Router} from '@angular/router';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {AuthApiService, TokenPair, GoogleOAuthCredential} from '@profyu/unblock-ng-sdk';
-import {merge} from 'd3';
-import {JwtService} from 'src/app/services/jwt.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
+import { Subject } from 'rxjs';
+import { takeUntil, take, map, filter, switchMap, mergeMap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AuthApiService, TokenPair, GoogleOAuthCredential, AccountCredentials } from '@profyu/unblock-ng-sdk';
+import { merge } from 'd3';
+import { JwtService } from 'src/app/services/jwt.service';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-login-page',
@@ -22,15 +23,16 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   validateForm: FormGroup;
 
   constructor(private fb: FormBuilder,
-              private authService: AuthService,
-              private authApiService: AuthApiService,
-              private httpClient: HttpClient,
-              private jwtService: JwtService,
-              private router: Router) {
+    private authService: AuthService,
+    private authApiService: AuthApiService,
+    private httpClient: HttpClient,
+    private jwtService: JwtService,
+    private router: Router,
+    private messageService: NzMessageService) {
     this.validateForm = this.fb.group({
-      userName: [null, [Validators.required]],
+      email: [null, [Validators.required]],
       password: [null, [Validators.required]],
-      remember: [true]
+
     });
   }
 
@@ -68,8 +70,26 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
 
-  login() {
+  loginWithGoogle() {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
+
+  login() {
+    const formValue = this.validateForm.value;
+
+    const body: AccountCredentials = {
+      email: formValue.email,
+      password: formValue.password
+    };
+
+    this.authApiService.authenticateUsingPOSTDefault(body)
+      .pipe(
+        take(1)
+      ).subscribe(tokenPair => {
+        this.jwtService.writeToken(tokenPair.token);
+      }, (err) => {
+        console.error(err);
+      });
   }
 
 }
