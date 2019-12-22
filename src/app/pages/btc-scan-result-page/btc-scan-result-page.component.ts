@@ -326,7 +326,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
     }
 
 
-    this.btcFlowRiskGraphJobApiService.runFlowRiskGraphJobUsingPOSTDefault(0, 1000, {
+    this.btcFlowRiskGraphJobApiService.runFlowRiskGraphJobUsingPOSTDefault(0, 10000, {
       flowRiskJobId: this.pipeline.flowRiskJobId,
       startingTime,
       endingTime,
