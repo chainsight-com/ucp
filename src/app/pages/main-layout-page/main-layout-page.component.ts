@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { JwtService } from 'src/app/services/jwt.service';
-import { AuthService } from 'angularx-social-login';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {JwtService} from 'src/app/services/jwt.service';
+import {AuthService} from 'angularx-social-login';
+import {Router} from '@angular/router';
+import {User} from '../../models/user';
 
 @Component({
   selector: 'app-main-layout-page',
@@ -11,10 +12,17 @@ import { Router } from '@angular/router';
 export class MainLayoutPageComponent implements OnInit {
 
   public isSideBarCollapsed = false;
+  public user: User;
 
-  constructor(private jwtService: JwtService, private authService: AuthService, private router: Router) { }
+  constructor(private jwtService: JwtService, private authService: AuthService, private router: Router) {
+  }
 
   ngOnInit() {
+    const res = this.jwtService.getMe();
+    console.log(res);
+    this.user = new User();
+    this.user.displayName = res.firstName;
+    this.user.email = res.email;
   }
 
   async logout() {
