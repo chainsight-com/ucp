@@ -25,7 +25,11 @@
     "@ant-design/icons-angular": "8.1.1",
     "@antv/g6": "^2.2.6",
     "@auth0/angular-jwt": "^2.1.0",
+<<<<<<< HEAD
     "@profyu/unblock-ng-sdk": "3.1.1-BETA",
+=======
+    "@profyu/unblock-ng-sdk": "3.0.8-BETA",
+>>>>>>> f4cbe4a6d3ff914d49783fe432cb7ebd12305096
     "@types/bignumber.js": "^5.0.0",
     "@types/d3": "4.13.0",
     "@zxing/ngx-scanner": "^1.7.1",

@@ -10,3 +10,53 @@
   background-size: contain;
   margin: 16px;
 }
+
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+nz-header {
+  background: #fff;
+  padding: 0;
+  .avatar{
+    float:right;
+    margin-left: 5px;
+    margin-right: 5px;
+    span{
+      margin: 5px;
+    }
+  }
+}
+
+nz-content {
+  margin: 0 16px;
+  .content{
+    height: 100%;
+    background: #fff;
+    margin: 10px;
+    padding: 20px;
+  }
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+.inner-content {
+  padding: 24px;
+  background: #fff;
+  min-height: 360px;
+}
+
+nz-footer {
+  text-align: center;
+  padding: 0;
+}

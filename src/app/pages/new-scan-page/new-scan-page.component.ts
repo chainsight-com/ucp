@@ -47,7 +47,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
     if (!this.showQuota) {
       return null;
     }
-    return `Used: ${this.accountQuota.used} / Total: ${this.accountQuota.total}`
+    return `Used: ${this.accountQuota.used} / Total: ${this.accountQuota.total}`;
   }
   get isTrial(): boolean {
     return !!this.accountQuota && this.accountQuota.licenseType === 'TRIAL';

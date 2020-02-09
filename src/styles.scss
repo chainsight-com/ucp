@@ -1,6 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~ng-zorro-antd/style/index.min.css"; /* Import basic styles */
+@import "~ng-zorro-antd/button/style/index.min.css"; /* Import styles of the component */
 Html, body{
 	height:100%;
     margin:0px;
     padding:0px;
+}
+
+.func-area {
+  height: 10%;
+
+  .search-input {
+    float: left;
+  }
+
+  .btn {
+    float: right;
+
+    button {
+      margin: 1px;
+    }
+  }
 }
