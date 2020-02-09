@@ -20,12 +20,20 @@
     <thead>
     <tr>
       <th>NameSpace</th>
-      <th>Status</th>
+      <th>Holder Id</th>
+      <th>Name</th>
+      <th>Risk Level</th>
+      <th>Last Scan At</th>
+      <th>Create At</th>
       <th>Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let data of basicTable.data">
+      <td>{{ data.namespace }}</td>
+      <td>{{ data.status }}</td>
+      <td>{{ data.namespace }}</td>
+      <td>{{ data.status }}</td>
       <td>{{ data.namespace }}</td>
       <td>{{ data.status }}</td>
       <td>

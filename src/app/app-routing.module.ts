@@ -16,6 +16,7 @@ import {HolderDetailComponent} from './pages/holder-detail/holder-detail.compone
 import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
 import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
 import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
+import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
 
 
 const routes: Routes = [
@@ -36,7 +37,7 @@ const routes: Routes = [
       {path: 'namespace', component: NameSpaceComponent},
       {path: 'holder', component: HolderComponent},
       {path: 'holder-detail/:id', component: HolderDetailComponent},
-      {path: 'holder-scan', component: HolderComponent},
+      {path: 'holder-scan', component: HolderScanComponent},
       {path: 'holder-scan-result/:id', component: HolderScanResultComponent},
       {path: 'holder-scan-schedule', component: HolderScanScheduleComponent},
       {path: 'holder-scan-schedule-add', component: HolderScanScheduleAddComponent},

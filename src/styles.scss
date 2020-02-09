@@ -6,3 +6,19 @@ Html, body{
     margin:0px;
     padding:0px;
 }
+
+.func-area {
+  height: 10%;
+
+  .search-input {
+    float: left;
+  }
+
+  .btn {
+    float: right;
+
+    button {
+      margin: 1px;
+    }
+  }
+}
