@@ -1,1 +1,29 @@
-<p>holder-scan-schedule works!</p>
+<nz-page-header nzTitle="Scan Schedules">
+</nz-page-header>
+<div class="func-area">
+  <div class="btn">
+    <button nz-button nzType="primary">Add Schedule</button>
+  </div>
+</div>
+<nz-table #basicTable [nzData]="listOfData">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Status</th>
+    <th>Next Scan At</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of basicTable.data">
+    <td>{{ data.name }}</td>
+    <td>{{ data.status }}</td>
+    <td>{{ data.nextScanAt }}</td>
+    <td>
+      <a>Edit</a>
+      <nz-divider nzType="vertical"></nz-divider>
+      <a>Delete</a>
+    </td>
+  </tr>
+  </tbody>
+</nz-table>

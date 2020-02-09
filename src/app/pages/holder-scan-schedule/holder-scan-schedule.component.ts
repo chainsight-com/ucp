@@ -7,9 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HolderScanScheduleComponent implements OnInit {
 
-  constructor() { }
+  listOfData: Array<any>;
+
+  constructor() {
+  }
 
   ngOnInit() {
+    this.listOfData = [{
+      'name': '#00003',
+      'status': 'Enabled',
+      'nextScanAt': '2020-01-01'
+    }];
   }
 
 }
