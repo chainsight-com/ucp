@@ -1,19 +1,20 @@
-import {Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Output, AfterViewInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {Subject, pipe} from 'rxjs';
-import {takeUntil, take, mergeMap} from 'rxjs/operators';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Output, AfterViewInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subject, pipe } from 'rxjs';
+import { takeUntil, take, mergeMap } from 'rxjs/operators';
 import {
   BtcAddressScanPipeline,
   BtcAddressScanPipelineApiService,
   BtcFlowAddressTaintJobApiService,
   BtcFlowAddressTaintJobResultPage,
   BtcFlowRiskGraphJobApiService,
-  BtcFlowRiskGraph
+  BtcFlowRiskGraph,
+  BtcFlowRiskWitnessPage
 } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
-import {SankeyLayout} from '../../shared/sankey-layout';
-import {CryptoPipe} from 'src/app/pipes/crypto.pipe';
+import { SankeyLayout } from '../../shared/sankey-layout';
+import { CryptoPipe } from 'src/app/pipes/crypto.pipe';
 
 import * as moment from 'moment';
 
@@ -24,8 +25,20 @@ import * as moment from 'moment';
 })
 export class BtcScanResultPageComponent implements OnInit, OnDestroy {
 
+
   public isLoadingPipeline = false;
   public pipeline: BtcAddressScanPipeline = {};
+
+  // witness
+  public isWitnessLoading = false;
+  public witnessPageNo = 0;
+  public witnessPageSize = 10000;
+  public witnessResultPage: BtcFlowRiskWitnessPage = {
+    hasNextPage: false,
+    records: [],
+  };
+
+  // taint
   public isAddressTaintJobLoading = false;
   public addressTaintJobResultPageNo = 0;
   public addressTaintJobResultPageSize = 30;
@@ -35,14 +48,23 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
   };
 
 
+
   public btcFlowRiskGraph: BtcFlowRiskGraph = {};
+
+  public witnessSummary = {
+    critical: 0,
+    high: 0,
+    medium: 0,
+    low: 0,
+    normal: 0,
+  };
 
   public maxDays = 1;
   public dateRange = [0, 1];
   public dateRangeMarks = {};
 
 
-  @ViewChild('flowDiagramDiv', {static: false})
+  @ViewChild('flowDiagramDiv', { static: false })
   private flowDiagramRef: ElementRef;
 
   private diagram: go.Diagram;
@@ -54,10 +76,10 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
   myDiagram: go.Diagram;
 
   constructor(private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService,
-              private btcFlowAddressTaintJobApiService: BtcFlowAddressTaintJobApiService,
-              private btcFlowRiskGraphJobApiService: BtcFlowRiskGraphJobApiService) {
+    private activatedRoute: ActivatedRoute,
+    private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService,
+    private btcFlowAddressTaintJobApiService: BtcFlowAddressTaintJobApiService,
+    private btcFlowRiskGraphJobApiService: BtcFlowRiskGraphJobApiService) {
   }
 
 
@@ -92,15 +114,16 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-      this.pipeline = pipeline;
-      this.maxDays = moment(this.pipeline.endingTime).diff(moment(this.pipeline.startingTime), 'days');
-      this.dateRangeMarks = {0: moment(this.pipeline.startingTime).format('YYYY-MM-DD')};
-      this.dateRangeMarks[this.maxDays] = moment(this.pipeline.endingTime).format('YYYY-MM-DD');
-      this.dateRange = [0, this.maxDays];
-      this.reloadAddressTaintJobResultPage(true);
-    }, console.error, () => {
-      this.isLoadingPipeline = false;
-    });
+        this.pipeline = pipeline;
+        this.maxDays = moment(this.pipeline.endingTime).diff(moment(this.pipeline.startingTime), 'days');
+        this.dateRangeMarks = { 0: moment(this.pipeline.startingTime).format('YYYY-MM-DD') };
+        this.dateRangeMarks[this.maxDays] = moment(this.pipeline.endingTime).format('YYYY-MM-DD');
+        this.dateRange = [0, this.maxDays];
+        this.reloadWitnessPage(true);
+        this.reloadAddressTaintJobResultPage(true);
+      }, console.error, () => {
+        this.isLoadingPipeline = false;
+      });
   }
 
   reloadAddressTaintJobResultPage(reset: boolean) {
@@ -108,14 +131,43 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
       this.addressTaintJobResultPageNo = 1;
     }
     this.isAddressTaintJobLoading = false;
-    this.btcFlowAddressTaintJobApiService.getFlowAddressTaintJobResultUsingGETDefault(this.pipeline.flowAddressTaintJobId, this.addressTaintJobResultPageNo - 1, this.addressTaintJobResultPageSize)
+    this.btcAddressScanPipelineApiService.getAddressScanTaintTableUsingGETDefault(this.pipeline.id, this.addressTaintJobResultPageNo - 1, this.addressTaintJobResultPageSize)
       .pipe(
         take(1),
       ).subscribe(page => {
-      this.addressTaintJobResultPage = page;
-    }, console.error, () => {
-      this.isAddressTaintJobLoading = false;
-    });
+        this.addressTaintJobResultPage = page;
+      }, console.error, () => {
+        this.isAddressTaintJobLoading = false;
+      });
+
+  }
+
+  reloadWitnessPage(reset: boolean) {
+    if (reset) {
+      this.witnessPageNo = 1;
+    }
+    this.isWitnessLoading = false;
+    this.btcAddressScanPipelineApiService.getAddressScanWitnessUsingGETDefault(this.pipeline.id, this.witnessPageNo - 1, this.witnessPageSize)
+      .pipe(
+        take(1),
+      ).subscribe(page => {
+        this.witnessResultPage = page;
+        this.witnessResultPage.records.forEach(r => {
+          if (r.riskLevel === 5) {
+            this.witnessSummary.critical += 1;
+          } else if (r.riskLevel === 4) {
+            this.witnessSummary.high += 1;
+          } else if (r.riskLevel === 3) {
+            this.witnessSummary.medium += 1;
+          } else if (r.riskLevel === 2) {
+            this.witnessSummary.low += 1;
+          } else if (r.riskLevel === 1) {
+            this.witnessSummary.normal += 1;
+          }
+        });
+      }, console.error, () => {
+        this.isWitnessLoading = false;
+      });
 
   }
 
@@ -134,7 +186,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
 
     // this function provides a common style for the TextBlocks
     function textStyle() {
-      return {font: 'bold 12pt Segoe UI, sans-serif', stroke: 'black', margin: new go.Margin(5, 5, 0, 5)};
+      return { font: 'bold 12pt Segoe UI, sans-serif', stroke: 'black', margin: new go.Margin(5, 5, 0, 5) };
     }
 
 
@@ -192,7 +244,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
             }
           },
           $(go.TextBlock, textStyle(),
-            {name: 'LTEXT'},
+            { name: 'LTEXT' },
             new go.Binding('text', 'ltext'),
           ),
           $(go.Shape,
@@ -208,7 +260,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
               height: 50,
               width: 20,
               toolTip: $('ToolTip',
-                $(go.TextBlock, {margin: 4},
+                $(go.TextBlock, { margin: 4 },
                   new go.Binding('text', 'toolTipText'))
               )
             },
@@ -224,9 +276,9 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
             }).ofObject()
           ),
           $(go.Panel, 'Vertical',
-            {defaultStretch: go.GraphObject.Horizontal},
+            { defaultStretch: go.GraphObject.Horizontal },
             $(go.TextBlock, textStyle(),
-              {name: 'TEXT'},
+              { name: 'TEXT' },
               new go.Binding('text'),
               new go.Binding('stroke', 'textColor')),
             $(go.TextBlock,
@@ -282,14 +334,14 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
             }
           },
           $(go.Shape, {
-              strokeWidth: 4,
-              stroke: 'rgba(173, 173, 173, 0.25)',
-              toolTip:
-                $('ToolTip',
-                  $(go.TextBlock, {margin: 4},
-                    new go.Binding('text', 'toolTipText'))
-                )
-            },
+            strokeWidth: 4,
+            stroke: 'rgba(173, 173, 173, 0.25)',
+            toolTip:
+              $('ToolTip',
+                $(go.TextBlock, { margin: 4 },
+                  new go.Binding('text', 'toolTipText'))
+              )
+          },
             new go.Binding('stroke', '', (l) => {
               if (l.isHighlighted) {
                 return 'rgba(255,0,0,0.4)';
@@ -312,11 +364,11 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
             }).ofObject(),
             new go.Binding('strokeWidth', 'width')),
           $(go.TextBlock, new go.Binding('text', '', (l) => {
-              if (l.isHighlighted) {
-                return l.data.text;
-              }
-              return null;
-            }).ofObject(),
+            if (l.isHighlighted) {
+              return l.data.text;
+            }
+            return null;
+          }).ofObject(),
             {
               segmentIndex: -1,
               segmentOffset: new go.Point(-60, 0),
@@ -326,12 +378,11 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
     }
 
 
-    this.btcFlowRiskGraphJobApiService.runFlowRiskGraphJobUsingPOSTDefault(0, 10000, {
-      flowRiskJobId: this.pipeline.flowRiskJobId,
+    this.btcAddressScanPipelineApiService.getAddressScanGraphUsingPOSTDefault(this.pipeline.id, 0, 10000, {
+
       startingTime,
       endingTime,
       address,
-      tag
     }).pipe(
       take(1)
     ).subscribe((graph) => {
@@ -345,9 +396,9 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
             key: node.address,
             color: '#f89602',
             text: node.address,
-            textColor: node.address === this.pipeline.address ? '#0040FF' : (node.tags.length ? 'red' : 'black'),
-            toolTipText: node.tags.length ? node.tags.join('\n') : null,
-            tags: node.tags,
+            textColor: node.address === this.pipeline.address ? '#0040FF' : 'black',
+            toolTipText: null,
+            tags: [],
 
           };
           return n;
