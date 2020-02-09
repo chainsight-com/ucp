@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-name-space',
@@ -7,9 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NameSpaceComponent implements OnInit {
 
-  constructor() { }
+  listOfData: Array<any>;
+
+  constructor() {
+  }
 
   ngOnInit() {
+    this.listOfData = [{
+      'namespace': 'VIP',
+      'status': 'Enabled'
+    }];
   }
 
 }

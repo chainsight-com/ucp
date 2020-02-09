@@ -17,6 +17,7 @@ export class JwtService {
   currentAccount$ = new BehaviorSubject<Account>(null);
   isTokenExpired(): boolean {
     const jwtStr = this.getToken();
+    console.log(jwtStr);
     if (jwtStr) {
       return this.jwtHelper.isTokenExpired(jwtStr);
     } else {
