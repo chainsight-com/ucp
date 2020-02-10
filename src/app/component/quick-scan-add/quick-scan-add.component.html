@@ -1,0 +1,26 @@
+<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+  <nz-form-item>
+    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired>Address</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input address!">
+      <input nz-input id="address" formControlName="address" placeholder="Address"/>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired>Max Level</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <nz-slider formControlName="maxLevel"></nz-slider>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired>RangePicker</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <nz-range-picker formControlName="rangePicker"></nz-range-picker>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 16, offset: 8 }">
+      <button nz-button nzType="primary">Submit</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

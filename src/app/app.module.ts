@@ -58,6 +58,7 @@ import { HolderScanScheduleComponent } from './pages/holder-scan-schedule/holder
 import { HolderDetailComponent } from './pages/holder-detail/holder-detail.component';
 import { HolderScanResultComponent } from './pages/holder-scan-result/holder-scan-result.component';
 import { HolderScanComponent } from './pages/holder-scan/holder-scan.component';
+import { QuickScanAddComponent } from './component/quick-scan-add/quick-scan-add.component';
 
 export function authServiceConfigFactory() {
   return new AuthServiceConfig([
@@ -102,7 +103,8 @@ G6.track(false);
     HolderScanScheduleComponent,
     HolderDetailComponent,
     HolderScanResultComponent,
-    HolderScanComponent
+    HolderScanComponent,
+    QuickScanAddComponent
   ],
   imports: [
     BrowserModule,

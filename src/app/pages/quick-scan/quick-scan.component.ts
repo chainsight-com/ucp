@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-quick-scan',
@@ -6,10 +6,26 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./quick-scan.component.scss']
 })
 export class QuickScanComponent implements OnInit {
+  tabs: Array<{ name: string }> = [
+    {name: 'BTC'},
+    {name: 'ETH'},
+    {name: 'BCH'},
+    {name: 'LTC'},
+    {name: 'USDT'},
+    {name: 'ZIL'}];
 
-  constructor() { }
+  selectedTab = this.tabs[0]['name'];
 
-  ngOnInit() {
+  constructor() {
   }
+
+  ngOnInit(): void {
+  }
+
+  clickTab(args: any[]): void {
+    console.log(args);
+    this.selectedTab = args[1]['name'];
+  }
+
 
 }

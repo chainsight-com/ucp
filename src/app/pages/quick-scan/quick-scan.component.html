@@ -1,1 +1,18 @@
-<p>quick-scan works!</p>
+<nz-page-header>
+  <nz-page-header-title>Quick Scan</nz-page-header-title>
+  <nz-page-header-subtitle>Start a new quick scan</nz-page-header-subtitle>
+</nz-page-header>
+<nz-content>
+  <nz-tabset [nzTabPosition]="'left'">
+    <nz-tab
+      *ngFor="let tab of tabs"
+      [nzTitle]="tab.name"
+      (nzClick)="clickTab(['click', tab])"
+    >
+      <app-quick-scan-add
+        [selectedTab]="selectedTab"
+      ></app-quick-scan-add>
+
+    </nz-tab>
+  </nz-tabset>
+</nz-content>
