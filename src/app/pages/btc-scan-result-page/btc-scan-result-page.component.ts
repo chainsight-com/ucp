@@ -32,7 +32,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
   // witness
   public isWitnessLoading = false;
   public witnessPageNo = 0;
-  public witnessPageSize = 10000;
+  public witnessPageSize = 500;
   public witnessResultPage: BtcFlowRiskWitnessPage = {
     hasNextPage: false,
     records: [],
