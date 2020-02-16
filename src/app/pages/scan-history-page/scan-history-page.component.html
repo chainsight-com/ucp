@@ -43,7 +43,7 @@
                         nzText="Running"></nz-badge>
                       <nz-badge *ngIf="data.status === 'FAILED'" nzStatus="error" nzText="Error"></nz-badge>
                     </td>
-                    <td><a [routerLink]="'/main-layout/btc-scan-result/' + data.id">{{ data.address }}</a></td>
+                    <td><a [routerLink]="'/btc-scan-result/' + data.id">{{ data.address }}</a></td>
                     <td>{{ data.maxLevel }}</td>
                     <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
                     <td>{{ data.createdTime | date: 'short' }}</td>
@@ -89,7 +89,7 @@
                         nzText="Running"></nz-badge>
                       <nz-badge *ngIf="data.status === 'FAILED'" nzStatus="error" nzText="Error"></nz-badge>
                     </td>
-                    <td><a [routerLink]="'/main-layout/eth-scan-result/' + data.id">{{ data.address }}</a></td>
+                    <td><a [routerLink]="'/eth-scan-result/' + data.id">{{ data.address }}</a></td>
                     <td>{{ data.maxLevel }}</td>
                     <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
                     <td>{{ data.createdTime | date: 'short' }}</td>
@@ -145,7 +145,7 @@
                             nzText="Running"></nz-badge>
                           <nz-badge *ngIf="data.status === 'FAILED'" nzStatus="error" nzText="Error"></nz-badge>
                         </td>
-                        <td><a [routerLink]="'/main-layout/xrp-scan-result/' + data.id">{{ data.address }}</a></td>
+                        <td><a [routerLink]="'/xrp-scan-result/' + data.id">{{ data.address }}</a></td>
                         <td>{{ data.maxLevel }}</td>
                         <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
                         <td>{{ data.createdTime | date: 'short' }}</td>

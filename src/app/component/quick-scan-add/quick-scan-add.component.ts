@@ -39,7 +39,6 @@ export class QuickScanAddComponent implements OnInit {
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if (this.validateForm.valid) {
-      // console.log('selected tab:', this.selectedIndex);
       console.log(this.validateForm.value);
       console.log(this._selectedTab);
     } else {

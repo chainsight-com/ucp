@@ -42,7 +42,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$)
     ).subscribe((isAuthenticated: boolean) => {
       if (isAuthenticated) {
-        this.router.navigateByUrl('/main-layout/new-scan');
+        this.router.navigateByUrl('/new-scan');
       }
     });
 

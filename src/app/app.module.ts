@@ -50,15 +50,189 @@ import {CryptoPipe} from './pipes/crypto.pipe';
 import {RouteReuseStrategy} from '@angular/router';
 import {EthScanResultPageComponent} from './pages/eth-scan-result-page/eth-scan-result-page.component';
 import {XrpScanResultPageComponent} from './pages/xrp-scan-result-page/xrp-scan-result-page.component';
-import { QuickScanComponent } from './pages/quick-scan/quick-scan.component';
-import { NameSpaceComponent } from './pages/name-space/name-space.component';
-import { HolderComponent } from './pages/holder/holder.component';
-import { HolderScanScheduleAddComponent } from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
-import { HolderScanScheduleComponent } from './pages/holder-scan-schedule/holder-scan-schedule.component';
-import { HolderDetailComponent } from './pages/holder-detail/holder-detail.component';
-import { HolderScanResultComponent } from './pages/holder-scan-result/holder-scan-result.component';
-import { HolderScanComponent } from './pages/holder-scan/holder-scan.component';
-import { QuickScanAddComponent } from './component/quick-scan-add/quick-scan-add.component';
+import {QuickScanComponent} from './pages/quick-scan/quick-scan.component';
+import {NameSpaceComponent} from './pages/name-space/name-space.component';
+import {HolderComponent} from './pages/holder/holder.component';
+import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
+import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
+import {HolderDetailComponent} from './pages/holder-detail/holder-detail.component';
+import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
+import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
+import {QuickScanAddComponent} from './component/quick-scan-add/quick-scan-add.component';
+import {CoreNgZorroModule} from '@profyu/core-ng-zorro';
+
+const menus: any[] = [
+
+  {
+    id: 'home',
+    name: 'Home',
+    path: 'dashboard',
+    url: null,
+    level: 1,
+    icon: 'home',
+    children: []
+  },
+  {
+    id: 'address-scan',
+    name: 'ADDRESS SCAN',
+    path: null,
+    url: null,
+    level: 1,
+    icon: 'area-chart',
+    children: [
+      {
+        id: 'new-scan',
+        name: 'NEW SCAN',
+        subtitle: 'Start a new quick scan',
+        path: 'new-scan',
+        url: null,
+        level: 2,
+        children: [],
+        icon: 'file',
+      },
+      {
+        id: 'scan-history',
+        name: 'SCAN HISTORY',
+        path: 'scan-history',
+        url: null,
+        level: 2,
+        icon: 'file',
+        children: []
+      }
+    ]
+  },
+  {
+    id: 'quick-scan',
+    name: 'QUICK SCAN',
+    context: null,
+    path: 'quick-scan',
+    url: null,
+    icon: 'bar-chart',
+    level: 1,
+    children: []
+  },
+  {
+    id: 'kyc-lookup',
+    name: 'KYC LOOKUP',
+    context: null,
+    path: '/',
+    url: null,
+    icon: 'area-chart',
+    level: 1,
+    children: []
+  },
+  {
+    id: 'holder-mgt',
+    name: 'HOLDER MANAGEMENT',
+    path: null,
+    url: null,
+    level: 1,
+    icon: 'area-chart',
+    children: [
+      {
+        id: 'namespace',
+        name: 'NAMESPACE',
+        path: 'namespace',
+        url: null,
+        icon: 'bar-chart',
+        level: 2,
+        children: []
+      },
+      {
+        id: 'holder',
+        name: 'HOLDER',
+        path: 'holder',
+        url: null,
+        level: 2,
+        icon: 'bar-chart',
+        children: []
+      }
+    ]
+  },
+  {
+    id: 'holder-scan',
+    name: 'HOLDER Scan',
+    path: null,
+    url: null,
+    level: 1,
+    icon: 'area-chart',
+    children: [
+      {
+        id: 'scan',
+        name: 'SCAN',
+        path: 'holder-scan',
+        url: null,
+        icon: 'bar-chart',
+        level: 2,
+        children: []
+      },
+      {
+        id: 'schedule',
+        name: 'SCHEDULE',
+        path: 'holder-scan-schedule',
+        url: null,
+        level: 2,
+        icon: 'bar-chart',
+        children: []
+      },
+      {
+        id: 'tx-monitoring',
+        name: 'TX MONITORING',
+        path: 'tx-monitoring',
+        url: null,
+        level: 2,
+        icon: 'bar-chart',
+        children: []
+      }
+    ]
+  },
+  {
+    id: 'ubo-identification',
+    name: 'UBO IDENTIFICATION',
+    path: 'ubo-identification',
+    url: null,
+    level: 1,
+    icon: 'area-chart',
+    children: []
+  },
+  {
+    id: 'settings',
+    name: 'SETTINGS',
+    path: '/',
+    url: null,
+    level: 1,
+    icon: 'area-chart',
+    children: [
+      {
+        id: 'wallet-config',
+        name: 'WALLET CONFIG',
+        path: 'wallet-config',
+        url: null,
+        icon: 'bar-chart',
+        level: 2,
+        children: []
+      },
+      {
+        id: 'role-permission',
+        name: 'ROLE&PERMISSION',
+        path: 'role-permission',
+        url: null,
+        level: 2,
+        icon: 'bar-chart',
+        children: []
+      },
+      {
+        id: 'billing',
+        name: 'BILLING',
+        path: 'billing',
+        url: null,
+        level: 2,
+        icon: 'bar-chart',
+        children: []
+      }
+    ]
+  }
+];
 
 export function authServiceConfigFactory() {
   return new AuthServiceConfig([
@@ -104,7 +278,7 @@ G6.track(false);
     HolderDetailComponent,
     HolderScanResultComponent,
     HolderScanComponent,
-    QuickScanAddComponent
+    QuickScanAddComponent,
   ],
   imports: [
     BrowserModule,
@@ -118,6 +292,7 @@ G6.track(false);
     SocialLoginModule,
     ZXingScannerModule,
     NzIconModule,
+    CoreNgZorroModule,
     JwtModule.forRoot({
       config: {
         tokenGetter,
@@ -133,8 +308,9 @@ G6.track(false);
       provide: AuthServiceConfig,
       useFactory: authServiceConfigFactory
     },
-    {provide: HTTP_INTERCEPTORS, useClass: LogoutInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+    // {provide: HTTP_INTERCEPTORS, useClass: LogoutInterceptor, multi: true},
+    // {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+    {provide: 'MENU_TREE_DATA', useValue: menus},
   ],
   bootstrap: [AppComponent]
 })
