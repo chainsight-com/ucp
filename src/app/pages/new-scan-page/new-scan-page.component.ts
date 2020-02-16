@@ -138,7 +138,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
+        this.router.navigate(['scan-history'], {
           queryParams: {
             type: 'BTC'
           }
@@ -154,7 +154,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
+        this.router.navigate(['scan-history'], {
           queryParams: {
             type: 'ETH'
           }
@@ -170,7 +170,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
+        this.router.navigate(['scan-history'], {
           queryParams: {
             type: 'XRP'
           }
@@ -186,7 +186,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
+        this.router.navigate(['scan-history'], {
           queryParams: {
             type: 'ZIL'
           }
@@ -197,7 +197,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
   }
 
   qrScan() {
-    this.router.navigate(['main-layout', 'qr-scan']);
+    this.router.navigate(['qr-scan']);
   }
 
   ngOnDestroy(): void {
