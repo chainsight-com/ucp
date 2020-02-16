@@ -50,7 +50,7 @@ import {CryptoPipe} from './pipes/crypto.pipe';
 import {RouteReuseStrategy} from '@angular/router';
 import {EthScanResultPageComponent} from './pages/eth-scan-result-page/eth-scan-result-page.component';
 import {XrpScanResultPageComponent} from './pages/xrp-scan-result-page/xrp-scan-result-page.component';
-<<<<<<< HEAD
+
 import { QuickScanComponent } from './pages/quick-scan/quick-scan.component';
 import { NameSpaceComponent } from './pages/name-space/name-space.component';
 import { HolderComponent } from './pages/holder/holder.component';
@@ -61,16 +61,7 @@ import { HolderScanResultComponent } from './pages/holder-scan-result/holder-sca
 import { HolderScanComponent } from './pages/holder-scan/holder-scan.component';
 import { QuickScanAddComponent } from './component/quick-scan-add/quick-scan-add.component';
 import { ZilScanResultPageComponent } from './pages/zil-scan-result-page/zil-scan-result-page.component';
-=======
-import {QuickScanComponent} from './pages/quick-scan/quick-scan.component';
-import {NameSpaceComponent} from './pages/name-space/name-space.component';
-import {HolderComponent} from './pages/holder/holder.component';
-import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
-import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
-import {HolderDetailComponent} from './pages/holder-detail/holder-detail.component';
-import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
-import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
-import {QuickScanAddComponent} from './component/quick-scan-add/quick-scan-add.component';
+
 import {CoreNgZorroModule} from '@profyu/core-ng-zorro';
 
 const menus: any[] = [
@@ -245,7 +236,7 @@ const menus: any[] = [
     ]
   }
 ];
->>>>>>> 138e680399ceef2f517a8a5f18e0b96e21332629
+
 
 export function authServiceConfigFactory() {
   return new AuthServiceConfig([

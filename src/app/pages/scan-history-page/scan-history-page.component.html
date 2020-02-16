@@ -200,7 +200,7 @@
                         nzText="Running"></nz-badge>
                       <nz-badge *ngIf="data.status === 'FAILED'" nzStatus="error" nzText="Error"></nz-badge>
                     </td>
-                    <td><a [routerLink]="'/main-layout/zil-scan-result/' + data.id">{{ data.address }}</a></td>
+                    <td><a [routerLink]="'/zil-scan-result/' + data.id">{{ data.address }}</a></td>
                     <td>{{ data.maxLevel }}</td>
                     <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
                     <td>{{ data.createdTime | date: 'short' }}</td>
