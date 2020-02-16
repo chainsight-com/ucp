@@ -6,7 +6,8 @@ import {
   Account,
   EthAddressScanPipelineApiService,
   PageOfEthAddressScanPipeline,
-  XrpAddressScanPipelineApiService
+  XrpAddressScanPipelineApiService,
+  ZilAddressScanPipelineApiService
 } from '@profyu/unblock-ng-sdk';
 import {take, filter} from 'rxjs/operators';
 import {JwtService} from 'src/app/services/jwt.service';
@@ -34,6 +35,7 @@ export class ScanHistoryPageComponent implements OnInit {
   };
 
   public me: Account;
+
   public btcPipelinePage: PageOfBtcAddressScanPipeline = this.EMPTY_PAGE;
   public btcPageSize = 30;
   public btcPage = 1;
@@ -49,7 +51,18 @@ export class ScanHistoryPageComponent implements OnInit {
   public xrpPage = 1;
   public isXrpLoading = false;
 
-  constructor(private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService, private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService, private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService, private jwtService: JwtService, private activatedRoute: ActivatedRoute) {
+  public zilPipelinePage: PageOfBtcAddressScanPipeline = this.EMPTY_PAGE;
+  public zilPageSize = 30;
+  public zilPage = 1;
+  public isZilLoading = false;
+
+  constructor(
+    private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService,
+    private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService,
+    private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService,
+    private zilAddressScanPipelineApiService: ZilAddressScanPipelineApiService,
+    private jwtService: JwtService,
+    private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -57,6 +70,7 @@ export class ScanHistoryPageComponent implements OnInit {
     this.reloadBtcPipelines(true);
     this.reloadEthPipelines(true);
     this.reloadXrpPipelines(true);
+    this.reloadZilPipelines(true);
     this.activatedRoute.queryParams
       .pipe(
         filter(params => params.type)
@@ -68,6 +82,8 @@ export class ScanHistoryPageComponent implements OnInit {
           this.selectedTabIndex = 1;
         } else if (params.type === 'XRP') {
           this.selectedTabIndex = 2;
+        } else if (params.type === 'ZIL') {
+          this.selectedTabIndex = 3;
         }
       });
   }
@@ -118,6 +134,22 @@ export class ScanHistoryPageComponent implements OnInit {
       this.xrpPipelinePage = page;
     }, console.error, () => {
       this.isXrpLoading = false;
+    });
+  }
+
+  reloadZilPipelines(reset: boolean) {
+
+    if (reset) {
+      this.zilPage = 1;
+    }
+    this.isZilLoading = true;
+    this.zilAddressScanPipelineApiService.paginateZilAddressScanPipelinesUsingGETDefault(this.btcPage - 1, this.btcPageSize, this.me.id)
+      .pipe(
+        take(1),
+      ).subscribe(page => {
+      this.zilPipelinePage = page;
+    }, console.error, () => {
+      this.isZilLoading = false;
     });
   }
 
