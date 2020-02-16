@@ -17,6 +17,7 @@ import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-
 import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
 import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
 import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
+import { ZilScanResultPageComponent } from './pages/zil-scan-result-page/zil-scan-result-page.component';
 
 
 const routes: Routes = [
@@ -28,6 +29,7 @@ const routes: Routes = [
   {path: 'btc-scan-result/:id', component: BtcScanResultPageComponent},
   {path: 'eth-scan-result/:id', component: EthScanResultPageComponent},
   {path: 'xrp-scan-result/:id', component: XrpScanResultPageComponent},
+  {path: 'zil-scan-result/:id', component: ZilScanResultPageComponent},
   {path: 'qr-scan', component: ScanPageComponent},
   {path: 'quick-scan', component: QuickScanComponent},
   {path: 'namespace', component: NameSpaceComponent},

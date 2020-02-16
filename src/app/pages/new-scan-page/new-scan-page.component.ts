@@ -11,7 +11,9 @@ import {
   XrpAddressScanPipelineApiService,
   XrpSingleAddressRoot,
   Account,
-  AccountQuota
+  AccountQuota,
+  ZilAddressScanPipelineApiService,
+  ZilSingleAddressRoot
 } from '@profyu/unblock-ng-sdk';
 import { Router } from '@angular/router';
 import { QrScannerService } from 'src/app/services/qr-scanner.service';
@@ -61,6 +63,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
     private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService,
     private ethAddressScanPipelineApiService: EthAddressScanPipelineApiService,
     private xrpAddressScanPipelineApiService: XrpAddressScanPipelineApiService,
+    private zilAddressScanPipelineApiService: ZilAddressScanPipelineApiService,
     private accountApiService: AccountApiService,
     private jwtService: JwtService) {
   }
@@ -108,7 +111,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
 
     const formValue = this.form.value;
 
-    const body: BtcSingleAddressRoot | EthSingleAddressRoot | XrpSingleAddressRoot = {
+    const body: BtcSingleAddressRoot | EthSingleAddressRoot | XrpSingleAddressRoot | ZilSingleAddressRoot = {
       address: formValue.address,
       maxLevel: formValue.maxLevel,
       startingTime: formValue.dateRange[0],
@@ -122,6 +125,8 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       this.submitEth(body);
     } else if (formValue.scanType === 'XRP') {
       this.submitXrp(body);
+    } else if (formValue.scanType === 'ZIL') {
+      this.submitZil(body);
     }
 
 
@@ -133,7 +138,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
+        this.router.navigate(['scan-history'], {
           queryParams: {
             type: 'BTC'
           }
@@ -149,7 +154,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
+        this.router.navigate(['scan-history'], {
           queryParams: {
             type: 'ETH'
           }
@@ -165,7 +170,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       .pipe(
         take(1)
       ).subscribe(pipeline => {
-        this.router.navigate(['main-layout', 'scan-history'], {
+        this.router.navigate(['scan-history'], {
           queryParams: {
             type: 'XRP'
           }
@@ -175,8 +180,24 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
       });
   }
 
+  submitZil(body: ZilSingleAddressRoot) {
+    this.isSubmitting = true;
+    this.zilAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOSTDefault3(body)
+      .pipe(
+        take(1)
+      ).subscribe(pipeline => {
+        this.router.navigate(['scan-history'], {
+          queryParams: {
+            type: 'ZIL'
+          }
+        });
+      }, console.error, () => {
+        this.isSubmitting = false;
+      });
+  }
+
   qrScan() {
-    this.router.navigate(['main-layout', 'qr-scan']);
+    this.router.navigate(['qr-scan']);
   }
 
   ngOnDestroy(): void {

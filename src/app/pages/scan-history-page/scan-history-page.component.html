@@ -166,6 +166,51 @@
                   </nz-table>
                 </nz-spin>
           </nz-tab>
+          <nz-tab [nzTitle]="'ZIL'">
+            <div nz-row style="margin-bottom: 16px;">
+              <div nz-col nzSpan="24" style="text-align: right;">
+                <button (click)="reloadZilPipelines(false)" nz-button nzType="primary" nzShape="round"><i nz-icon
+                    nzType="reload" nzTheme="outline"></i>Reload</button>
+              </div>
+            </div>
+            <nz-spin [nzSpinning]="isZilLoading">
+              <nz-table #zilTable [nzData]="zilPipelinePage.content" nzShowSizeChanger [nzFrontPagination]="false"
+                [(nzPageIndex)]="zilPage" [(nzPageSize)]="zilPageSize" [nzTotal]="zilPipelinePage.totalElements"
+                (nzPageIndexChange)="reloadZilPipelines(false)" (nzPageSizeChange)="reloadZilPipelines(true)">
+                <thead>
+                  <tr>
+                    <th>
+                      Status
+                    </th>
+                    <th>
+                      Address
+                    </th>
+                    <th>Max Level</th>
+                    <th>Time Range</th>
+                    <th>Created Time</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr *ngFor="let data of zilTable.data">
+                    <td>
+                      <nz-badge *ngIf="data.status === 'COMPLETED'" nzStatus="success" nzText="Success"></nz-badge>
+                      <nz-badge *ngIf="data.status === 'PENDING' || data.status === 'RUNNING'" nzStatus="processing"
+                        nzText="Running"></nz-badge>
+                      <nz-badge *ngIf="data.status === 'FAILED'" nzStatus="error" nzText="Error"></nz-badge>
+                    </td>
+                    <td><a [routerLink]="'/zil-scan-result/' + data.id">{{ data.address }}</a></td>
+                    <td>{{ data.maxLevel }}</td>
+                    <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
+                    <td>{{ data.createdTime | date: 'short' }}</td>
+
+                  </tr>
+                </tbody>
+              </nz-table>
+            </nz-spin>
+
+          </nz-tab>
         </nz-tabset>
       </div>
     </div>

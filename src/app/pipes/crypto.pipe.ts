@@ -15,6 +15,10 @@ export class CryptoPipe implements PipeTransform {
       if (to === 'eth') {
         return new BigNumber(value).multipliedBy('1e-18').toNumber();
       }
+    } else if (from === 'qa') {
+      if (to === 'zil') {
+        return new BigNumber(value).multipliedBy('1e-12').toNumber();
+      }
     }
     return value;
   }
