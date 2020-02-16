@@ -4,34 +4,32 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {ZXingScannerModule} from '@zxing/ngx-scanner';
-import {NgZorroAntdModule, NZ_I18N, en_US, NZ_ICONS, NzIconModule} from 'ng-zorro-antd';
+import {en_US, NgZorroAntdModule, NZ_I18N, NZ_ICONS, NzIconModule} from 'ng-zorro-antd';
 import {
-  NotificationOutline,
-  LaptopOutline,
-  UserOutline,
-  MailOutline,
-  GoogleOutline,
   ArrowLeftOutline,
-  QrcodeOutline,
-  LockOutline,
-  SecurityScanOutline,
   DashboardOutline,
-  MenuFoldOutline,
-  ReloadOutline,
+  ExperimentOutline,
+  GoogleOutline,
+  LaptopOutline,
+  LockOutline,
   LogoutOutline,
+  MailOutline,
+  MenuFoldOutline,
+  NotificationOutline,
+  QrcodeOutline,
+  ReloadOutline,
+  SecurityScanOutline,
   SwapLeftOutline,
   SwapRightOutline,
-  ExperimentOutline
+  UserOutline
 } from '@ant-design/icons-angular/icons';
-
-const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline, SwapLeftOutline, SwapRightOutline, ExperimentOutline];
 import {registerLocaleData} from '@angular/common';
 import en from '@angular/common/locales/zh';
 import {IconDefinition} from '@ant-design/icons-angular';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import G6 from '@antv/g6';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SocialLoginModule, AuthServiceConfig, GoogleLoginProvider} from 'angularx-social-login';
+import {AuthServiceConfig, GoogleLoginProvider, SocialLoginModule} from 'angularx-social-login';
 import {LoginPageComponent} from './pages/login-page/login-page.component';
 import {JwtModule} from '@auth0/angular-jwt';
 import {LOCAL_TOKEN_KEY} from './services/jwt.service';
@@ -40,29 +38,28 @@ import {MainLayoutPageComponent} from './pages/main-layout-page/main-layout-page
 import {ScanHistoryPageComponent} from './pages/scan-history-page/scan-history-page.component';
 import {NewScanPageComponent} from './pages/new-scan-page/new-scan-page.component';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
-import {BASE_PATH, Configuration, ConfigurationParameters, ApiModule} from '@profyu/unblock-ng-sdk';
+import {BASE_PATH} from '@profyu/unblock-ng-sdk';
 import {environment} from 'src/environments/environment';
 // import { NoopInterceptor } from '@angular/common/http/src/interceptor';
-import {LogoutInterceptor} from './interceptors/LogoutInterceptor';
-import {JwtInterceptor} from './interceptors/JwtInterceptor';
 import {BtcScanResultPageComponent} from './pages/btc-scan-result-page/btc-scan-result-page.component';
 import {CryptoPipe} from './pipes/crypto.pipe';
-import {RouteReuseStrategy} from '@angular/router';
 import {EthScanResultPageComponent} from './pages/eth-scan-result-page/eth-scan-result-page.component';
 import {XrpScanResultPageComponent} from './pages/xrp-scan-result-page/xrp-scan-result-page.component';
 
-import { QuickScanComponent } from './pages/quick-scan/quick-scan.component';
-import { NameSpaceComponent } from './pages/name-space/name-space.component';
-import { HolderComponent } from './pages/holder/holder.component';
-import { HolderScanScheduleAddComponent } from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
-import { HolderScanScheduleComponent } from './pages/holder-scan-schedule/holder-scan-schedule.component';
-import { HolderDetailComponent } from './pages/holder-detail/holder-detail.component';
-import { HolderScanResultComponent } from './pages/holder-scan-result/holder-scan-result.component';
-import { HolderScanComponent } from './pages/holder-scan/holder-scan.component';
-import { QuickScanAddComponent } from './component/quick-scan-add/quick-scan-add.component';
-import { ZilScanResultPageComponent } from './pages/zil-scan-result-page/zil-scan-result-page.component';
+import {QuickScanComponent} from './pages/quick-scan/quick-scan.component';
+import {NameSpaceComponent} from './pages/name-space/name-space.component';
+import {HolderComponent} from './pages/holder/holder.component';
+import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
+import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
+import {HolderDetailComponent} from './pages/holder-detail/holder-detail.component';
+import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
+import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
+import {QuickScanAddComponent} from './component/quick-scan-add/quick-scan-add.component';
+import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-result-page.component';
 
 import {CoreNgZorroModule} from '@profyu/core-ng-zorro';
+
+const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline, SwapLeftOutline, SwapRightOutline, ExperimentOutline];
 
 const menus: any[] = [
 
@@ -106,7 +103,7 @@ const menus: any[] = [
   },
   {
     id: 'quick-scan',
-    name: 'QUICK SCAN',
+    subtitle: 'Start a new quick scan',
     context: null,
     path: 'quick-scan',
     url: null,
@@ -118,7 +115,7 @@ const menus: any[] = [
     id: 'kyc-lookup',
     name: 'KYC LOOKUP',
     context: null,
-    path: '/',
+    path: 'kyc-lookup',
     url: null,
     icon: 'area-chart',
     level: 1,
