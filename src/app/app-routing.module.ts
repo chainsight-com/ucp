@@ -21,6 +21,7 @@ import { ZilScanResultPageComponent } from './pages/zil-scan-result-page/zil-sca
 
 
 const routes: Routes = [
+<<<<<<< HEAD
   {path: 'login', component: LoginPageComponent},
 
   {
@@ -49,6 +50,26 @@ const routes: Routes = [
   // { path: 'search', component: SearchComponent },
   // { path: 'result/:keyword/:maxDist/:starting/:ending', component: SearchResultPageComponent },
   {path: '**', component: LoginPageComponent}
+=======
+  // {path: 'login', component: LoginPageComponent},
+  {path: 'new-scan', component: NewScanPageComponent},
+  {path: 'dashboard', component: DashboardPageComponent},
+  {path: 'new-scan', component: NewScanPageComponent},
+  {path: 'scan-history', component: ScanHistoryPageComponent},
+  {path: 'btc-scan-result/:id', component: BtcScanResultPageComponent},
+  {path: 'eth-scan-result/:id', component: EthScanResultPageComponent},
+  {path: 'xrp-scan-result/:id', component: XrpScanResultPageComponent},
+  {path: 'qr-scan', component: ScanPageComponent},
+  {path: 'quick-scan', component: QuickScanComponent},
+  {path: 'namespace', component: NameSpaceComponent},
+  {path: 'holder', component: HolderComponent},
+  {path: 'holder-detail/:id', component: HolderDetailComponent},
+  {path: 'holder-scan', component: HolderScanComponent},
+  {path: 'holder-scan-result/:id', component: HolderScanResultComponent},
+  {path: 'holder-scan-schedule', component: HolderScanScheduleComponent},
+  {path: 'holder-scan-schedule-add', component: HolderScanScheduleAddComponent},
+  {path: '**', component: DashboardPageComponent}
+>>>>>>> 138e680399ceef2f517a8a5f18e0b96e21332629
 ];
 
 @NgModule({
