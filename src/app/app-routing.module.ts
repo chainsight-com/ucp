@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
-import {LoginPageComponent} from './pages/login-page/login-page.component';
+import {RouterModule, Routes} from '@angular/router';
 import {ScanPageComponent} from './pages/scan-page/scan-page.component';
-import {MainLayoutPageComponent} from './pages/main-layout-page/main-layout-page.component';
 import {NewScanPageComponent} from './pages/new-scan-page/new-scan-page.component';
 import {ScanHistoryPageComponent} from './pages/scan-history-page/scan-history-page.component';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
@@ -17,7 +15,8 @@ import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-
 import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
 import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
 import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
-import { ZilScanResultPageComponent } from './pages/zil-scan-result-page/zil-scan-result-page.component';
+import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-result-page.component';
+import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
 
 
 const routes: Routes = [
@@ -32,6 +31,7 @@ const routes: Routes = [
   {path: 'zil-scan-result/:id', component: ZilScanResultPageComponent},
   {path: 'qr-scan', component: ScanPageComponent},
   {path: 'quick-scan', component: QuickScanComponent},
+  {path: 'quick-scan-add', component: QuickScanAddComponent},
   {path: 'namespace', component: NameSpaceComponent},
   {path: 'holder', component: HolderComponent},
   {path: 'holder-detail/:id', component: HolderDetailComponent},

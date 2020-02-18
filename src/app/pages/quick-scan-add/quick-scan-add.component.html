@@ -1,0 +1,18 @@
+<nz-breadcrumb style="margin: 16px;">
+  <nz-breadcrumb-item>Quick Scan</nz-breadcrumb-item>
+  <nz-breadcrumb-item>New Scan</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="pfy-page-content">
+  <nz-tabset [nzTabPosition]="'top'">
+    <nz-tab
+      *ngFor="let tab of tabs"
+      [nzTitle]="tab.name"
+      (nzClick)="clickTab(['click', tab])">
+      <div class="pfy-page-content">
+        <app-quick-scan-add-form
+          [selectedTab]="selectedTab"
+        ></app-quick-scan-add-form>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>

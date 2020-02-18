@@ -1,4 +1,4 @@
-<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+<form nz-form [formGroup]="validateForm">
   <nz-form-item>
     <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired>Address</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input address!">
@@ -20,7 +20,10 @@
 
   <nz-form-item>
     <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 16, offset: 8 }">
-      <button nz-button nzType="primary">Submit</button>
+      <div class="pfy-form-btn">
+        <button nz-button nzType="primary" (click)="submitForm()">Submit</button>
+        <button nz-button (click)="handleCancel()">Cancel</button>
+      </div>
     </nz-form-control>
   </nz-form-item>
 </form>

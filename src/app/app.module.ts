@@ -54,10 +54,11 @@ import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-s
 import {HolderDetailComponent} from './pages/holder-detail/holder-detail.component';
 import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
 import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
-import {QuickScanAddComponent} from './component/quick-scan-add/quick-scan-add.component';
 import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-result-page.component';
 
 import {CoreNgZorroModule} from '@profyu/core-ng-zorro';
+import {QuickScanAddFormComponent} from './component/quick-scan-add-form/quick-scan-add-form.component';
+import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
 
 const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline, SwapLeftOutline, SwapRightOutline, ExperimentOutline];
 
@@ -103,6 +104,7 @@ const menus: any[] = [
   },
   {
     id: 'quick-scan',
+    name: 'QUICK SCAN',
     subtitle: 'Start a new quick scan',
     context: null,
     path: 'quick-scan',
@@ -272,7 +274,6 @@ G6.track(false);
     XrpScanResultPageComponent,
     ZilScanResultPageComponent,
     CryptoPipe,
-    QuickScanComponent,
     NameSpaceComponent,
     HolderComponent,
     HolderScanScheduleAddComponent,
@@ -280,7 +281,9 @@ G6.track(false);
     HolderDetailComponent,
     HolderScanResultComponent,
     HolderScanComponent,
+    QuickScanComponent,
     QuickScanAddComponent,
+    QuickScanAddFormComponent,
   ],
   imports: [
     BrowserModule,

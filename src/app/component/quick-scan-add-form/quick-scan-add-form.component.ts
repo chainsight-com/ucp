@@ -1,17 +1,20 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-quick-scan-add',
-  templateUrl: './quick-scan-add.component.html',
-  styleUrls: ['./quick-scan-add.component.scss']
+  selector: 'app-quick-scan-add-form',
+  templateUrl: './quick-scan-add-form.component.html',
+  styleUrls: ['./quick-scan-add-form.component.scss']
 })
-export class QuickScanAddComponent implements OnInit {
+export class QuickScanAddFormComponent implements OnInit {
+
   validateForm: FormGroup;
   maxLevel: number;
   private _selectedTab;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private router: Router) {
   }
 
   get selectedTab(): any {
@@ -45,4 +48,9 @@ export class QuickScanAddComponent implements OnInit {
       // validate all form fields
     }
   }
+
+  handleCancel() {
+    this.router.navigate(['/quick-scan']);
+  }
+
 }
