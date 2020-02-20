@@ -16,14 +16,6 @@ Html, body{
   .search-input {
     float: left;
   }
-
-  .btn {
-    float: right;
-
-    button {
-      margin: 1px;
-    }
-  }
 }
 .pfy-page-content{
   padding: 15px;
@@ -31,6 +23,22 @@ Html, body{
 .pfy-form-btn {
   float: right;
 
+  button {
+    margin: 5px;
+  }
+}
+
+.pfy-btn-right {
+  float: right;
+  margin: 1px;
+  button {
+    margin: 5px;
+  }
+}
+
+.pfy-btn-left {
+  float: left;
+  margin: 1px;
   button {
     margin: 5px;
   }

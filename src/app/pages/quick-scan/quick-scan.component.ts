@@ -11,6 +11,9 @@ import {
 import {JwtService} from '../../services/jwt.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, take} from 'rxjs/operators';
+import {NzTabComponent} from 'ng-zorro-antd';
+import {TblColumn} from '@profyu/core-ng-zorro/lib/model/tblColumn';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-quick-scan',
@@ -37,6 +40,42 @@ export class QuickScanComponent implements OnInit {
   public btcPageSize = 30;
   public btcPage = 1;
   public isBtcLoading = false;
+  public btcTblColumns: Array<TblColumn> = [
+    {
+      property: 'status',
+      title: 'Status',
+      type: 'level',
+      formatter: (data) => {
+        return this.statusFormatter(data);
+      }
+    },
+    {
+      property: 'address',
+      title: 'Address',
+      detail: true
+    },
+    {
+      property: 'maxLevel',
+      title: 'Max Level'
+    },
+    {
+      property: '',
+      title: 'Time Range',
+      formatter: data => {
+        return formatDate(data.startingTime, 'short', 'en-US', '') + '-' +
+          formatDate(data.endingTime, 'short', 'en-US', '');
+      }
+    },
+    {
+      property: '',
+      title: 'Created Time',
+      formatter: data => {
+        return formatDate(data.createdTime, 'short', 'en-US', '');
+      }
+    }
+  ];
+
+
 
   public ethPipelinePage: PageOfEthAddressScanPipeline = this.EMPTY_PAGE;
   public ethPageSize = 30;
@@ -52,6 +91,7 @@ export class QuickScanComponent implements OnInit {
   public zilPageSize = 30;
   public zilPage = 1;
   public isZilLoading = false;
+
 
   constructor(
     private btcAddressScanPipelineApiService: BtcAddressScanPipelineApiService,
@@ -155,5 +195,75 @@ export class QuickScanComponent implements OnInit {
     this.router.navigate(['/quick-scan-add']);
   }
 
+  handleSelectChange(val: { index: number, tab: NzTabComponent }) {
+    this.selectedTabIndex = val.index;
+    console.log(this.selectedTabIndex);
+  }
+
+  reloadPipelines() {
+
+    switch (this.selectedTabIndex) {
+      case 0: {
+        this.reloadBtcPipelines(false);
+        break;
+      }
+      case 1: {
+        this.reloadEthPipelines(false);
+        break;
+      }
+      case 2: {
+        this.reloadXrpPipelines(false);
+        break;
+      }
+      case 3: {
+        this.reloadZilPipelines(false);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+
+  handleBtcDetailClick(row) {
+    this.router.navigate(['/btc-scan-result/' + row.id]);
+  }
+
+  statusFormatter(data) {
+
+    let res = null;
+    switch (data) {
+      case 'COMPLETED':
+        res = {
+          color: '#52c41a',
+          title: 'Success'
+        };
+        break;
+      case 'PENDING':
+        res = {
+          color: 'processing',
+          title: 'Running'
+        };
+        break;
+      case 'RUNNING':
+        res = {
+          color: 'processing',
+          title: 'Running'
+        };
+        break;
+      case 'FAILED':
+        res = {
+          color: 'error',
+          title: 'Error'
+        };
+        break;
+      default:
+        res = {
+          color: '#108ee9',
+          title: 'default'
+        };
+    }
+    return res;
+  }
 
 }
