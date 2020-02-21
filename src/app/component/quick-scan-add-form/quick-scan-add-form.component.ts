@@ -52,5 +52,7 @@ export class QuickScanAddFormComponent implements OnInit {
   handleCancel() {
     this.router.navigate(['/quick-scan']);
   }
-
+  qrScan() {
+    this.router.navigate(['qr-scan']);
+  }
 }

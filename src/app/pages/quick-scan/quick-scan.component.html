@@ -24,10 +24,13 @@
       <pfy-table
         [tblColumns]="btcTblColumns"
         [tblData]="btcPipelinePage.content"
+        [tblTotal]="btcPipelinePage.totalElements"
         [(pageIndex)]="btcPage"
         [(loading)]="isBtcLoading"
         (detailClick)="handleBtcDetailClick($event)"
         [pageable]="true"
+        [pageSizeOptions]="btcPageSizeOptions"
+        (pageSizeChange)="handlePageSizeChange($event)"
       ></pfy-table>
       <!--(actionClick)="handleActionClick($event)"-->
       <!--(detailClick)="handleDetailClick($event)"-->
@@ -35,171 +38,79 @@
       <!--(pageSizeChange)="handlePageSizeChange($event)"-->
     </nz-tab>
     <nz-tab [nzTitle]="'ETH'">
-      <div class="pfy-btn-right">
-        <button (click)="reloadEthPipelines(false)" nzShape="round" nzType="default" nz-button>
-          <i nz-icon
-             nzType="reload"
-             nzTheme="outline">
-          </i>Reload
-        </button>
-      </div>
-      <nz-spin [nzSpinning]="isEthLoading">
-        <nz-table #ethTable [nzData]="ethPipelinePage.content" nzShowSizeChanger [nzFrontPagination]="false"
-                  [(nzPageIndex)]="ethPage" [(nzPageSize)]="ethPageSize" [nzTotal]="ethPipelinePage.totalElements"
-                  (nzPageIndexChange)="reloadEthPipelines(false)" (nzPageSizeChange)="reloadEthPipelines(true)">
-          <thead>
-          <tr>
-            <th>
-              Status
-            </th>
-            <th>
-              Address
-            </th>
-            <th>Max Level</th>
-            <th>Time Range</th>
-            <th>Created Time</th>
-            <th>Total Score EV</th>
-            <th>Avg. Score EV</th>
-          </tr>
-          </thead>
-          <tbody>
-
-          <tr *ngFor="let data of ethTable.data">
-            <td>
-              <nz-badge *ngIf="data.status === 'COMPLETED'" nzStatus="success" nzText="Success"></nz-badge>
-              <nz-badge *ngIf="data.status === 'PENDING' || data.status === 'RUNNING'" nzStatus="processing"
-                        nzText="Running"></nz-badge>
-              <nz-badge *ngIf="data.status === 'FAILED'" nzStatus="error" nzText="Error"></nz-badge>
-            </td>
-            <td><a [routerLink]="'/eth-scan-result/' + data.id">{{ data.address }}</a></td>
-            <td>{{ data.maxLevel }}</td>
-            <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
-            <td>{{ data.createdTime | date: 'short' }}</td>
-            <td>
-                  <span
-                    *ngIf="data.status === 'COMPLETED' || data.status === 'FAILED'; else elseTmpl">{{ data.totalScoreEv | number:'.1-3'}}</span>
-              <ng-template #elseTmpl>
-                <i nz-icon nzType="loading" nzTheme="outline"></i>
-              </ng-template>
-            </td>
-            <td>
-                  <span
-                    *ngIf="data.status === 'COMPLETED' || data.status === 'FAILED'; else elseTmpl">{{ data.avgScoreEv | number:'.1-3'}}</span>
-              <ng-template #elseTmpl>
-                <i nz-icon nzType="loading" nzTheme="outline"></i>
-              </ng-template>
-            </td>
-          </tr>
-          </tbody>
-        </nz-table>
-      </nz-spin>
+      <pfy-table
+        [tblColumns]="ethTblColumns"
+        [tblData]="ethPipelinePage.content"
+        [tblTotal]="ethPipelinePage.totalElements"
+        [(pageIndex)]="btcPage"
+        [(loading)]="isEthLoading"
+        (detailClick)="handleEthDetailClick($event)"
+        [pageable]="true"
+        [slotTemplate]="ethSlot"
+        [pageSizeOptions]="ethPageSizeOptions"
+        (pageSizeChange)="handlePageSizeChange($event)"
+      >
+        <ng-template #ethSlot>
+          <td>
+            <span
+              *ngIf="data.status === 'COMPLETED' || data.status === 'FAILED'; else elseTmpl">{{ data.totalScoreEv | number:'.1-3'}}</span>
+            <ng-template #elseTmpl>
+              <i nz-icon nzType="loading" nzTheme="outline"></i>
+            </ng-template>
+          </td>
+          <td>
+            <span
+              *ngIf="data.status === 'COMPLETED' || data.status === 'FAILED'; else elseTmpl">{{ data.avgScoreEv | number:'.1-3'}}</span>
+            <ng-template #elseTmpl>
+              <i nz-icon nzType="loading" nzTheme="outline"></i>
+            </ng-template>
+          </td>
+        </ng-template>
+      </pfy-table>
     </nz-tab>
     <nz-tab [nzTitle]="'XRP'">
-      <div nz-row style="margin-bottom: 16px;">
-        <div nz-col nzSpan="24" style="text-align: right;">
-          <button (click)="reloadXrpPipelines(false)" nz-button nzType="primary" nzShape="round"><i nz-icon
-                                                                                                    nzType="reload"
-                                                                                                    nzTheme="outline"></i>Reload
-          </button>
-        </div>
-      </div>
-      <nz-spin [nzSpinning]="isXrpLoading">
-        <nz-table #xrpTable [nzData]="xrpPipelinePage.content" nzShowSizeChanger [nzFrontPagination]="false"
-                  [(nzPageIndex)]="xrpPage" [(nzPageSize)]="xrpPageSize" [nzTotal]="xrpPipelinePage.totalElements"
-                  (nzPageIndexChange)="reloadXrpPipelines(false)" (nzPageSizeChange)="reloadXrpPipelines(true)">
-          <thead>
-          <tr>
-            <th style="width: 120px;">
-              Status
-            </th>
-            <th>
-              Address
-            </th>
-            <th>Max Level</th>
-            <th>Time Range</th>
-            <th>Created Time</th>
-            <th>Total Score EV</th>
-            <th>Avg. Score EV</th>
-          </tr>
-          </thead>
-          <tbody>
-
-          <tr *ngFor="let data of xrpTable.data">
-            <td>
-              <nz-badge *ngIf="data.status === 'COMPLETED'" nzStatus="success" nzText="Success"></nz-badge>
-              <nz-badge *ngIf="data.status === 'PENDING' || data.status === 'RUNNING'" nzStatus="processing"
-                        nzText="Running"></nz-badge>
-              <nz-badge *ngIf="data.status === 'FAILED'" nzStatus="error" nzText="Error"></nz-badge>
-            </td>
-            <td><a [routerLink]="'/xrp-scan-result/' + data.id">{{ data.address }}</a></td>
-            <td>{{ data.maxLevel }}</td>
-            <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
-            <td>{{ data.createdTime | date: 'short' }}</td>
-            <td>
-                  <span
-                    *ngIf="data.status === 'COMPLETED' || data.status === 'FAILED'; else elseTmpl">{{ data.totalScoreEv | number:'.1-3'}}</span>
-              <ng-template #elseTmpl>
-                <i nz-icon nzType="loading" nzTheme="outline"></i>
-              </ng-template>
-            </td>
-            <td>
-                  <span
-                    *ngIf="data.status === 'COMPLETED' || data.status === 'FAILED'; else elseTmpl">{{ data.avgScoreEv | number:'.1-3'}}</span>
-              <ng-template #elseTmpl>
-                <i nz-icon nzType="loading" nzTheme="outline"></i>
-              </ng-template>
-            </td>
-          </tr>
-          </tbody>
-        </nz-table>
-      </nz-spin>
+      <pfy-table
+        [tblColumns]="xrpTblColumns"
+        [tblData]="xrpPipelinePage.content"
+        [tblTotal]="xrpPipelinePage.totalElements"
+        [(pageIndex)]="xrpPage"
+        [(loading)]="isXrpLoading"
+        (detailClick)="handleXrpDetailClick($event)"
+        [pageable]="true"
+        [slotTemplate]="xrpSlot"
+        (pageSizeChange)="handlePageSizeChange($event)"
+        [pageSizeOptions]="xrpPageSizeOptions"
+      >
+        <ng-template #xrpSlot>
+          <td>
+            <span
+              *ngIf="data.status === 'COMPLETED' || data.status === 'FAILED'; else elseTmpl">{{ data.totalScoreEv | number:'.1-3'}}</span>
+            <ng-template #elseTmpl>
+              <i nz-icon nzType="loading" nzTheme="outline"></i>
+            </ng-template>
+          </td>
+          <td>
+            <span
+              *ngIf="data.status === 'COMPLETED' || data.status === 'FAILED'; else elseTmpl">{{ data.avgScoreEv | number:'.1-3'}}</span>
+            <ng-template #elseTmpl>
+              <i nz-icon nzType="loading" nzTheme="outline"></i>
+            </ng-template>
+          </td>
+        </ng-template>
+      </pfy-table>
     </nz-tab>
     <nz-tab [nzTitle]="'ZIL'">
-      <div nz-row style="margin-bottom: 16px;">
-        <div nz-col nzSpan="24" style="text-align: right;">
-          <button (click)="reloadZilPipelines(false)" nz-button nzType="primary" nzShape="round"><i nz-icon
-                                                                                                    nzType="reload"
-                                                                                                    nzTheme="outline"></i>Reload
-          </button>
-        </div>
-      </div>
-      <nz-spin [nzSpinning]="isZilLoading">
-        <nz-table #zilTable [nzData]="zilPipelinePage.content" nzShowSizeChanger [nzFrontPagination]="false"
-                  [(nzPageIndex)]="zilPage" [(nzPageSize)]="zilPageSize" [nzTotal]="zilPipelinePage.totalElements"
-                  (nzPageIndexChange)="reloadZilPipelines(false)" (nzPageSizeChange)="reloadZilPipelines(true)">
-          <thead>
-          <tr>
-            <th>
-              Status
-            </th>
-            <th>
-              Address
-            </th>
-            <th>Max Level</th>
-            <th>Time Range</th>
-            <th>Created Time</th>
-
-          </tr>
-          </thead>
-          <tbody>
-
-          <tr *ngFor="let data of zilTable.data">
-            <td>
-              <nz-badge *ngIf="data.status === 'COMPLETED'" nzStatus="success" nzText="Success"></nz-badge>
-              <nz-badge *ngIf="data.status === 'PENDING' || data.status === 'RUNNING'" nzStatus="processing"
-                        nzText="Running"></nz-badge>
-              <nz-badge *ngIf="data.status === 'FAILED'" nzStatus="error" nzText="Error"></nz-badge>
-            </td>
-            <td><a [routerLink]="'/zil-scan-result/' + data.id">{{ data.address }}</a></td>
-            <td>{{ data.maxLevel }}</td>
-            <td>{{ data.startingTime | date: 'short' }} ~ {{ data.endingTime | date: 'short' }}</td>
-            <td>{{ data.createdTime | date: 'short' }}</td>
-
-          </tr>
-          </tbody>
-        </nz-table>
-      </nz-spin>
-
+      <pfy-table
+        [tblColumns]="zilTblColumns"
+        [tblData]="zilPipelinePage.content"
+        [tblTotal]="zilPipelinePage.totalElements"
+        [(pageIndex)]="zilPage"
+        [(loading)]="isZilLoading"
+        (detailClick)="handleZilDetailClick($event)"
+        [pageable]="true"
+        [pageSizeOptions]="zipPageSizeOptions"
+        (pageSizeChange)="handlePageSizeChange($event)"
+      ></pfy-table>
     </nz-tab>
     <nz-tab [nzTitle]="'LTC'">
     </nz-tab>

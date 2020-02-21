@@ -2,8 +2,13 @@
   <nz-form-item>
     <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired>Address</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input address!">
-      <input nz-input id="address" formControlName="address" placeholder="Address"/>
+      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+        <input nz-input id="address" formControlName="address" placeholder="Address"/>
+      </nz-input-group>
     </nz-form-control>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch (click)="qrScan()"><i nz-icon type="qrcode"></i></button>
+    </ng-template>
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired>Max Level</nz-form-label>

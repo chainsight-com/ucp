@@ -35,12 +35,131 @@ export class QuickScanComponent implements OnInit {
   };
 
   public me: Account;
-
-  public btcPipelinePage: PageOfBtcAddressScanPipeline = this.EMPTY_PAGE;
-  public btcPageSize = 30;
-  public btcPage = 1;
-  public isBtcLoading = false;
   public btcTblColumns: Array<TblColumn> = [
+    {
+      property: 'status',
+      title: 'Status',
+      type: 'level',
+      width: 120,
+      formatter: (data) => {
+        return this.statusFormatter(data);
+      }
+    },
+    {
+      property: 'address',
+      title: 'Address',
+      detail: true
+    },
+    {
+      property: 'maxLevel',
+      title: 'Max Level'
+    },
+    {
+      property: '',
+      title: 'Time Range',
+      formatter: data => {
+        return formatDate(data.startingTime, 'short', 'en-US', '') + '-' +
+          formatDate(data.endingTime, 'short', 'en-US', '');
+      }
+    },
+    {
+      property: '',
+      title: 'Created Time',
+      formatter: data => {
+        return formatDate(data.createdTime, 'short', 'en-US', '');
+      }
+    }
+  ];
+  public ethTblColumns: Array<TblColumn> = [
+    {
+      property: 'status',
+      title: 'Status',
+      type: 'level',
+      formatter: (data) => {
+        return this.statusFormatter(data);
+      }
+    },
+    {
+      property: 'address',
+      title: 'Address',
+      detail: true
+    },
+    {
+      property: 'maxLevel',
+      title: 'Max Level'
+    },
+    {
+      property: '',
+      title: 'Time Range',
+      formatter: data => {
+        return formatDate(data.startingTime, 'short', 'en-US', '') + '-' +
+          formatDate(data.endingTime, 'short', 'en-US', '');
+      }
+    },
+    {
+      property: '',
+      title: 'Created Time',
+      formatter: data => {
+        return formatDate(data.createdTime, 'short', 'en-US', '');
+      }
+    },
+    {
+      property: 'maxLevel',
+      title: 'Total Score EV',
+      slot: ''
+    },
+    {
+      property: 'maxLevel',
+      title: 'Avg. Score EV',
+      slot: ''
+    }
+  ];
+  public xrpTblColumns: Array<TblColumn> = [
+    {
+      property: 'status',
+      title: 'Status',
+      type: 'level',
+      formatter: (data) => {
+        return this.statusFormatter(data);
+      }
+    },
+    {
+      property: 'address',
+      title: 'Address',
+      detail: true
+    },
+    {
+      property: 'maxLevel',
+      title: 'Max Level'
+    },
+    {
+      property: '',
+      title: 'Time Range',
+      formatter: data => {
+        return formatDate(data.startingTime, 'short', 'en-US', '') + '-' +
+          formatDate(data.endingTime, 'short', 'en-US', '');
+      }
+    },
+    {
+      property: '',
+      title: 'Created Time',
+      formatter: data => {
+        return formatDate(data.createdTime, 'short', 'en-US', '');
+      }
+    },
+    {
+      property: 'maxLevel',
+      title: 'Total Score EV',
+      slot: ''
+    },
+    {
+      property: 'maxLevel',
+      title: 'Avg. Score EV',
+      slot: ''
+    }
+
+  ];
+  public zilTblColumns: Array<TblColumn> = [
     {
       property: 'status',
       title: 'Status',
@@ -75,20 +194,27 @@ export class QuickScanComponent implements OnInit {
     }
   ];
 
-
+  public btcPipelinePage: PageOfBtcAddressScanPipeline = this.EMPTY_PAGE;
+  public btcPageSize = 30;
+  public btcPageSizeOptions = [30, 50, 100];
+  public btcPage = 1;
+  public isBtcLoading = false;
 
   public ethPipelinePage: PageOfEthAddressScanPipeline = this.EMPTY_PAGE;
   public ethPageSize = 30;
+  public ethPageSizeOptions = [30, 50, 100];
   public ethPage = 1;
   public isEthLoading = false;
 
   public xrpPipelinePage: PageOfEthAddressScanPipeline = this.EMPTY_PAGE;
   public xrpPageSize = 30;
+  public xrpPageSizeOptions = [30, 50, 100];
   public xrpPage = 1;
   public isXrpLoading = false;
 
   public zilPipelinePage: PageOfBtcAddressScanPipeline = this.EMPTY_PAGE;
   public zilPageSize = 30;
+  public zipPageSizeOptions = [30, 50, 100];
   public zilPage = 1;
   public isZilLoading = false;
 
@@ -181,7 +307,7 @@ export class QuickScanComponent implements OnInit {
       this.zilPage = 1;
     }
     this.isZilLoading = true;
-    this.zilAddressScanPipelineApiService.paginateZilAddressScanPipelinesUsingGETDefault(this.btcPage - 1, this.btcPageSize, this.me.id)
+    this.zilAddressScanPipelineApiService.paginateZilAddressScanPipelinesUsingGETDefault(this.btcPage - 1, this.zilPageSize, this.me.id)
       .pipe(
         take(1),
       ).subscribe(page => {
@@ -201,7 +327,6 @@ export class QuickScanComponent implements OnInit {
   }
 
   reloadPipelines() {
-
     switch (this.selectedTabIndex) {
       case 0: {
         this.reloadBtcPipelines(false);
@@ -225,8 +350,44 @@ export class QuickScanComponent implements OnInit {
     }
   }
 
+  handlePageSizeChange(pageSize) {
+    switch (this.selectedTabIndex) {
+      case 0: {
+        this.btcPageSize = pageSize;
+        break;
+      }
+      case 1: {
+        this.ethPageSize = pageSize;
+        break;
+      }
+      case 2: {
+        this.xrpPageSize = pageSize;
+        break;
+      }
+      case 3: {
+        this.zilPageSize = pageSize;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    this.reloadPipelines();
+  }
   handleBtcDetailClick(row) {
     this.router.navigate(['/btc-scan-result/' + row.id]);
+  }
+
+  handleEthDetailClick(row) {
+    this.router.navigate(['/eth-scan-result/' + row.id]);
+  }
+
+  handleXrpDetailClick(row) {
+    this.router.navigate(['/xrp-scan-result/' + row.id]);
+  }
+
+  handleZilDetailClick(row) {
+    this.router.navigate(['/zil-scan-result/' + row.id]);
   }
 
   statusFormatter(data) {
