@@ -19,4 +19,7 @@ export class HolderComponent implements OnInit {
     }];
   }
 
+  addNamespace() {
+  }
+
 }

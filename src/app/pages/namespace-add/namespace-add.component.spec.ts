@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NameSpaceComponent } from './name-space.component';
+import { NamespaceAddComponent } from './namespace-add.component';
 
-describe('NameSpaceComponent', () => {
-  let component: NameSpaceComponent;
-  let fixture: ComponentFixture<NameSpaceComponent>;
+describe('NamespaceAddComponent', () => {
+  let component: NamespaceAddComponent;
+  let fixture: ComponentFixture<NamespaceAddComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NameSpaceComponent ]
+      declarations: [ NamespaceAddComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NameSpaceComponent);
+    fixture = TestBed.createComponent(NamespaceAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

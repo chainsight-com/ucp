@@ -1,8 +1,12 @@
-<!--<nz-page-header nzTitle="Holder Management">-->
-<!--</nz-page-header>-->
-<!--<nz-content>-->
+<nz-breadcrumb>
+  <nz-breadcrumb-item>NameSpace</nz-breadcrumb-item>
+  <nz-breadcrumb-item>NameSpace List</nz-breadcrumb-item>
+</nz-breadcrumb>
 
   <div class="func-area">
+    <div class="pfy-btn-right">
+    <button (click)="addNamespace()" nz-button nzType="primary">New Namespace</button>
+  </div>
     <div class="area-title">Holder Management</div>
     <div class="search-input">
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">

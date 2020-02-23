@@ -47,7 +47,6 @@ import {EthScanResultPageComponent} from './pages/eth-scan-result-page/eth-scan-
 import {XrpScanResultPageComponent} from './pages/xrp-scan-result-page/xrp-scan-result-page.component';
 
 import {QuickScanComponent} from './pages/quick-scan/quick-scan.component';
-import {NameSpaceComponent} from './pages/name-space/name-space.component';
 import {HolderComponent} from './pages/holder/holder.component';
 import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
 import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
@@ -59,7 +58,9 @@ import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-
 import {CoreNgZorroModule} from '@profyu/core-ng-zorro';
 import {QuickScanAddFormComponent} from './component/quick-scan-add-form/quick-scan-add-form.component';
 import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
-import { QuickScanResultComponent } from './pages/quick-scan-result/quick-scan-result.component';
+import {QuickScanResultComponent} from './pages/quick-scan-result/quick-scan-result.component';
+import {NamespaceComponent} from './pages/namespace/namespace.component';
+import {NamespaceAddComponent} from './pages/namespace-add/namespace-add.component';
 
 const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline, SwapLeftOutline, SwapRightOutline, ExperimentOutline];
 
@@ -275,7 +276,6 @@ G6.track(false);
     XrpScanResultPageComponent,
     ZilScanResultPageComponent,
     CryptoPipe,
-    NameSpaceComponent,
     HolderComponent,
     HolderScanScheduleAddComponent,
     HolderScanScheduleComponent,
@@ -286,6 +286,8 @@ G6.track(false);
     QuickScanAddComponent,
     QuickScanAddFormComponent,
     QuickScanResultComponent,
+    NamespaceComponent,
+    NamespaceAddComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,25 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>HOLDER MANAGEMENT</nz-breadcrumb-item>
+  <nz-breadcrumb-item>NameSpace</nz-breadcrumb-item>
+</nz-breadcrumb>
+
+<div class="func-area">
+  <div class="pfy-btn-right">
+    <button (click)="addNamespace()" nz-button nzType="primary">New Namespace</button>
+  </div>
+
+  <div class="pfy-page-content">
+
+    <pfy-table
+      [tblColumns]="tblColumns"
+      [tblData]="listOfData"
+      [tblTotal]="total"
+      [(pageIndex)]="currentPage"
+      [loading]="isLoading"
+      (detailClick)="handleDetailClick($event)"
+      [pageable]="true"
+      [pageSizeOptions]="pageSizeOptions"
+      (pageSizeChange)="handlePageSizeChange($event)"
+    ></pfy-table>
+  </div>
+</div>
