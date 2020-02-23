@@ -40,7 +40,7 @@
     "rxjs": "~6.5.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1",
-    "@profyu/core-ng-zorro": "1.0.13-BETA"
+    "@profyu/core-ng-zorro": "1.0.15-BETA"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.20",

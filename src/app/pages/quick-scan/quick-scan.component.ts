@@ -104,14 +104,14 @@ export class QuickScanComponent implements OnInit {
       }
     },
     {
-      property: 'maxLevel',
+      property: 'totalScore',
       title: 'Total Score EV',
-      slot: ''
+      slot: 'totalScore'
     },
     {
-      property: 'maxLevel',
+      property: 'avgScore',
       title: 'Avg. Score EV',
-      slot: ''
+      slot: 'avgScore'
     }
   ];
   public xrpTblColumns: Array<TblColumn> = [
