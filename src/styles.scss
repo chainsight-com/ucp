@@ -1,29 +1,50 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~ng-zorro-antd/style/index.min.css"; /* Import basic styles */
+@import "~ng-zorro-antd/style/index.min.css";
+/* Import basic styles */
 @import "~ng-zorro-antd/button/style/index.min.css"; /* Import styles of the component */
-Html, body{
-	height:100%;
-    margin:0px;
-    padding:0px;
+Html, body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 
 .func-area {
   height: 10%;
-  .area-title{
+
+  .area-title {
 
   }
 
   .pfy-search-input {
     float: left;
     margin: 10px 0px 10px 0px;
-    input{
+
+    input {
       margin: 5px;
     }
   }
 }
-.pfy-page-content{
+
+.pfy-page-content {
   padding: 15px;
+  display: block;
+  text-align: center;
+  form {
+    width: 80%;
+    display: inline-block;
+
+    text-align: left;
+    .ant-form-item-label {
+      line-height: 30px;
+    }
+
+    .ant-form-item {
+      margin: 0 0 15px;
+    }
+  }
+
 }
+
 .pfy-form-btn {
   float: right;
 
@@ -35,6 +56,7 @@ Html, body{
 .pfy-btn-right {
   float: right;
   margin: 10px 0px 10px 0px;
+
   button {
     margin: 5px;
   }
@@ -43,6 +65,7 @@ Html, body{
 .pfy-btn-left {
   float: left;
   margin: 10px 0px 10px 0px;
+
   button {
     margin: 5px;
   }

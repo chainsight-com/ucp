@@ -58,6 +58,7 @@ import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.compo
 import {QuickScanResultComponent} from './pages/quick-scan-result/quick-scan-result.component';
 import {NamespaceComponent} from './pages/namespace/namespace.component';
 import {NamespaceAddComponent} from './pages/namespace-add/namespace-add.component';
+import { HolderAddComponent } from './pages/holder-add/holder-add.component';
 
 const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline, SwapLeftOutline, SwapRightOutline, ExperimentOutline];
 
@@ -283,6 +284,7 @@ G6.track(false);
     QuickScanResultComponent,
     NamespaceComponent,
     NamespaceAddComponent,
+    HolderAddComponent,
   ],
   imports: [
     BrowserModule,

@@ -18,6 +18,7 @@ import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-
 import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
 import {NamespaceComponent} from './pages/namespace/namespace.component';
 import {NamespaceAddComponent} from './pages/namespace-add/namespace-add.component';
+import {HolderAddComponent} from './pages/holder-add/holder-add.component';
 
 
 const routes: Routes = [
@@ -35,6 +36,7 @@ const routes: Routes = [
   {path: 'namespace', component: NamespaceComponent},
   {path: 'namespace-add', component: NamespaceAddComponent},
   {path: 'holder', component: HolderComponent},
+  {path: 'holder-add', component: HolderAddComponent},
   {path: 'holder-detail/:id', component: HolderDetailComponent},
   {path: 'holder-scan', component: HolderScanComponent},
   {path: 'holder-scan-result/:id', component: HolderScanResultComponent},

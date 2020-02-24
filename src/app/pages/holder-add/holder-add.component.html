@@ -1,0 +1,59 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Holder Management</nz-breadcrumb-item>
+  <nz-breadcrumb-item>Holder</nz-breadcrumb-item>
+  <nz-breadcrumb-item>New Holder</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="pfy-page-content">
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>Namespace</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the Namespace!">
+        <nz-select formControlName="namespace" [ngModel]="'Option 1'">
+          <nz-option nzValue="Option 1" nzLabel="Option 1"></nz-option>
+          <nz-option nzValue="Option 2" nzLabel="Option 2"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>Holder Id</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the Holder Id!">
+        <input type="text" nz-input formControlName="holderId" placeholder="Holder Id" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>First Name</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the First Name!">
+        <input type="text" nz-input formControlName="firstName" placeholder="First Name" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>Last Name</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the Last Name!">
+        <input type="text" nz-input formControlName="lastName" placeholder="Last Name" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>Country</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the country!">
+        <nz-select formControlName="country" [ngModel]="'Option 1'">
+          <nz-option nzValue="Option 1" nzLabel="Option 1"></nz-option>
+          <nz-option nzValue="Option 2" nzLabel="Option 2"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>Birthday</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the birthday!">
+        <nz-date-picker formControlName="birthday"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <div class="pfy-form-btn">
+          <button nz-button nzType="primary" (click)="submitForm()">Submit</button>
+          <button nz-button (click)="handleCancel()">Cancel</button>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>

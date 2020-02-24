@@ -128,6 +128,7 @@ export class HolderComponent implements OnInit {
   }
 
   addHolder() {
+    this.router.navigate(['/holder-add']);
   }
 
   export() {

@@ -1,7 +1,7 @@
 <form nz-form [formGroup]="validateForm">
   <nz-form-item>
-    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired>Address</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input address!">
+    <nz-form-label [nzNoColon]="true" nzRequired>Address</nz-form-label>
+    <nz-form-control nzErrorTip="Please input address!">
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
         <input nz-input id="address" formControlName="address" placeholder="Address"/>
       </nz-input-group>
@@ -11,20 +11,20 @@
     </ng-template>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired>Max Level</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
+    <nz-form-label [nzNoColon]="true" nzRequired>Max Level</nz-form-label>
+    <nz-form-control>
       <nz-slider formControlName="maxLevel"></nz-slider>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired>RangePicker</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
+    <nz-form-label [nzNoColon]="true" nzRequired>RangePicker</nz-form-label>
+    <nz-form-control>
       <nz-range-picker formControlName="rangePicker"></nz-range-picker>
     </nz-form-control>
   </nz-form-item>
 
   <nz-form-item>
-    <nz-form-control [nzXs]="{ span: 24, offset: 0 }" [nzSm]="{ span: 16, offset: 8 }">
+    <nz-form-control>
       <div class="pfy-form-btn">
         <button nz-button nzType="primary" (click)="submitForm()">Submit</button>
         <button nz-button (click)="handleCancel()">Cancel</button>
