@@ -18,7 +18,8 @@ import {
 import { Router } from '@angular/router';
 import { QrScannerService } from 'src/app/services/qr-scanner.service';
 import { Subject } from 'rxjs';
-import { JwtService } from '../../services/jwt.service';
+import {JwtService} from '@profyu/core-ng-zorro';
+
 
 @Component({
   selector: 'app-new-scan-page',

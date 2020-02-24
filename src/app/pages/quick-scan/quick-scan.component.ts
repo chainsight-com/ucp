@@ -8,12 +8,12 @@ import {
   XrpAddressScanPipelineApiService,
   ZilAddressScanPipelineApiService
 } from '@profyu/unblock-ng-sdk';
-import {JwtService} from '../../services/jwt.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, take} from 'rxjs/operators';
 import {NzTabComponent} from 'ng-zorro-antd';
 import {TblColumn} from '@profyu/core-ng-zorro/lib/model/tblColumn';
 import {formatDate} from '@angular/common';
+import {JwtService} from '@profyu/core-ng-zorro';
 
 @Component({
   selector: 'app-quick-scan',

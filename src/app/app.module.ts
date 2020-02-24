@@ -30,11 +30,8 @@ import {HttpClientModule} from '@angular/common/http';
 import G6 from '@antv/g6';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthServiceConfig, GoogleLoginProvider, SocialLoginModule} from 'angularx-social-login';
-import {LoginPageComponent} from './pages/login-page/login-page.component';
 import {JwtModule} from '@auth0/angular-jwt';
-import {LOCAL_TOKEN_KEY} from './services/jwt.service';
 import {ScanPageComponent} from './pages/scan-page/scan-page.component';
-import {MainLayoutPageComponent} from './pages/main-layout-page/main-layout-page.component';
 import {ScanHistoryPageComponent} from './pages/scan-history-page/scan-history-page.component';
 import {NewScanPageComponent} from './pages/new-scan-page/new-scan-page.component';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
@@ -55,7 +52,7 @@ import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-
 import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
 import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-result-page.component';
 
-import {CoreNgZorroModule} from '@profyu/core-ng-zorro';
+import {CoreNgZorroModule, JwtService} from '@profyu/core-ng-zorro';
 import {QuickScanAddFormComponent} from './component/quick-scan-add-form/quick-scan-add-form.component';
 import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
 import {QuickScanResultComponent} from './pages/quick-scan-result/quick-scan-result.component';
@@ -237,7 +234,7 @@ const menus: any[] = [
     ]
   }
 ];
-
+export const LOCAL_TOKEN_KEY = 'access_token';
 
 export function authServiceConfigFactory() {
   return new AuthServiceConfig([
@@ -265,9 +262,7 @@ G6.track(false);
 @NgModule({
   declarations: [
     AppComponent,
-    LoginPageComponent,
     ScanPageComponent,
-    MainLayoutPageComponent,
     ScanHistoryPageComponent,
     NewScanPageComponent,
     DashboardPageComponent,
@@ -310,6 +305,7 @@ G6.track(false);
     })
   ],
   providers: [
+    JwtService,
     {provide: BASE_PATH, useValue: environment.baseApiUrl},
     {provide: NZ_I18N, useValue: en_US},
     {provide: NZ_ICONS, useValue: icons},
@@ -319,7 +315,7 @@ G6.track(false);
     },
     // {provide: HTTP_INTERCEPTORS, useClass: LogoutInterceptor, multi: true},
     // {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
-    {provide: 'MENU_TREE_DATA', useValue: menus},
+    {provide: 'MENU_TREE_DATA', useValue: menus}
   ],
   bootstrap: [AppComponent]
 })

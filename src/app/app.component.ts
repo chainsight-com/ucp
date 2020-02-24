@@ -1,5 +1,5 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
-import { JwtService } from './services/jwt.service';
+import {Component, OnInit} from '@angular/core';
+
 
 @Component({
   selector: 'app-root',
@@ -8,13 +8,10 @@ import { JwtService } from './services/jwt.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private jwtService: JwtService) {
+  constructor() {
 
   }
 
   ngOnInit(): void {
-    this.jwtService.init();
   }
-
-  title = 'unblock-ui';
 }

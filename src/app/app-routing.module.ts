@@ -21,7 +21,6 @@ import {NamespaceAddComponent} from './pages/namespace-add/namespace-add.compone
 
 
 const routes: Routes = [
-  // {path: 'login', component: LoginPageComponent},
   {path: 'new-scan', component: NewScanPageComponent},
   {path: 'dashboard', component: DashboardPageComponent},
   {path: 'new-scan', component: NewScanPageComponent},

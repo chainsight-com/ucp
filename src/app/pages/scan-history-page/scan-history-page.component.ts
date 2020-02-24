@@ -1,18 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {
-  BtcAddressScanPipeline,
-  BtcAddressScanPipelineApiService,
-  PageOfBtcAddressScanPipeline,
   Account,
+  BtcAddressScanPipelineApiService,
   EthAddressScanPipelineApiService,
+  PageOfBtcAddressScanPipeline,
   PageOfEthAddressScanPipeline,
   XrpAddressScanPipelineApiService,
   ZilAddressScanPipelineApiService
 } from '@profyu/unblock-ng-sdk';
-import {take, filter} from 'rxjs/operators';
-import {JwtService} from 'src/app/services/jwt.service';
-import {Route, ActivatedRoute} from '@angular/router';
-import { NzMessageService } from 'ng-zorro-antd';
+import {filter, take} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
+import {JwtService} from '@profyu/core-ng-zorro';
 
 @Component({
   selector: 'app-scan-history-page',
