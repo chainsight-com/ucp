@@ -1,7 +1,10 @@
-<nz-page-header nzTitle="Holder Scan">
-</nz-page-header>
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Holder Scan</nz-breadcrumb-item>
+  <nz-breadcrumb-item>Scan</nz-breadcrumb-item>
+</nz-breadcrumb>
+
 <div class="func-area">
-  <div class="search-input">
+  <div class="pfy-search-input">
     <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
       <input type="text" nz-input placeholder="input search text"/>
     </nz-input-group>
@@ -9,36 +12,21 @@
       <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
     </ng-template>
   </div>
-  <div class="btn">
-    <button nz-button nzType="primary">New Scan</button>
+  <div class="pfy-btn-right">
+    <button nz-button nzType="primary" (click)="addScan()">New Scan</button>
   </div>
 </div>
-<nz-table #basicTable [nzData]="listOfData">
-  <thead>
-  <tr>
-    <th>Scan Id</th>
-    <th>Status</th>
-    <th>Start At</th>
-    <th>End At</th>
-    <th>Scheduled By</th>
-    <th>Cases</th>
-    <th>Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let data of basicTable.data">
-    <td>{{ data.id }}</td>
-    <td>{{ data.status }}</td>
-    <td>{{ data.startAt }}</td>
-    <td>{{ data.startAt }}</td>
-    <td>{{ data.startAt }}</td>
-    <td>{{ data.startAt }}</td>
-    <td>
-      <a>Edit</a>
-      <nz-divider nzType="vertical"></nz-divider>
-      <a>Delete</a>
-    </td>
-  </tr>
-  </tbody>
-</nz-table>
 
+<div class="pfy-page-content">
+  <pfy-table
+    [tblColumns]="tblColumns"
+    [tblData]="listOfData"
+    [tblTotal]="total"
+    [(pageIndex)]="currentPage"
+    [loading]="isLoading"
+    (detailClick)="handleDetailClick($event)"
+    [pageable]="true"
+    [pageSizeOptions]="pageSizeOptions"
+    (pageSizeChange)="handlePageSizeChange($event)"
+  ></pfy-table>
+</div>

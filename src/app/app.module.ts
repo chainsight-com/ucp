@@ -153,7 +153,7 @@ const menus: any[] = [
   },
   {
     id: 'holder-scan',
-    name: 'HOLDER Scan',
+    name: 'HOLDER SCAN',
     path: null,
     url: null,
     level: 1,

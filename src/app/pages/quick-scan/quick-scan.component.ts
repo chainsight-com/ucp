@@ -402,19 +402,19 @@ export class QuickScanComponent implements OnInit {
         break;
       case 'PENDING':
         res = {
-          color: 'processing',
-          title: 'Running'
+          color: 'yellow',
+          title: 'Pending'
         };
         break;
       case 'RUNNING':
         res = {
-          color: 'processing',
+          color: 'blue',
           title: 'Running'
         };
         break;
       case 'FAILED':
         res = {
-          color: 'error',
+          color: 'red',
           title: 'Error'
         };
         break;
