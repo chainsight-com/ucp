@@ -1,52 +1,33 @@
 <nz-breadcrumb>
-  <nz-breadcrumb-item>NameSpace</nz-breadcrumb-item>
-  <nz-breadcrumb-item>NameSpace List</nz-breadcrumb-item>
+  <nz-breadcrumb-item>Holder Management</nz-breadcrumb-item>
+  <nz-breadcrumb-item>Holder</nz-breadcrumb-item>
 </nz-breadcrumb>
 
-  <div class="func-area">
-    <div class="pfy-btn-right">
-    <button (click)="addNamespace()" nz-button nzType="primary">New Namespace</button>
+<div class="func-area">
+  <div class="pfy-search-input">
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input type="text" nz-input placeholder="input search text"/>
+    </nz-input-group>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+    </ng-template>
   </div>
-    <div class="area-title">Holder Management</div>
-    <div class="search-input">
-      <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-        <input type="text" nz-input placeholder="input search text"/>
-      </nz-input-group>
-      <ng-template #suffixIconButton>
-        <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
-      </ng-template>
-    </div>
-    <div class="btn">
-      <button nz-button nzType="primary">Export</button>
-      <button nz-button nzType="primary">New Holder</button>
-    </div>
+  <div class="pfy-btn-right">
+    <button nz-button nzType="primary" (click)="export()">Export</button>
+    <button nz-button nzType="primary" (click)="addHolder()">New Holder</button>
   </div>
-  <nz-table #basicTable [nzData]="listOfData">
-    <thead>
-    <tr>
-      <th>NameSpace</th>
-      <th>Holder Id</th>
-      <th>Name</th>
-      <th>Risk Level</th>
-      <th>Last Scan At</th>
-      <th>Create At</th>
-      <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let data of basicTable.data">
-      <td>{{ data.namespace }}</td>
-      <td>{{ data.status }}</td>
-      <td>{{ data.namespace }}</td>
-      <td>{{ data.status }}</td>
-      <td>{{ data.namespace }}</td>
-      <td>{{ data.status }}</td>
-      <td>
-        <a>Edit</a>
-        <nz-divider nzType="vertical"></nz-divider>
-        <a>Delete</a>
-      </td>
-    </tr>
-    </tbody>
-  </nz-table>
-<!--</nz-content>-->
+</div>
+
+<div class="pfy-page-content">
+  <pfy-table
+    [tblColumns]="tblColumns"
+    [tblData]="listOfData"
+    [tblTotal]="total"
+    [(pageIndex)]="currentPage"
+    [loading]="isLoading"
+    (detailClick)="handleDetailClick($event)"
+    [pageable]="true"
+    [pageSizeOptions]="pageSizeOptions"
+    (pageSizeChange)="handlePageSizeChange($event)"
+  ></pfy-table>
+</div>

@@ -13,8 +13,12 @@ Html, body{
 
   }
 
-  .search-input {
+  .pfy-search-input {
     float: left;
+    margin: 10px 0px 10px 0px;
+    input{
+      margin: 5px;
+    }
   }
 }
 .pfy-page-content{

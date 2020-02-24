@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TblColumn} from '@profyu/core-ng-zorro/lib/model/tblColumn';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-namespace',
@@ -8,9 +9,10 @@ import {TblColumn} from '@profyu/core-ng-zorro/lib/model/tblColumn';
 })
 export class NamespaceComponent implements OnInit {
 
-  listOfData: Array<any>;
+  public listOfData: Array<any>;
   public isLoading = false;
   public currentPage = 0;
+  public pageSize = 0;
   public total = 0;
   public pageSizeOptions = [30, 50, 100];
   public tblColumns: Array<TblColumn> = [
@@ -20,8 +22,7 @@ export class NamespaceComponent implements OnInit {
     },
     {
       property: 'status',
-      title: 'Status',
-      detail: true
+      title: 'Status'
     },
     {
       title: 'Action',
@@ -39,7 +40,7 @@ export class NamespaceComponent implements OnInit {
     }
   ];
 
-  constructor() {
+  constructor(private router: Router) {
   }
 
   ngOnInit() {
@@ -50,12 +51,13 @@ export class NamespaceComponent implements OnInit {
   }
 
   addNamespace() {
+    this.router.navigate(['/namespace-add']);
   }
 
   handleDetailClick(row) {
   }
 
-  handlePageSizeChange(index) {
+  handlePageSizeChange(pageSize) {
+    this.pageSize = pageSize;
   }
-
 }

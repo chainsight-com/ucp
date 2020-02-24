@@ -150,12 +150,12 @@ export class QuickScanComponent implements OnInit {
     {
       property: 'maxLevel',
       title: 'Total Score EV',
-      slot: ''
+      slot: 'totalScore'
     },
     {
       property: 'maxLevel',
       title: 'Avg. Score EV',
-      slot: ''
+      slot: 'avgScore'
     }
 
   ];
