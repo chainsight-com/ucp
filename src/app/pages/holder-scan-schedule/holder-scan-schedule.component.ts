@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {TblColumn} from '@profyu/core-ng-zorro';
+import {ActivatedRoute, Router} from '@angular/router';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-holder-scan-schedule',
@@ -7,17 +10,104 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HolderScanScheduleComponent implements OnInit {
 
-  listOfData: Array<any>;
+  public listOfData: Array<any>;
+  public isLoading = false;
+  public currentPage = 0;
+  public pageSize = 0;
+  public total = 0;
+  public pageSizeOptions = [30, 50, 100];
+  public tblColumns: Array<TblColumn> = [
+    {
+      property: 'name',
+      title: 'Name',
+      detail: true
+    },
+    {
+      property: '',
+      title: 'Status',
+      formatter: data => {
+        if (data.status === 1) {
+          return 'Enabled';
+        } else if (data.status === 0) {
+          return 'Disabled';
+        } else {
+          return 'N/A';
+        }
+      }
+    },
+    {
+      property: '',
+      title: 'Next Scan At',
+      formatter: data => {
+        return this.transformDate(data);
+      }
+    },
+    {
+      title: 'Actions',
+      actions: [
+        {
+          name: 'edit',
+          title: 'Edit'
+        },
+        {
+          name: 'delete',
+          title: 'Delete'
+        }
+      ]
+    }
+  ];
+  public scanId: string;
 
-  constructor() {
+  constructor(private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.listOfData = [{
-      'name': '#00003',
-      'status': 'Enabled',
-      'nextScanAt': '2020-01-01'
-    }];
+    this.scanId = this.route.snapshot.paramMap.get('id');
+
+    this.listOfData = [
+      {
+        'name': 'Standard Monthly Scan',
+        'status': 0,
+        'nextScanAt': '2019-12-01T12:57:28.000+0000'
+
+      },
+      {
+        'name': 'Standard Monthly Scan',
+        'status': 1,
+        'nextScanAt': ''
+
+      },
+      {
+        'name': 'VIP Monthly Scan',
+        'status': 1,
+        'nextScanAt': '2019-11-01T09:57:28.000+0000'
+
+      }
+    ];
   }
 
+  transformDate(data) {
+    let res = null;
+    try {
+      res = formatDate(data.nextScanAt, 'short', 'en-US', '');
+    } catch (e) {
+      res = 'N/A';
+    }
+    return res;
+  }
+
+  addSchedule() {
+    this.router.navigate(['/holder-scan-schedule-add']);
+  }
+
+  handleDetailClick(row) {
+    this.router.navigate(['/???' + row.caseId]);
+  }
+
+  handlePageSizeChange(pageSize) {
+    this.pageSize = pageSize;
+  }
+
+  handleActionClick(val) {
+  }
 }
