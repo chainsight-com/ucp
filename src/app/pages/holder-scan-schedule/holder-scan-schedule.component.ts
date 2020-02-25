@@ -59,10 +59,11 @@ export class HolderScanScheduleComponent implements OnInit {
   public scanId: string;
 
   constructor(private router: Router, private route: ActivatedRoute) {
+    this.scanId = this.route.snapshot.paramMap.get('id');
+
   }
 
   ngOnInit() {
-    this.scanId = this.route.snapshot.paramMap.get('id');
 
     this.listOfData = [
       {

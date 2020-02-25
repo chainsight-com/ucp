@@ -47,7 +47,6 @@ import {QuickScanComponent} from './pages/quick-scan/quick-scan.component';
 import {HolderComponent} from './pages/holder/holder.component';
 import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
 import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
-import {HolderDetailComponent} from './pages/holder-detail/holder-detail.component';
 import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
 import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
 import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-result-page.component';
@@ -58,7 +57,11 @@ import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.compo
 import {QuickScanResultComponent} from './pages/quick-scan-result/quick-scan-result.component';
 import {NamespaceComponent} from './pages/namespace/namespace.component';
 import {NamespaceAddComponent} from './pages/namespace-add/namespace-add.component';
-import { HolderAddComponent } from './pages/holder-add/holder-add.component';
+import {HolderAddComponent} from './pages/holder-add/holder-add.component';
+import {HolderDetailProfileComponent} from './pages/holder-detail-profile/holder-detail-profile.component';
+import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
+import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
+import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
 
 const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline, SwapLeftOutline, SwapRightOutline, ExperimentOutline];
 
@@ -275,7 +278,6 @@ G6.track(false);
     HolderComponent,
     HolderScanScheduleAddComponent,
     HolderScanScheduleComponent,
-    HolderDetailComponent,
     HolderScanResultComponent,
     HolderScanComponent,
     QuickScanComponent,
@@ -285,6 +287,10 @@ G6.track(false);
     NamespaceComponent,
     NamespaceAddComponent,
     HolderAddComponent,
+    HolderDetailProfileComponent,
+    HolderDetailScanHistoryComponent,
+    HolderDetailAddressAddComponent,
+    HolderDetailAddressComponent,
   ],
   imports: [
     BrowserModule,

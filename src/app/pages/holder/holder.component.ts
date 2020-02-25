@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {TblColumn} from '@profyu/core-ng-zorro/lib/model/tblColumn';
 import {Router} from '@angular/router';
 import {formatDate} from '@angular/common';
+import {TblAction} from '@profyu/core-ng-zorro';
 
 @Component({
   selector: 'app-holder',
@@ -134,10 +135,35 @@ export class HolderComponent implements OnInit {
   export() {
   }
 
-  handleDetailClick(row) {
+  handleDetailClick(row: any) {
   }
 
-  handlePageSizeChange(pageSize) {
+  handlePageSizeChange(pageSize: number) {
     this.pageSize = pageSize;
+  }
+
+  handleDelete(row: any) {
+  }
+
+  handleActionClick(val: TblAction) {
+    switch (val.action) {
+      case 'edit':
+        this.router.navigate(['/holder-add/' + val.row['holderId']]);
+        break;
+      case 'delete':
+        this.handleDelete(val.row);
+        break;
+      case 'profile':
+        this.router.navigate(['/holder-detail-profile/' + val.row['holderId']]);
+        break;
+      case 'addresses':
+        this.router.navigate(['/holder-detail-address/' + val.row['holderId']]);
+        break;
+      case 'scanHistory':
+        this.router.navigate(['/holder-detail-scan-history/' + val.row['holderId']]);
+        break;
+      default:
+        break;
+    }
   }
 }

@@ -1,23 +1,22 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-  selector: 'app-holder-add',
-  templateUrl: './holder-add.component.html',
-  styleUrls: ['./holder-add.component.scss']
+  selector: 'app-holder-detail-profile',
+  templateUrl: './holder-detail-profile.component.html',
+  styleUrls: ['./holder-detail-profile.component.scss']
 })
-export class HolderAddComponent implements OnInit, AfterViewInit {
+export class HolderDetailProfileComponent implements OnInit {
 
+  holderId: string;
   public validateForm: FormGroup;
-  public id: string;
 
   constructor(private fb: FormBuilder, private router: Router, private route: ActivatedRoute) {
-    this.id = this.route.snapshot.paramMap.get('id');
+    this.holderId = this.route.snapshot.paramMap.get('id');
   }
 
-  ngOnInit(): void {
-
+  ngOnInit() {
     this.validateForm = this.fb.group({
       namespace: [null, [Validators.required]],
       holderId: [null, [Validators.required]],
@@ -26,15 +25,11 @@ export class HolderAddComponent implements OnInit, AfterViewInit {
       country: [null, [Validators.required]],
       birthday: [null, [Validators.required]]
     });
-    if (!!this.id) {
-      console.log(this.id);
-      this.validateForm.patchValue({'holderId': this.id});
+    if (!!this.holderId) {
+      console.log(this.holderId);
+      this.validateForm.patchValue({'holderId': this.holderId});
     }
   }
-  ngAfterViewInit(): void {
-
-  }
-
   submitForm(): void {
     console.log(this.validateForm.value);
     for (const i in this.validateForm.controls) {
@@ -46,5 +41,4 @@ export class HolderAddComponent implements OnInit, AfterViewInit {
   handleCancel() {
     this.router.navigate(['/holder']);
   }
-
 }

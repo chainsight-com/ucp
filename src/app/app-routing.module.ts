@@ -9,7 +9,6 @@ import {EthScanResultPageComponent} from './pages/eth-scan-result-page/eth-scan-
 import {XrpScanResultPageComponent} from './pages/xrp-scan-result-page/xrp-scan-result-page.component';
 import {QuickScanComponent} from './pages/quick-scan/quick-scan.component';
 import {HolderComponent} from './pages/holder/holder.component';
-import {HolderDetailComponent} from './pages/holder-detail/holder-detail.component';
 import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
 import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
 import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
@@ -19,6 +18,10 @@ import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.compo
 import {NamespaceComponent} from './pages/namespace/namespace.component';
 import {NamespaceAddComponent} from './pages/namespace-add/namespace-add.component';
 import {HolderAddComponent} from './pages/holder-add/holder-add.component';
+import {HolderDetailProfileComponent} from './pages/holder-detail-profile/holder-detail-profile.component';
+import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
+import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
+import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
 
 
 const routes: Routes = [
@@ -37,7 +40,11 @@ const routes: Routes = [
   {path: 'namespace-add', component: NamespaceAddComponent},
   {path: 'holder', component: HolderComponent},
   {path: 'holder-add', component: HolderAddComponent},
-  {path: 'holder-detail/:id', component: HolderDetailComponent},
+  {path: 'holder-add/:id', component: HolderAddComponent},
+  {path: 'holder-detail-profile/:id', component: HolderDetailProfileComponent},
+  {path: 'holder-detail-address/:id', component: HolderDetailAddressComponent},
+  {path: 'holder-detail-address-add/:id', component: HolderDetailAddressAddComponent},
+  {path: 'holder-detail-scan-history/:id', component: HolderDetailScanHistoryComponent},
   {path: 'holder-scan', component: HolderScanComponent},
   {path: 'holder-scan-result/:id', component: HolderScanResultComponent},
   {path: 'holder-scan-schedule', component: HolderScanScheduleComponent},
