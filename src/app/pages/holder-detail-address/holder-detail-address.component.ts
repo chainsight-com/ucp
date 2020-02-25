@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
+import {NzTabComponent} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-holder-detail-address',
@@ -8,7 +8,8 @@ import {ActivatedRoute, Router} from '@angular/router';
   styleUrls: ['./holder-detail-address.component.scss']
 })
 export class HolderDetailAddressComponent implements OnInit {
-  holderId: string;
+  public holderId: string;
+  public selectedTabIndex = 0;
 
   constructor(private router: Router, private route: ActivatedRoute) {
     this.holderId = this.route.snapshot.paramMap.get('id');
@@ -17,4 +18,12 @@ export class HolderDetailAddressComponent implements OnInit {
   ngOnInit() {
   }
 
+  add() {
+    this.router.navigate(['/holder-detail-address-add/' + this.holderId]);
+  }
+
+  handleSelectChange(val: { index: number, tab: NzTabComponent }) {
+    this.selectedTabIndex = val.index;
+    console.log(this.selectedTabIndex);
+  }
 }

@@ -1,1 +1,57 @@
-<p>holder-detail-address-add works!</p>
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Holder Management</nz-breadcrumb-item>
+  <nz-breadcrumb-item>Holder</nz-breadcrumb-item>
+  <nz-breadcrumb-item>{{id}}</nz-breadcrumb-item>
+  <nz-breadcrumb-item>New Holder Address</nz-breadcrumb-item>
+
+</nz-breadcrumb>
+<div class="pfy-page-content">
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>Flow</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the !">
+        <nz-select formControlName="flow" [ngModel]="">
+          <nz-option nzValue="ingress" nzLabel="Ingress"></nz-option>
+          <nz-option nzValue="egress" nzLabel="Egress"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>Name</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the !">
+        <nz-select formControlName="name" [ngModel]="">
+          <nz-option nzValue="BTC" nzLabel="BTC"></nz-option>
+          <nz-option nzValue="ETH" nzLabel="ETH"></nz-option>
+          <nz-option nzValue="BCH" nzLabel="BCH"></nz-option>
+          <nz-option nzValue="LTC" nzLabel="LTC"></nz-option>
+          <nz-option nzValue="USDT" nzLabel="USDT"></nz-option>
+          <nz-option nzValue="ZIL" nzLabel="ZIL"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>Type</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the type!">
+        <nz-select formControlName="type" [ngModel]="">
+          <nz-option nzValue="0" nzLabel="Holded"></nz-option>
+          <nz-option nzValue="1" nzLabel="Not Holded"></nz-option>
+          <nz-option nzValue="2" nzLabel="Unknown"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzNoColon]="true" nzRequired>Address</nz-form-label>
+      <nz-form-control nzErrorTip="Please input the Address!">
+        <input type="text" nz-input formControlName="address" placeholder="Address" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <div class="pfy-form-btn">
+          <button nz-button nzType="primary" (click)="submitForm()">Submit</button>
+          <button nz-button (click)="handleCancel()">Cancel</button>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>

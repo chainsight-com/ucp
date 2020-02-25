@@ -4,3 +4,28 @@
   <nz-breadcrumb-item>Addresses</nz-breadcrumb-item>
   <nz-breadcrumb-item>{{holderId}}</nz-breadcrumb-item>
 </nz-breadcrumb>
+<div class="func-area">
+  <div class="pfy-btn-right">
+    <button (click)="add()" nz-button nzType="primary">Add Address</button>
+  </div>
+</div>
+<div class="pfy-page-content">
+
+  <nz-tabset [nzTabPosition]="'top'"
+             [nzType]="'line'"
+             [nzSelectedIndex]="selectedTabIndex"
+             (nzSelectChange)="handleSelectChange($event)">
+    <nz-tab [nzTitle]="'BTC'">
+    </nz-tab>
+    <nz-tab [nzTitle]="'ETH'">
+    </nz-tab>
+    <nz-tab [nzTitle]="'XRP'">
+    </nz-tab>
+    <nz-tab [nzTitle]="'ZIL'">
+    </nz-tab>
+    <nz-tab [nzTitle]="'LTC'">
+    </nz-tab>
+    <nz-tab [nzTitle]="'USDT'">
+    </nz-tab>
+  </nz-tabset>
+</div>
