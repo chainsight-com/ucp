@@ -4,3 +4,17 @@
   <nz-breadcrumb-item>Scan History</nz-breadcrumb-item>
   <nz-breadcrumb-item>{{holderId}}</nz-breadcrumb-item>
 </nz-breadcrumb>
+
+<div class="pfy-page-content">
+  <pfy-table
+    [tblColumns]="tblColumns"
+    [tblData]="listOfData"
+    [tblTotal]="total"
+    [(pageIndex)]="currentPage"
+    [loading]="isLoading"
+    (detailClick)="handleDetailClick($event)"
+    [pageable]="true"
+    [pageSizeOptions]="pageSizeOptions"
+    (pageSizeChange)="handlePageSizeChange($event)"
+  ></pfy-table>
+</div>

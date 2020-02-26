@@ -1,1 +1,38 @@
-<p>holder-scan-schedule-add works!</p>
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Holder Scan</nz-breadcrumb-item>
+  <nz-breadcrumb-item>Scan Schedules</nz-breadcrumb-item>
+  <nz-breadcrumb-item>New Schedule</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="pfy-page-content">
+  <nz-divider nzText="MetaData" nzOrientation="left"></nz-divider>
+  <input nz-input placeholder="Schedule Name" [(ngModel)]="name"/>
+  <nz-divider nzText="Trigger" nzOrientation="left"></nz-divider>
+  <div nz-row>
+    <div nz-col nzSpan="12">
+      <div [ngStyle]="{ width: '300px', border: '1px solid #d9d9d9', borderRadius: '4px' }">
+        <nz-calendar
+          [nzFullscreen]="false"
+          (nzSelectChange)="onValueChange($event)"
+          (nzPanelChange)="onPanelChange($event)"
+        ></nz-calendar>
+      </div>
+    </div>
+    <div nz-col nzSpan="12">
+      <div [ngStyle]="{ width: '300px', border: '1px solid #d9d9d9', borderRadius: '4px' }">
+        <nz-radio-group [(ngModel)]="radioValue">
+          <label nz-radio [ngStyle]="style" nzValue="A">Daily</label>
+          <label nz-radio [ngStyle]="style" nzValue="B">Monthly</label>
+          <label nz-radio [ngStyle]="style" nzValue="C">Quarterly</label>
+          <label nz-radio [ngStyle]="style" nzValue="D">Yearly</label>
+          <label nz-radio [ngStyle]="style" nzValue="M">
+            More...
+            <input type="text" nz-input *ngIf="radioValue == 'M'" style="width: 100px; margin-left: 10px;"/>
+          </label>
+        </nz-radio-group>
+      </div>
+    </div>
+  </div>
+
+  <nz-divider nzText="Holder Filter" nzOrientation="left"></nz-divider>
+  ewe
+</div>

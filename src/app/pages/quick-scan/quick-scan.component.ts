@@ -40,7 +40,7 @@ export class QuickScanComponent implements OnInit {
       property: 'status',
       title: 'Status',
       type: 'level',
-      width: 120,
+      width: 150,
       formatter: (data) => {
         return this.statusFormatter(data);
       }

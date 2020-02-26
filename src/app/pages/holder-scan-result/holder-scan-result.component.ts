@@ -103,7 +103,7 @@ export class HolderScanResultComponent implements OnInit {
         'critical': 9,
         'major': 20,
         'minor': 14
-      },
+      }
     ];
   }
 

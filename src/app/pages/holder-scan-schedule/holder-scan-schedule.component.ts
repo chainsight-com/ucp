@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {TblColumn} from '@profyu/core-ng-zorro';
 import {ActivatedRoute, Router} from '@angular/router';
 import {formatDate} from '@angular/common';
+import {UtilsService} from '../../services/utils.service';
 
 @Component({
   selector: 'app-holder-scan-schedule',
@@ -39,7 +40,7 @@ export class HolderScanScheduleComponent implements OnInit {
       property: '',
       title: 'Next Scan At',
       formatter: data => {
-        return this.transformDate(data);
+        return this.utilService.transformDateShort(data.nextScanAt);
       }
     },
     {
@@ -58,7 +59,9 @@ export class HolderScanScheduleComponent implements OnInit {
   ];
   public scanId: string;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private utilService: UtilsService) {
     this.scanId = this.route.snapshot.paramMap.get('id');
 
   }
