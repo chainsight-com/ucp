@@ -128,11 +128,13 @@
 
                   <tr *ngFor="let data of basicTable.data">
                     <td>
+                      <nz-badge *ngIf="data.direction==='F'" nzStatus="processing" style="margin-right: 5px;"></nz-badge>
                       <i class="direction-icon" *ngIf="data.direction==='F'" nz-icon nzType="swap-right"
                         nzTheme="outline"></i>
                       {{ data.address }}
                       <i class="direction-icon" *ngIf="data.direction==='B'" nz-icon nzType="swap-right"
                         nzTheme="outline"></i>
+                        <nz-badge *ngIf="data.direction==='B'" nzStatus="processing" style="margin-left: 5px;"></nz-badge>
                     </td>
 
                     <td>{{ data.totalAmount | crypto: 'satoshi' : 'btc'}} BTC</td>

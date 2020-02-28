@@ -219,7 +219,7 @@ const menus: any[] = [
       },
       {
         id: 'role-permission',
-        name: 'ROLE&PERMISSION',
+        name: 'ROLE & PERMISSION',
         path: 'role-permission',
         url: null,
         level: 2,

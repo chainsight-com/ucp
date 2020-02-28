@@ -147,24 +147,30 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
       this.witnessPageNo = 1;
     }
     this.isWitnessLoading = false;
+    this.btcAddressScanPipelineApiService.getAddressScanWitnessSummaryUsingGETDefault(this.pipeline.id)
+      .pipe(
+        take(1),
+      ).subscribe(summary => {
+        summary.forEach(r => {
+          if (r.riskLevel === 5) {
+            this.witnessSummary.critical = r.witnessCount;
+          } else if (r.riskLevel === 4) {
+            this.witnessSummary.high = r.witnessCount;
+          } else if (r.riskLevel === 3) {
+            this.witnessSummary.medium = r.witnessCount;
+          } else if (r.riskLevel === 2) {
+            this.witnessSummary.low = r.witnessCount;
+          } else if (r.riskLevel === 1) {
+            this.witnessSummary.normal = r.witnessCount;
+          }
+        });
+      });
     this.btcAddressScanPipelineApiService.getAddressScanWitnessUsingGETDefault(this.pipeline.id, this.witnessPageNo - 1, this.witnessPageSize)
       .pipe(
         take(1),
       ).subscribe(page => {
         this.witnessResultPage = page;
-        this.witnessResultPage.records.forEach(r => {
-          if (r.riskLevel === 5) {
-            this.witnessSummary.critical += 1;
-          } else if (r.riskLevel === 4) {
-            this.witnessSummary.high += 1;
-          } else if (r.riskLevel === 3) {
-            this.witnessSummary.medium += 1;
-          } else if (r.riskLevel === 2) {
-            this.witnessSummary.low += 1;
-          } else if (r.riskLevel === 1) {
-            this.witnessSummary.normal += 1;
-          }
-        });
+
       }, console.error, () => {
         this.isWitnessLoading = false;
       });
@@ -225,7 +231,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
             locationSpot: go.Spot.MiddleLeft,
             portSpreading: go.Node.SpreadingPacked,  // rather than the default go.Node.SpreadingEvenly
             click: (e, node: go.Node) => {
-
+              this.copyToClipboard(node.data.key);
               // highlight all Links and Nodes coming out of a given Node
               const diagram = node.diagram;
               diagram.startTransaction('highlight');
@@ -467,6 +473,26 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
     }
     return '#CF1322';
   }
+
+  copyToClipboard(str) {
+    const el = document.createElement('textarea');  // Create a <textarea> element
+    el.value = str;                                 // Set its value to the string that you want copied
+    el.setAttribute('readonly', '');                // Make it readonly to be tamper-proof
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';                      // Move outside the screen to make it invisible
+    document.body.appendChild(el);                  // Append the <textarea> element to the HTML document
+    const selected =
+      document.getSelection().rangeCount > 0        // Check if there is any content selected previously
+        ? document.getSelection().getRangeAt(0)     // Store selection if found
+        : false;                                    // Mark as false to know no selection existed before
+    el.select();                                    // Select the <textarea> content
+    document.execCommand('copy');                   // Copy - only works as a result of a user action (e.g. click events)
+    document.body.removeChild(el);                  // Remove the <textarea> element
+    if (selected) {                                 // If a selection existed before copying
+      document.getSelection().removeAllRanges();    // Unselect everything on the HTML document
+      document.getSelection().addRange(selected);   // Restore the original selection
+    }
+  };
 
 
 }
