@@ -29,6 +29,9 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
   public isLoadingPipeline = false;
   public pipeline: BtcAddressScanPipeline = {};
 
+  // graph
+  public graphEdgeSize = 300;
+
   // witness
   public isWitnessLoading = false;
   public witnessPageNo = 0;
@@ -181,9 +184,9 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.isLoadingDiagram = true;
     });
-    const startingTime = moment(this.pipeline.startingTime).local().add(this.dateRange[0], 'days').toDate();
-    const endingTime = moment(this.pipeline.startingTime).local().add(this.dateRange[1], 'days').toDate();
-    const address = this.pipeline.address;
+    // const startingTime = moment(this.pipeline.startingTime).local().add(this.dateRange[0], 'days').toDate();
+    // const endingTime = moment(this.pipeline.startingTime).local().add(this.dateRange[1], 'days').toDate();
+    // const address = this.pipeline.address;
 
 
     // const rootAddress = '12etp4a21L5ks7KKuNtEFx2r1ZqbwEampq';
@@ -384,12 +387,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
     }
 
 
-    this.btcAddressScanPipelineApiService.getAddressScanGraphUsingPOSTDefault(this.pipeline.id, 0, 10000, {
-
-      startingTime,
-      endingTime,
-      address,
-    }).pipe(
+    this.btcAddressScanPipelineApiService.getAddressScanGraphUsingPOSTDefault(this.pipeline.id, 0, this.graphEdgeSize, {}).pipe(
       take(1)
     ).subscribe((graph) => {
 
@@ -493,6 +491,11 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
       document.getSelection().addRange(selected);   // Restore the original selection
     }
   };
+
+  loadMoreEdges(){
+    this.graphEdgeSize += 100;
+    this.initDiagram();
+  }
 
 
 }
