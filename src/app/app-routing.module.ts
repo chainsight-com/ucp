@@ -49,7 +49,7 @@ const routes: Routes = [
   {path: 'holder-scan-result/:id', component: HolderScanResultComponent},
   {path: 'holder-scan-schedule', component: HolderScanScheduleComponent},
   {path: 'holder-scan-schedule-add', component: HolderScanScheduleAddComponent},
-  {path: '**', component: DashboardPageComponent}
+  {path: '**', component: NewScanPageComponent}
 ];
 
 @NgModule({

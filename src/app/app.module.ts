@@ -21,7 +21,8 @@ import {
   SecurityScanOutline,
   SwapLeftOutline,
   SwapRightOutline,
-  UserOutline
+  UserOutline,
+  LockFill
 } from '@ant-design/icons-angular/icons';
 import {registerLocaleData} from '@angular/common';
 import en from '@angular/common/locales/zh';
@@ -51,7 +52,7 @@ import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-
 import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
 import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-result-page.component';
 
-import {CoreNgZorroModule, JwtService} from '@profyu/core-ng-zorro';
+import {CoreNgZorroModule, JwtService, Menu} from '@profyu/core-ng-zorro';
 import {QuickScanAddFormComponent} from './component/quick-scan-add-form/quick-scan-add-form.component';
 import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
 import {QuickScanResultComponent} from './pages/quick-scan-result/quick-scan-result.component';
@@ -63,7 +64,7 @@ import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-histo
 import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
 import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
 
-const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline, SwapLeftOutline, SwapRightOutline, ExperimentOutline];
+const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline, SwapLeftOutline, SwapRightOutline, ExperimentOutline, LockFill];
 
 const menus: any[] = [
 
@@ -73,8 +74,10 @@ const menus: any[] = [
     path: 'dashboard',
     url: null,
     level: 1,
-    icon: 'home',
-    children: []
+    icon: 'lock',
+    children: [],
+    disabled: true,
+
   },
   {
     id: 'address-scan',
@@ -112,7 +115,8 @@ const menus: any[] = [
     context: null,
     path: 'quick-scan',
     url: null,
-    icon: 'bar-chart',
+    icon: 'lock',
+    disabled: true,
     level: 1,
     children: []
   },
@@ -122,7 +126,8 @@ const menus: any[] = [
     context: null,
     path: 'kyc-lookup',
     url: null,
-    icon: 'area-chart',
+    icon: 'lock',
+    disabled: true,
     level: 1,
     children: []
   },
@@ -139,7 +144,8 @@ const menus: any[] = [
         name: 'NAMESPACE',
         path: 'namespace',
         url: null,
-        icon: 'bar-chart',
+        icon: 'lock',
+        disabled: true,
         level: 2,
         children: []
       },
@@ -149,7 +155,8 @@ const menus: any[] = [
         path: 'holder',
         url: null,
         level: 2,
-        icon: 'bar-chart',
+        icon: 'lock',
+        disabled: true,
         children: []
       }
     ]
@@ -167,7 +174,8 @@ const menus: any[] = [
         name: 'SCAN',
         path: 'holder-scan',
         url: null,
-        icon: 'bar-chart',
+        icon: 'lock',
+        disabled: true,
         level: 2,
         children: []
       },
@@ -177,7 +185,8 @@ const menus: any[] = [
         path: 'holder-scan-schedule',
         url: null,
         level: 2,
-        icon: 'bar-chart',
+        icon: 'lock',
+        disabled: true,
         children: []
       },
       {
@@ -186,7 +195,8 @@ const menus: any[] = [
         path: 'tx-monitoring',
         url: null,
         level: 2,
-        icon: 'bar-chart',
+        icon: 'lock',
+        disabled: true,
         children: []
       }
     ]
@@ -197,7 +207,8 @@ const menus: any[] = [
     path: 'ubo-identification',
     url: null,
     level: 1,
-    icon: 'area-chart',
+    icon: 'lock',
+    disabled: true,
     children: []
   },
   {
@@ -213,7 +224,8 @@ const menus: any[] = [
         name: 'WALLET CONFIG',
         path: 'wallet-config',
         url: null,
-        icon: 'bar-chart',
+        icon: 'lock',
+        disabled: true,
         level: 2,
         children: []
       },
@@ -223,7 +235,8 @@ const menus: any[] = [
         path: 'role-permission',
         url: null,
         level: 2,
-        icon: 'bar-chart',
+        icon: 'lock',
+        disabled: true,
         children: []
       },
       {
@@ -232,7 +245,8 @@ const menus: any[] = [
         path: 'billing',
         url: null,
         level: 2,
-        icon: 'bar-chart',
+        icon: 'lock',
+        disabled: true,
         children: []
       }
     ]
