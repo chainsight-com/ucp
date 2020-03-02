@@ -4,29 +4,9 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {ZXingScannerModule} from '@zxing/ngx-scanner';
-import {en_US, NgZorroAntdModule, NZ_I18N, NZ_ICONS, NzIconModule} from 'ng-zorro-antd';
-import {
-  ArrowLeftOutline,
-  DashboardOutline,
-  ExperimentOutline,
-  GoogleOutline,
-  LaptopOutline,
-  LockOutline,
-  LogoutOutline,
-  MailOutline,
-  MenuFoldOutline,
-  NotificationOutline,
-  QrcodeOutline,
-  ReloadOutline,
-  SecurityScanOutline,
-  SwapLeftOutline,
-  SwapRightOutline,
-  UserOutline,
-  LockFill
-} from '@ant-design/icons-angular/icons';
+import {en_US, NgZorroAntdModule, NZ_I18N} from 'ng-zorro-antd';
 import {registerLocaleData} from '@angular/common';
 import en from '@angular/common/locales/zh';
-import {IconDefinition} from '@ant-design/icons-angular';
 import {HttpClientModule} from '@angular/common/http';
 import G6 from '@antv/g6';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -38,12 +18,10 @@ import {NewScanPageComponent} from './pages/new-scan-page/new-scan-page.componen
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
 import {BASE_PATH} from '@profyu/unblock-ng-sdk';
 import {environment} from 'src/environments/environment';
-// import { NoopInterceptor } from '@angular/common/http/src/interceptor';
 import {BtcScanResultPageComponent} from './pages/btc-scan-result-page/btc-scan-result-page.component';
 import {CryptoPipe} from './pipes/crypto.pipe';
 import {EthScanResultPageComponent} from './pages/eth-scan-result-page/eth-scan-result-page.component';
 import {XrpScanResultPageComponent} from './pages/xrp-scan-result-page/xrp-scan-result-page.component';
-
 import {QuickScanComponent} from './pages/quick-scan/quick-scan.component';
 import {HolderComponent} from './pages/holder/holder.component';
 import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
@@ -51,8 +29,7 @@ import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-s
 import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
 import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
 import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-result-page.component';
-
-import {CoreNgZorroModule, JwtService, Menu} from '@profyu/core-ng-zorro';
+import {CoreNgZorroModule, JwtService} from '@profyu/core-ng-zorro';
 import {QuickScanAddFormComponent} from './component/quick-scan-add-form/quick-scan-add-form.component';
 import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
 import {QuickScanResultComponent} from './pages/quick-scan-result/quick-scan-result.component';
@@ -63,8 +40,6 @@ import {HolderDetailProfileComponent} from './pages/holder-detail-profile/holder
 import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
 import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
 import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
-
-const icons: IconDefinition[] = [UserOutline, LaptopOutline, NotificationOutline, MailOutline, GoogleOutline, ArrowLeftOutline, QrcodeOutline, LockOutline, SecurityScanOutline, DashboardOutline, MenuFoldOutline, ReloadOutline, LogoutOutline, SwapLeftOutline, SwapRightOutline, ExperimentOutline, LockFill];
 
 const menus: any[] = [
 
@@ -317,7 +292,6 @@ G6.track(false);
     ReactiveFormsModule,
     SocialLoginModule,
     ZXingScannerModule,
-    NzIconModule,
     CoreNgZorroModule,
     JwtModule.forRoot({
       config: {
@@ -330,7 +304,7 @@ G6.track(false);
     JwtService,
     {provide: BASE_PATH, useValue: environment.baseApiUrl},
     {provide: NZ_I18N, useValue: en_US},
-    {provide: NZ_ICONS, useValue: icons},
+    // {provide: NZ_ICONS, useValue: icons},
     {
       provide: AuthServiceConfig,
       useFactory: authServiceConfigFactory

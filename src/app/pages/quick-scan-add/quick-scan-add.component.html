@@ -9,9 +9,11 @@
       [nzTitle]="tab.name"
       (nzClick)="clickTab(['click', tab])">
       <div class="pfy-page-content">
-        <app-quick-scan-add-form
-          [selectedTab]="selectedTab"
-        ></app-quick-scan-add-form>
+        <div class="center">
+          <app-quick-scan-add-form
+            [selectedTab]="selectedTab"
+          ></app-quick-scan-add-form>
+        </div>
       </div>
     </nz-tab>
   </nz-tabset>

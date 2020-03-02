@@ -32,7 +32,9 @@ Html, body {
 .pfy-page-content {
   padding: 15px;
   display: block;
-  text-align: center;
+  .center {
+    text-align: center;
+  }
   form {
     width: 80%;
     display: inline-block;

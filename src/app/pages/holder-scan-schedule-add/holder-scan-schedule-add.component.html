@@ -8,7 +8,11 @@
   <input nz-input placeholder="Schedule Name" [(ngModel)]="name"/>
   <nz-divider nzText="Trigger" nzOrientation="left"></nz-divider>
   <div nz-row>
-    <div nz-col nzSpan="12">
+    <h5>Starting From:</h5>
+  </div>
+  <div nz-row>
+    <div nz-col nzSpan="4"></div>
+    <div nz-col nzSpan="10">
       <div [ngStyle]="{ width: '300px', border: '1px solid #d9d9d9', borderRadius: '4px' }">
         <nz-calendar
           [nzFullscreen]="false"
@@ -17,15 +21,15 @@
         ></nz-calendar>
       </div>
     </div>
-    <div nz-col nzSpan="12">
-      <div [ngStyle]="{ width: '300px', border: '1px solid #d9d9d9', borderRadius: '4px' }">
+    <div nz-col nzSpan="8">
+      <div class="radio">
         <nz-radio-group [(ngModel)]="radioValue">
           <label nz-radio [ngStyle]="style" nzValue="A">Daily</label>
           <label nz-radio [ngStyle]="style" nzValue="B">Monthly</label>
           <label nz-radio [ngStyle]="style" nzValue="C">Quarterly</label>
           <label nz-radio [ngStyle]="style" nzValue="D">Yearly</label>
           <label nz-radio [ngStyle]="style" nzValue="M">
-            More...
+            Other...
             <input type="text" nz-input *ngIf="radioValue == 'M'" style="width: 100px; margin-left: 10px;"/>
           </label>
         </nz-radio-group>
@@ -34,5 +38,38 @@
   </div>
 
   <nz-divider nzText="Holder Filter" nzOrientation="left"></nz-divider>
-  ewe
+  <form nz-form>
+    <nz-form-item *ngFor="let control of listOfControl; let i = index">
+      <nz-form-label [nzXs]="24" [nzSm]="4" *ngIf="i == 0" [nzFor]="control.controlInstance"
+      >Passengers
+      </nz-form-label>
+      <nz-form-control
+        [nzXs]="24"
+        [nzSm]="20"
+        [nzOffset]="i == 0 ? 0 : 4"
+        nzErrorTip="Please input passenger's name or delete this field."
+      >
+        <input
+          class="passenger-input"
+          nz-input
+          placeholder="placeholder"
+          [attr.id]="control.id"
+          [formControlName]="control.controlInstance"
+        />
+        <i nz-icon nzType="minus-circle-o" class="dynamic-delete-button" (click)="removeField(control, $event)"></i>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+
+  <nz-divider nzText="Scenario" nzOrientation="left"></nz-divider>
+
+  <div class="center">
+    <nz-transfer
+      [nzDataSource]="list"
+      nzShowSearch
+      [nzListStyle]="{ 'width.px': 250, 'height.px': 300 }"
+      (nzSelectChange)="transferSelect($event)"
+      (nzChange)="transferChange($event)">
+    </nz-transfer>
+  </div>
 </div>

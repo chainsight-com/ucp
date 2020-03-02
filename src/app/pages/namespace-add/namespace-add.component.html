@@ -4,20 +4,22 @@
   <nz-breadcrumb-item>New Namespace</nz-breadcrumb-item>
 </nz-breadcrumb>
 <div class="pfy-page-content">
-  <form nz-form [formGroup]="validateForm">
-    <nz-form-item>
-      <nz-form-label [nzNoColon]="true" nzRequired>Namespace</nz-form-label>
-      <nz-form-control  nzErrorTip="Please input the Namespace!">
-        <input type="text" nz-input formControlName="namespace" placeholder="Namespace" />
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control>
-        <div class="pfy-form-btn">
-          <button nz-button nzType="primary" (click)="submitForm()">Submit</button>
-          <button nz-button (click)="handleCancel()">Cancel</button>
-        </div>
-      </nz-form-control>
-    </nz-form-item>
-  </form>
+  <div class="center">
+    <form nz-form [formGroup]="validateForm">
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true" nzRequired>Namespace</nz-form-label>
+        <nz-form-control nzErrorTip="Please input the Namespace!">
+          <input type="text" nz-input formControlName="namespace" placeholder="Namespace"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <div class="pfy-form-btn">
+            <button nz-button nzType="primary" (click)="submitForm()">Submit</button>
+            <button nz-button (click)="handleCancel()">Cancel</button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
 </div>
