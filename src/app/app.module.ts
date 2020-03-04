@@ -8,7 +8,7 @@ import {en_US, NgZorroAntdModule, NZ_I18N} from 'ng-zorro-antd';
 import {registerLocaleData} from '@angular/common';
 import en from '@angular/common/locales/zh';
 import {HttpClientModule} from '@angular/common/http';
-import G6 from '@antv/g6';
+// import G6 from '@antv/g6';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthServiceConfig, GoogleLoginProvider, SocialLoginModule} from 'angularx-social-login';
 import {JwtModule} from '@auth0/angular-jwt';
@@ -250,7 +250,7 @@ export function tokenGetter() {
 // }
 
 registerLocaleData(en);
-G6.track(false);
+// G6.track(false);
 
 @NgModule({
   declarations: [
