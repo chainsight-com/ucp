@@ -85,7 +85,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
         this.form.controls.address.setValue(code);
       });
     this.account = this.jwtService.getMe();
-    this.accountApiService.getAccountQuotaUsingGETDefault(this.account.id).pipe(
+    this.accountApiService.getAccountQuotaUsingGET(this.account.id).pipe(
       take(1)
     ).subscribe(res => {
       this.accountQuota = res;
@@ -135,7 +135,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
 
   submitBtc(body: BtcSingleAddressRoot) {
     this.isSubmitting = true;
-    this.btcAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOSTDefault(body)
+    this.btcAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOST(body)
       .pipe(
         take(1)
       ).subscribe(pipeline => {
@@ -151,7 +151,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
 
   submitEth(body: EthSingleAddressRoot) {
     this.isSubmitting = true;
-    this.ethAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOSTDefault1(body)
+    this.ethAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOST1(body)
       .pipe(
         take(1)
       ).subscribe(pipeline => {
@@ -167,7 +167,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
 
   submitXrp(body: XrpSingleAddressRoot) {
     this.isSubmitting = true;
-    this.xrpAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOSTDefault2(body)
+    this.xrpAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOST2(body)
       .pipe(
         take(1)
       ).subscribe(pipeline => {
@@ -183,7 +183,7 @@ export class NewScanPageComponent implements OnInit, OnDestroy {
 
   submitZil(body: ZilSingleAddressRoot) {
     this.isSubmitting = true;
-    this.zilAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOSTDefault3(body)
+    this.zilAddressScanPipelineApiService.createBteAddressScanPipelineUsingPOST3(body)
       .pipe(
         take(1)
       ).subscribe(pipeline => {

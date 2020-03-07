@@ -88,7 +88,7 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
 
   reload(id: number) {
     this.isLoadingPipeline = true;
-    this.xrpAddressScanPipelineApiService.getXrpAddressScanPipelineUsingGETDefault(id)
+    this.xrpAddressScanPipelineApiService.getXrpAddressScanPipelineUsingGET(id)
       .pipe(
         take(1)
       ).subscribe(pipeline => {
@@ -108,7 +108,7 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
       this.addressTaintJobResultPageNo = 1;
     }
     this.isAddressTaintJobLoading = false;
-    this.xrpFlowAddressTaintJobApiService.getFlowAddressTaintJobResultUsingGETDefault2(this.pipeline.flowAddressTaintJobId, this.addressTaintJobResultPageNo - 1, this.addressTaintJobResultPageSize)
+    this.xrpFlowAddressTaintJobApiService.getFlowAddressTaintJobResultUsingGET2(this.pipeline.flowAddressTaintJobId, this.addressTaintJobResultPageNo - 1, this.addressTaintJobResultPageSize)
       .pipe(
         take(1),
       ).subscribe(page => {
@@ -327,7 +327,7 @@ export class XrpScanResultPageComponent implements OnInit, OnDestroy {
     this.isLoadingDiagram = true;
 
 
-    this.xrpFlowRiskGraphJobApiService.runFlowRiskGraphJobUsingPOSTDefault2(0, 10000, {
+    this.xrpFlowRiskGraphJobApiService.runFlowRiskGraphJobUsingPOST2(0, 10000, {
       flowRiskJobId: this.pipeline.flowRiskJobId,
       startingTime,
       endingTime,

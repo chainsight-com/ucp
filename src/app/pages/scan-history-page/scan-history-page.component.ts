@@ -93,7 +93,7 @@ export class ScanHistoryPageComponent implements OnInit {
       this.btcPage = 1;
     }
     this.isBtcLoading = true;
-    this.btcAddressScanPipelineApiService.paginateBtcAddressScanPipelinesUsingGETDefault(this.btcPage - 1, this.btcPageSize, this.me.id)
+    this.btcAddressScanPipelineApiService.paginateBtcAddressScanPipelinesUsingGET(this.btcPage - 1, this.btcPageSize, this.me.id)
       .pipe(
         take(1),
       ).subscribe(page => {
@@ -109,7 +109,7 @@ export class ScanHistoryPageComponent implements OnInit {
       this.btcPage = 1;
     }
     this.isEthLoading = true;
-    this.ethAddressScanPipelineApiService.paginateEthAddressScanPipelinesUsingGETDefault(this.ethPage - 1, this.ethPageSize, this.me.id)
+    this.ethAddressScanPipelineApiService.paginateEthAddressScanPipelinesUsingGET(this.ethPage - 1, this.ethPageSize, this.me.id)
       .pipe(
         take(1),
       ).subscribe(page => {
@@ -125,7 +125,7 @@ export class ScanHistoryPageComponent implements OnInit {
       this.btcPage = 1;
     }
     this.isXrpLoading = true;
-    this.xrpAddressScanPipelineApiService.paginateXrpAddressScanPipelinesUsingGETDefault(this.xrpPage - 1, this.xrpPageSize, this.me.id)
+    this.xrpAddressScanPipelineApiService.paginateXrpAddressScanPipelinesUsingGET(this.xrpPage - 1, this.xrpPageSize, this.me.id)
       .pipe(
         take(1),
       ).subscribe(page => {
@@ -141,7 +141,7 @@ export class ScanHistoryPageComponent implements OnInit {
       this.zilPage = 1;
     }
     this.isZilLoading = true;
-    this.zilAddressScanPipelineApiService.paginateZilAddressScanPipelinesUsingGETDefault(this.btcPage - 1, this.btcPageSize, this.me.id)
+    this.zilAddressScanPipelineApiService.paginateZilAddressScanPipelinesUsingGET(this.btcPage - 1, this.btcPageSize, this.me.id)
       .pipe(
         take(1),
       ).subscribe(page => {

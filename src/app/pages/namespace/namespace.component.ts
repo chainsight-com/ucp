@@ -15,7 +15,7 @@ export class NamespaceComponent implements OnInit {
   public pageSize = 0;
   public total = 0;
   public pageSizeOptions = [30, 50, 100];
-  public tblColumns: Array<TblColumn> = [
+  public tblColumns: Array<TblColumn<any>> = [
     {
       property: 'namespace',
       title: 'Namespace'

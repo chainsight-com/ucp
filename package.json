@@ -25,7 +25,7 @@
     "@ant-design/icons-angular": "8.1.1",
     "@antv/g6": "^2.2.6",
     "@auth0/angular-jwt": "^2.1.0",
-    "@profyu/unblock-ng-sdk": "3.1.7-BETA",
+    "@profyu/unblock-ng-sdk": "3.2.1-BETA",
     "@types/bignumber.js": "^5.0.0",
     "@types/d3": "4.13.0",
     "@zxing/ngx-scanner": "^1.7.1",
@@ -40,7 +40,7 @@
     "rxjs": "~6.5.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1",
-    "@profyu/core-ng-zorro": "1.0.18-beta"
+    "@profyu/core-ng-zorro": "1.0.20-beta"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.20",

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TblColumn} from '@profyu/core-ng-zorro';
 import {UtilsService} from '../../services/utils.service';
+import {TblColumn} from '@profyu/core-ng-zorro';
 
 @Component({
   selector: 'app-holder-detail-scan-history',
@@ -17,7 +17,7 @@ export class HolderDetailScanHistoryComponent implements OnInit {
   public pageSize = 0;
   public total = 0;
   public pageSizeOptions = [30, 50, 100];
-  public tblColumns: Array<TblColumn> = [
+  public tblColumns: Array<TblColumn<any>> = [
     {
       property: 'scanId',
       title: 'Scan Id',

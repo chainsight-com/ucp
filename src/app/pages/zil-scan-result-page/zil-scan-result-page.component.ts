@@ -108,7 +108,7 @@ export class ZilScanResultPageComponent implements OnInit, OnDestroy {
 
   reload(id: number) {
     this.isLoadingPipeline = true;
-    this.zilAddressScanPipelineApiService.getZilAddressScanPipelineUsingGETDefault(id)
+    this.zilAddressScanPipelineApiService.getZilAddressScanPipelineUsingGET(id)
       .pipe(
         take(1)
       ).subscribe(pipeline => {
@@ -129,7 +129,7 @@ export class ZilScanResultPageComponent implements OnInit, OnDestroy {
       this.addressTaintJobResultPageNo = 1;
     }
     this.isAddressTaintJobLoading = false;
-    this.zilAddressScanPipelineApiService.getAddressScanTaintTableUsingGETDefault1(this.pipeline.id, this.addressTaintJobResultPageNo - 1, this.addressTaintJobResultPageSize)
+    this.zilAddressScanPipelineApiService.getAddressScanTaintTableUsingGET1(this.pipeline.id, this.addressTaintJobResultPageNo - 1, this.addressTaintJobResultPageSize)
       .pipe(
         take(1),
       ).subscribe(page => {
@@ -145,7 +145,7 @@ export class ZilScanResultPageComponent implements OnInit, OnDestroy {
       this.witnessPageNo = 1;
     }
     this.isWitnessLoading = false;
-    this.zilAddressScanPipelineApiService.getAddressScanWitnessUsingGETDefault1(this.pipeline.id, this.witnessPageNo - 1, this.witnessPageSize)
+    this.zilAddressScanPipelineApiService.getAddressScanWitnessUsingGET1(this.pipeline.id, this.witnessPageNo - 1, this.witnessPageSize)
       .pipe(
         take(1),
       ).subscribe(page => {
@@ -376,7 +376,7 @@ export class ZilScanResultPageComponent implements OnInit, OnDestroy {
     }
 
 
-    this.zilAddressScanPipelineApiService.getAddressScanGraphUsingPOSTDefault1(this.pipeline.id, 0, 10000, {
+    this.zilAddressScanPipelineApiService.getAddressScanGraphUsingPOST1(this.pipeline.id, 0, 10000, {
 
       startingTime,
       endingTime,

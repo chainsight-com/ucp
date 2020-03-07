@@ -88,7 +88,7 @@ export class EthScanResultPageComponent implements OnInit, OnDestroy {
 
   reload(id: number) {
     this.isLoadingPipeline = true;
-    this.ethAddressScanPipelineApiService.getEthAddressScanPipelineUsingGETDefault(id)
+    this.ethAddressScanPipelineApiService.getEthAddressScanPipelineUsingGET(id)
       .pipe(
         take(1)
       ).subscribe(pipeline => {
@@ -108,7 +108,7 @@ export class EthScanResultPageComponent implements OnInit, OnDestroy {
       this.addressTaintJobResultPageNo = 1;
     }
     this.isAddressTaintJobLoading = false;
-    this.ethFlowAddressTaintJobApiService.getFlowAddressTaintJobResultUsingGETDefault1(this.pipeline.flowAddressTaintJobId, this.addressTaintJobResultPageNo - 1, this.addressTaintJobResultPageSize)
+    this.ethFlowAddressTaintJobApiService.getFlowAddressTaintJobResultUsingGET1(this.pipeline.flowAddressTaintJobId, this.addressTaintJobResultPageNo - 1, this.addressTaintJobResultPageSize)
       .pipe(
         take(1),
       ).subscribe(page => {
@@ -128,7 +128,16 @@ export class EthScanResultPageComponent implements OnInit, OnDestroy {
 
     // const rootAddress = '12etp4a21L5ks7KKuNtEFx2r1ZqbwEampq';
 
-    var colors = ['#AC193D/#BF1E4B', '#2672EC/#2E8DEF', '#8C0095/#A700AE', '#5133AB/#643EBF', '#008299/#00A0B1', '#D24726/#DC572E', '#008A00/#00A600', '#094AB2/#0A5BC4'];
+    const colors = [
+      '#AC193D/#BF1E4B',
+      '#2672EC/#2E8DEF',
+      '#8C0095/#A700AE',
+      '#5133AB/#643EBF',
+      '#008299/#00A0B1',
+      '#D24726/#DC572E',
+      '#008A00/#00A600',
+      '#094AB2/#0A5BC4'
+    ];
 
     // this function provides a common style for the TextBlocks
     function textStyle() {
@@ -327,7 +336,7 @@ export class EthScanResultPageComponent implements OnInit, OnDestroy {
     this.isLoadingDiagram = true;
 
 
-    this.ethFlowRiskGraphJobApiService.runFlowRiskGraphJobUsingPOSTDefault1(0, 10000, {
+    this.ethFlowRiskGraphJobApiService.runFlowRiskGraphJobUsingPOST1(0, 10000, {
       flowRiskJobId: this.pipeline.flowRiskJobId,
       startingTime,
       endingTime,
