@@ -39,6 +39,7 @@ import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add
 import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
 import { HolderGroupComponent } from './pages/holder-group/holder-group.component';
 import { HolderGroupAddComponent } from './pages/holder-group-add/holder-group-add.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 const menus: any[] = [
 
@@ -296,7 +297,8 @@ registerLocaleData(en);
         tokenGetter,
         whitelistedDomains: ['unblock-analysis.com', 'localhost']
       }
-    })
+    }),
+    MarkdownModule.forRoot()
   ],
   providers: [
     JwtService,

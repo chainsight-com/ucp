@@ -150,7 +150,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
     if (resetPage) {
       this.witnessPageNo = 1;
     }
-    this.isWitnessLoading = false;
+    this.isWitnessLoading = true;
     this.btcAddressScanPipelineApiService.getAddressScanWitnessSummaryUsingGET(this.pipeline.id)
       .pipe(
         take(1),

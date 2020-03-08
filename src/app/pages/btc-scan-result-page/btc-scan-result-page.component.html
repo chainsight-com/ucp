@@ -65,9 +65,12 @@
         <div nz-col nzSpan="23">
           <nz-tabset [nzTabPosition]="'right'" [nzType]="'line'">
             <nz-tab [nzTitle]="'Issues'">
-              <h2>Issues</h2>
-              <div nz-row>
-                <div nz-col>
+
+              <div nz-row style="margin-bottom: 20px;">
+                <div nz-col nzSpan="12">
+                  <h2>Issues</h2>
+                </div>
+                <div nz-col nzSpan="12" style="text-align: right;">
                   <nz-radio-group [(ngModel)]="category" (ngModelChange)="reloadWitnessPage(true, category)">
                     <label nz-radio-button [nzValue]="null">All</label>
                     <label nz-radio-button [nzValue]="'SEND'">Send</label>
@@ -85,7 +88,11 @@
                     <th>
                       Rule ID
                     </th>
+                    <th>
+                      Category
+                    </th>
                     <th style="width: 100px;">Risk Level</th>
+
                     <th>Description</th>
                   </tr>
                 </thead>
@@ -96,6 +103,9 @@
                       <a href="#">{{ data.ruleId }}</a>
                     </td>
                     <td>
+                      {{ data.category }}
+                    </td>
+                    <td>
                       <nz-badge *ngIf="data.riskLevel === 5" nzColor="pink" nzText="Critical"></nz-badge>
                       <nz-badge *ngIf="data.riskLevel === 4" nzColor="red" nzText="High"></nz-badge>
                       <nz-badge *ngIf="data.riskLevel === 3" nzColor="orange" nzText="Medium"></nz-badge>
@@ -103,8 +113,9 @@
                       <nz-badge *ngIf="data.riskLevel === 1" nzColor="green" nzText="Normal"></nz-badge>
                     </td>
 
-                    <td>
-                      <code>{{data.description}}</code>
+                    <td >
+                      <markdown class="markdown-body" ngPreserveWhitespaces>{{data.description}}</markdown>
+                      <!-- <code></code> -->
                     </td>
 
 

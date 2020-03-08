@@ -37,7 +37,7 @@
               "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
             ],
             "scripts": [
-
+              "node_modules/marked/lib/marked.js",
               "node_modules/d3/build/d3.min.js"
             ]
           },
@@ -113,7 +113,9 @@
               "src/styles.scss",
               "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/marked/lib/marked.js"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets",
