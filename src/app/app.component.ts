@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AccountApiService, ProjectAccountDto} from '@profyu/unblock-ng-sdk';
+
+import {AccountApiService, ProjectMemberDto} from '@profyu/unblock-ng-sdk';
 import {User} from './models/user';
 import {take} from 'rxjs/operators';
 
@@ -13,8 +14,9 @@ export class AppComponent implements OnInit {
   constructor(private accountApiService: AccountApiService) {
   }
 
-  tag: ProjectAccountDto;
-  infoList: Array<ProjectAccountDto>;
+
+  tag: ProjectMemberDto;
+  infoList: Array<ProjectMemberDto>;
   user: User = new User();
 
   ngOnInit() {
@@ -23,6 +25,7 @@ export class AppComponent implements OnInit {
   handleInfoClick(item) {
     this.tag = item;
   }
+
 
   handleUserChange(user) {
     this.user = user;
