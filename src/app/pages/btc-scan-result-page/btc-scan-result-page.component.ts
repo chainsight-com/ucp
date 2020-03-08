@@ -50,6 +50,9 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
     records: [],
   };
 
+  // filter
+  public category?: 'SEND' | 'RECEIVE' | 'OTHER' = null;
+
 
 
   public btcFlowRiskGraph: BtcFlowRiskGraph = {};
@@ -145,8 +148,8 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
 
   }
 
-  reloadWitnessPage(reset: boolean) {
-    if (reset) {
+  reloadWitnessPage(resetPage: boolean, category?: 'SEND' | 'RECEIVE' | 'OTHER') {
+    if (resetPage) {
       this.witnessPageNo = 1;
     }
     this.isWitnessLoading = false;
@@ -168,7 +171,7 @@ export class BtcScanResultPageComponent implements OnInit, OnDestroy {
           }
         });
       });
-    this.btcAddressScanPipelineApiService.getAddressScanWitnessUsingGETDefault(this.pipeline.id, this.witnessPageNo - 1, this.witnessPageSize)
+    this.btcAddressScanPipelineApiService.getAddressScanWitnessUsingGET(this.pipeline.id, this.witnessPageNo - 1, this.witnessPageSize, category)
       .pipe(
         take(1),
       ).subscribe(page => {
