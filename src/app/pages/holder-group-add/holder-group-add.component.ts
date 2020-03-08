@@ -31,7 +31,7 @@ export class HolderGroupAddComponent implements OnInit {
   ngOnInit(): void {
     this.validateForm = this.fb.group({
       name: [null, [Validators.required]],
-      enabled: [null, [Validators.required]]
+      enabled: [null]
     });
     if (this.isEditing) {
       this.holderGroupApiService.getHolderGroupUsingGET(this.id).subscribe(res => {
