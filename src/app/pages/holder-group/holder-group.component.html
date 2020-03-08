@@ -5,7 +5,7 @@
 
 <div class="func-area">
   <div class="pfy-btn-right">
-    <button (click)="addNamespace()" nz-button nzType="primary">New Holder Group</button>
+    <button (click)="addHolderGroup()" nz-button nzType="primary">New Holder Group</button>
   </div>
 </div>
 <div class="pfy-page-content">
@@ -19,6 +19,7 @@
     [pageable]="true"
     [pageSizeOptions]="pageSizeOptions"
     (pageSizeChange)="handlePageSizeChange($event)"
+    (actionClick)="handleActionClick($event)"
   ></pfy-table>
 </div>
 

@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {AccountApiService, ProjectAccountDto} from '@profyu/unblock-ng-sdk';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AccountApiService, ProjectDto} from '@profyu/unblock-ng-sdk';
 import {User} from './models/user';
-import {take} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
+import {UserService} from './services/user.service';
+import {Subject} from 'rxjs';
 
 
 @Component({
@@ -9,35 +11,47 @@ import {take} from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-  constructor(private accountApiService: AccountApiService) {
+export class AppComponent implements OnInit, OnDestroy {
+  constructor(private accountApiService: AccountApiService,
+              private userService: UserService) {
   }
 
-  tag: ProjectAccountDto;
-  infoList: Array<ProjectAccountDto>;
+  tag: ProjectDto;
+  infoList: Array<ProjectDto>;
   user: User = new User();
+  private unsubscribe$ = new Subject<void>();
 
   ngOnInit() {
+    this.userService.project$.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(project => {
+      this.tag = project;
+    });
   }
 
   handleInfoClick(item) {
-    this.tag = item;
+    this.userService.project$.next(item);
   }
 
   handleUserChange(user) {
     this.user = user;
-    console.log(this.user);
+    // console.log(this.user);
     if (!!this.user) {
       this.accountApiService.getAccountProjectUsingGET(this.user.id).pipe(
         take(1),
       ).subscribe(res => {
         console.log(res);
-        this.infoList = res;
+        this.infoList = res.map(item => item.project);
         if (!!this.infoList && this.infoList.length > 0) {
-          this.tag = this.infoList[0];
+          this.userService.project$.next(this.infoList[0]);
         }
       }, console.error, () => {
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
