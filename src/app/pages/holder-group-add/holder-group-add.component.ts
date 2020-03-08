@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
-import {HolderGroupApiService, HolderGroupCreation} from '@profyu/unblock-ng-sdk';
+import {HolderGroupApiService, HolderGroupCreation, HolderGroupUpdates} from '@profyu/unblock-ng-sdk';
 import {NzMessageService} from 'ng-zorro-antd';
 
 @Component({
@@ -13,19 +13,34 @@ import {NzMessageService} from 'ng-zorro-antd';
 export class HolderGroupAddComponent implements OnInit {
 
   validateForm: FormGroup;
-
+  public id: number;
+  public isEditing = false;
 
   constructor(private fb: FormBuilder,
               private router: Router,
               private userService: UserService,
               private holderGroupApiService: HolderGroupApiService,
-              private message: NzMessageService) {
+              private message: NzMessageService,
+              private route: ActivatedRoute) {
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!!this.id) {
+      this.isEditing = true;
+    }
   }
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
-      name: [null, [Validators.required]]
+      name: [null, [Validators.required]],
+      enabled: [null, [Validators.required]]
     });
+    if (this.isEditing) {
+      this.holderGroupApiService.getHolderGroupUsingGET(this.id).subscribe(res => {
+        console.log(res);
+        this.validateForm.setValue({'name': res.name, 'enabled': res.enabled});
+      }, (error) => {
+        this.message.create('error', error);
+      });
+    }
   }
 
   submitForm(): void {
@@ -35,19 +50,31 @@ export class HolderGroupAddComponent implements OnInit {
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if (!!this.validateForm.valid) {
-      console.log(this.validateForm.value);
-      console.log(this.userService.project$.getValue());
-      const newVal = {
-        name: this.validateForm.value.name,
-        projectId: this.userService.project$.getValue().id
-      } as HolderGroupCreation;
+      if (this.isEditing) {
+        this.holderGroupApiService.updateHolderGroupUsingPUT(
+          this.id,
+          {
+            'name': this.validateForm.value.name,
+            'enabled': this.validateForm.value.enabled
+          } as HolderGroupUpdates
+        ).subscribe(res => {
+          this.router.navigate(['/holder-group']);
+        }, (error) => {
+          this.message.create('error', error);
+        });
+      } else {
+        const newVal = {
+          name: this.validateForm.value.name,
+          projectId: this.userService.project$.getValue().id
+        } as HolderGroupCreation;
 
-      this.holderGroupApiService.createHolderGroupUsingPOST(newVal).subscribe(res => {
-        this.router.navigate(['/holder-group']);
-      }, (error) => {
-        this.message.create('error', error);
-      });
-
+        this.holderGroupApiService.createHolderGroupUsingPOST(newVal)
+          .subscribe(res => {
+            this.router.navigate(['/holder-group']);
+          }, (error) => {
+            this.message.create('error', error);
+          });
+      }
     }
   }
 
