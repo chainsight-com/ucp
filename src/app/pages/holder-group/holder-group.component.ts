@@ -107,7 +107,7 @@ export class HolderGroupComponent implements OnInit, OnDestroy {
   handleActionClick(val: TblAction) {
     switch (val.action) {
       case 'edit':
-        this.router.navigate(['/holder-add/' + val.row['holderId']]);
+        this.router.navigate(['/holder-group-add/' + val.row['id']]);
         break;
       case 'delete':
         this.handleDelete(val.row);

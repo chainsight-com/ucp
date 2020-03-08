@@ -38,6 +38,7 @@ const routes: Routes = [
   {path: 'quick-scan-add', component: QuickScanAddComponent},
   {path: 'holder-group', component: HolderGroupComponent},
   {path: 'holder-group-add', component: HolderGroupAddComponent},
+  {path: 'holder-group-add/:id', component: HolderGroupAddComponent},
   {path: 'holder', component: HolderComponent},
   {path: 'holder-add', component: HolderAddComponent},
   {path: 'holder-add/:id', component: HolderAddComponent},
