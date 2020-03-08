@@ -15,13 +15,13 @@ import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/h
 import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
 import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-result-page.component';
 import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
-import {NamespaceComponent} from './pages/namespace/namespace.component';
-import {NamespaceAddComponent} from './pages/namespace-add/namespace-add.component';
 import {HolderAddComponent} from './pages/holder-add/holder-add.component';
 import {HolderDetailProfileComponent} from './pages/holder-detail-profile/holder-detail-profile.component';
 import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
 import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
 import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
+import {HolderGroupAddComponent} from './pages/holder-group-add/holder-group-add.component';
+import {HolderGroupComponent} from './pages/holder-group/holder-group.component';
 
 
 const routes: Routes = [
@@ -36,8 +36,8 @@ const routes: Routes = [
   {path: 'qr-scan', component: ScanPageComponent},
   {path: 'quick-scan', component: QuickScanComponent},
   {path: 'quick-scan-add', component: QuickScanAddComponent},
-  {path: 'namespace', component: NamespaceComponent},
-  {path: 'namespace-add', component: NamespaceAddComponent},
+  {path: 'holder-group', component: HolderGroupComponent},
+  {path: 'holder-group-add', component: HolderGroupAddComponent},
   {path: 'holder', component: HolderComponent},
   {path: 'holder-add', component: HolderAddComponent},
   {path: 'holder-add/:id', component: HolderAddComponent},

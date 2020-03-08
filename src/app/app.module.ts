@@ -8,7 +8,6 @@ import {en_US, NgZorroAntdModule, NZ_I18N} from 'ng-zorro-antd';
 import {registerLocaleData} from '@angular/common';
 import en from '@angular/common/locales/zh';
 import {HttpClientModule} from '@angular/common/http';
-// import G6 from '@antv/g6';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthServiceConfig, GoogleLoginProvider, SocialLoginModule} from 'angularx-social-login';
 import {JwtModule} from '@auth0/angular-jwt';
@@ -33,13 +32,13 @@ import {CoreNgZorroModule, JwtService} from '@profyu/core-ng-zorro';
 import {QuickScanAddFormComponent} from './component/quick-scan-add-form/quick-scan-add-form.component';
 import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
 import {QuickScanResultComponent} from './pages/quick-scan-result/quick-scan-result.component';
-import {NamespaceComponent} from './pages/namespace/namespace.component';
-import {NamespaceAddComponent} from './pages/namespace-add/namespace-add.component';
 import {HolderAddComponent} from './pages/holder-add/holder-add.component';
 import {HolderDetailProfileComponent} from './pages/holder-detail-profile/holder-detail-profile.component';
 import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
 import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
 import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
+import { HolderGroupComponent } from './pages/holder-group/holder-group.component';
+import { HolderGroupAddComponent } from './pages/holder-group-add/holder-group-add.component';
 
 const menus: any[] = [
 
@@ -51,8 +50,7 @@ const menus: any[] = [
     level: 1,
     icon: 'lock',
     children: [],
-    disabled: true,
-
+    // disabled: true,
   },
   {
     id: 'address-scan',
@@ -66,7 +64,7 @@ const menus: any[] = [
         id: 'new-scan',
         name: 'NEW SCAN',
         subtitle: 'Start a new quick scan',
-        path: 'new-scan',
+        path: '/new-scan',
         url: null,
         level: 2,
         children: [],
@@ -75,7 +73,7 @@ const menus: any[] = [
       {
         id: 'scan-history',
         name: 'SCAN HISTORY',
-        path: 'scan-history',
+        path: '/scan-history',
         url: null,
         level: 2,
         icon: 'file',
@@ -88,10 +86,10 @@ const menus: any[] = [
     name: 'QUICK SCAN',
     subtitle: 'Start a new quick scan',
     context: null,
-    path: 'quick-scan',
+    path: '/quick-scan',
     url: null,
     icon: 'lock',
-    disabled: true,
+    // disabled: true,
     level: 1,
     children: []
   },
@@ -99,10 +97,10 @@ const menus: any[] = [
     id: 'kyc-lookup',
     name: 'KYC LOOKUP',
     context: null,
-    path: 'kyc-lookup',
+    path: '/kyc-lookup',
     url: null,
     icon: 'lock',
-    disabled: true,
+    // disabled: true,
     level: 1,
     children: []
   },
@@ -115,23 +113,23 @@ const menus: any[] = [
     icon: 'area-chart',
     children: [
       {
-        id: 'namespace',
-        name: 'NAMESPACE',
-        path: 'namespace',
+        id: 'holder-group',
+        name: 'HOLDER GROUP',
+        path: '/holder-group',
         url: null,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         level: 2,
         children: []
       },
       {
         id: 'holder',
         name: 'HOLDER',
-        path: 'holder',
+        path: '/holder',
         url: null,
         level: 2,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         children: []
       }
     ]
@@ -147,31 +145,31 @@ const menus: any[] = [
       {
         id: 'scan',
         name: 'SCAN',
-        path: 'holder-scan',
+        path: '/holder-scan',
         url: null,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         level: 2,
         children: []
       },
       {
         id: 'schedule',
         name: 'SCHEDULE',
-        path: 'holder-scan-schedule',
+        path: '/holder-scan-schedule',
         url: null,
         level: 2,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         children: []
       },
       {
         id: 'tx-monitoring',
         name: 'TX MONITORING',
-        path: 'tx-monitoring',
+        path: '/tx-monitoring',
         url: null,
         level: 2,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         children: []
       }
     ]
@@ -179,11 +177,11 @@ const menus: any[] = [
   {
     id: 'ubo-identification',
     name: 'UBO IDENTIFICATION',
-    path: 'ubo-identification',
+    path: '/ubo-identification',
     url: null,
     level: 1,
     icon: 'lock',
-    disabled: true,
+    // disabled: true,
     children: []
   },
   {
@@ -197,31 +195,31 @@ const menus: any[] = [
       {
         id: 'wallet-config',
         name: 'WALLET CONFIG',
-        path: 'wallet-config',
+        path: '/wallet-config',
         url: null,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         level: 2,
         children: []
       },
       {
         id: 'role-permission',
         name: 'ROLE & PERMISSION',
-        path: 'role-permission',
+        path: '/role-permission',
         url: null,
         level: 2,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         children: []
       },
       {
         id: 'billing',
         name: 'BILLING',
-        path: 'billing',
+        path: '/billing',
         url: null,
         level: 2,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         children: []
       }
     ]
@@ -273,13 +271,13 @@ registerLocaleData(en);
     QuickScanAddComponent,
     QuickScanAddFormComponent,
     QuickScanResultComponent,
-    NamespaceComponent,
-    NamespaceAddComponent,
     HolderAddComponent,
     HolderDetailProfileComponent,
     HolderDetailScanHistoryComponent,
     HolderDetailAddressAddComponent,
     HolderDetailAddressComponent,
+    HolderGroupComponent,
+    HolderGroupAddComponent,
   ],
   imports: [
     BrowserModule,

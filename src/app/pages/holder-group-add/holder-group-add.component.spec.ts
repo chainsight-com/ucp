@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NamespaceAddComponent } from './namespace-add.component';
+import { HolderGroupAddComponent } from './holder-group-add.component';
 
-describe('NamespaceAddComponent', () => {
-  let component: NamespaceAddComponent;
-  let fixture: ComponentFixture<NamespaceAddComponent>;
+describe('HolderGroupAddComponent', () => {
+  let component: HolderGroupAddComponent;
+  let fixture: ComponentFixture<HolderGroupAddComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NamespaceAddComponent ]
+      declarations: [ HolderGroupAddComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NamespaceAddComponent);
+    fixture = TestBed.createComponent(HolderGroupAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

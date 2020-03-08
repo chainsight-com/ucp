@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-namespace-add',
-  templateUrl: './namespace-add.component.html',
-  styleUrls: ['./namespace-add.component.scss']
+  selector: 'app-holder-group-add',
+  templateUrl: './holder-group-add.component.html',
+  styleUrls: ['./holder-group-add.component.scss']
 })
-export class NamespaceAddComponent implements OnInit {
+export class HolderGroupAddComponent implements OnInit {
 
   validateForm: FormGroup;
 
@@ -30,6 +30,7 @@ export class NamespaceAddComponent implements OnInit {
   }
 
   handleCancel() {
-    this.router.navigate(['/namespace']);
+    this.router.navigate(['/holder-group']);
   }
+
 }

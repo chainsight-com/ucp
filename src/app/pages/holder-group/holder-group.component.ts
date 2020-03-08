@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {TblColumn} from '@profyu/core-ng-zorro/lib/model/tblColumn';
+import { Component, OnInit } from '@angular/core';
+import {TblColumn} from '@profyu/core-ng-zorro';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-namespace',
-  templateUrl: './namespace.component.html',
-  styleUrls: ['./namespace.component.scss']
+  selector: 'app-holder-group',
+  templateUrl: './holder-group.component.html',
+  styleUrls: ['./holder-group.component.scss']
 })
-export class NamespaceComponent implements OnInit {
+export class HolderGroupComponent implements OnInit {
 
   public listOfData: Array<any>;
   public isLoading = false;
@@ -60,4 +60,5 @@ export class NamespaceComponent implements OnInit {
   handlePageSizeChange(pageSize) {
     this.pageSize = pageSize;
   }
+
 }
