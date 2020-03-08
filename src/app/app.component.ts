@@ -33,6 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userService.project$.next(item);
   }
 
+
   handleUserChange(user) {
     this.user = user;
     // console.log(this.user);

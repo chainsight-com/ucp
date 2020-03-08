@@ -19,25 +19,14 @@
   <nz-row [nzGutter]="16">
     <nz-col [nzSpan]="4">
       <nz-card>
-        <nz-statistic [nzValue]="witnessSummary.critical" [nzTitle]="'Critical'"
-          [nzValueStyle]="{ color: '#EB2F96' }">
+        <nz-statistic [nzValue]="witnessSummary.critical" [nzTitle]="'Critical'" [nzValueStyle]="{ color: '#EB2F96' }">
         </nz-statistic>
 
       </nz-card>
     </nz-col>
     <nz-col [nzSpan]="4">
       <nz-card>
-        <nz-statistic [nzValue]="witnessSummary.high" [nzTitle]="'High'"
-          [nzValueStyle]="{ color: '#f5222d' }">
-        </nz-statistic>
-
-      </nz-card>
-    </nz-col>
-
-    <nz-col [nzSpan]="4">
-      <nz-card>
-        <nz-statistic [nzValue]="witnessSummary.medium" [nzTitle]="'Medium'"
-          [nzValueStyle]="{ color: '#fa8c16' }">
+        <nz-statistic [nzValue]="witnessSummary.high" [nzTitle]="'High'" [nzValueStyle]="{ color: '#f5222d' }">
         </nz-statistic>
 
       </nz-card>
@@ -45,16 +34,22 @@
 
     <nz-col [nzSpan]="4">
       <nz-card>
-        <nz-statistic [nzValue]="witnessSummary.low" [nzTitle]="'Low'"
-          [nzValueStyle]="{ color: '#2f54eb' }">
+        <nz-statistic [nzValue]="witnessSummary.medium" [nzTitle]="'Medium'" [nzValueStyle]="{ color: '#fa8c16' }">
+        </nz-statistic>
+
+      </nz-card>
+    </nz-col>
+
+    <nz-col [nzSpan]="4">
+      <nz-card>
+        <nz-statistic [nzValue]="witnessSummary.low" [nzTitle]="'Low'" [nzValueStyle]="{ color: '#2f54eb' }">
         </nz-statistic>
         <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
       </nz-card>
     </nz-col>
     <nz-col [nzSpan]="4">
       <nz-card>
-        <nz-statistic [nzValue]="witnessSummary.normal" [nzTitle]="'Normal'"
-          [nzValueStyle]="{ color: '#52c41a' }">
+        <nz-statistic [nzValue]="witnessSummary.normal" [nzTitle]="'Normal'" [nzValueStyle]="{ color: '#52c41a' }">
         </nz-statistic>
 
       </nz-card>
@@ -70,18 +65,34 @@
         <div nz-col nzSpan="23">
           <nz-tabset [nzTabPosition]="'right'" [nzType]="'line'">
             <nz-tab [nzTitle]="'Issues'">
-              <h2>Issues</h2>
+
+              <div nz-row style="margin-bottom: 20px;">
+                <div nz-col nzSpan="12">
+                  <h2>Issues</h2>
+                </div>
+                <div nz-col nzSpan="12" style="text-align: right;">
+                  <nz-radio-group [(ngModel)]="category" (ngModelChange)="reloadWitnessPage(true, category)">
+                    <label nz-radio-button [nzValue]="null">All</label>
+                    <label nz-radio-button [nzValue]="'SEND'">Send</label>
+                    <label nz-radio-button [nzValue]="'RECEIVE'">Receive</label>
+                    <label nz-radio-button [nzValue]="'OTHER'">Other</label>
+                  </nz-radio-group>
+                </div>
+              </div>
               <nz-table #issueTable [nzLoading]="isWitnessLoading" [nzData]="witnessResultPage.records"
                 nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="witnessPageNo"
                 [(nzPageSize)]="witnessPageSize" [nzTotal]="witnessResultPage.totalRecords"
-                (nzPageIndexChange)="reloadWitnessPage(false)"
-                (nzPageSizeChange)="reloadWitnessPage(true)">
+                (nzPageIndexChange)="reloadWitnessPage(false, category)" (nzPageSizeChange)="reloadWitnessPage(true, category)">
                 <thead>
                   <tr>
                     <th>
                       Rule ID
                     </th>
+                    <th>
+                      Category
+                    </th>
                     <th style="width: 100px;">Risk Level</th>
+
                     <th>Description</th>
                   </tr>
                 </thead>
@@ -92,6 +103,9 @@
                       <a href="#">{{ data.ruleId }}</a>
                     </td>
                     <td>
+                      {{ data.category }}
+                    </td>
+                    <td>
                       <nz-badge *ngIf="data.riskLevel === 5" nzColor="pink" nzText="Critical"></nz-badge>
                       <nz-badge *ngIf="data.riskLevel === 4" nzColor="red" nzText="High"></nz-badge>
                       <nz-badge *ngIf="data.riskLevel === 3" nzColor="orange" nzText="Medium"></nz-badge>
@@ -99,8 +113,9 @@
                       <nz-badge *ngIf="data.riskLevel === 1" nzColor="green" nzText="Normal"></nz-badge>
                     </td>
 
-                    <td>
-                      <code>{{data.description}}</code>
+                    <td >
+                      <markdown class="markdown-body" ngPreserveWhitespaces>{{data.description}}</markdown>
+                      <!-- <code></code> -->
                     </td>
 
 
@@ -128,13 +143,14 @@
 
                   <tr *ngFor="let data of basicTable.data">
                     <td>
-                      <nz-badge *ngIf="data.direction==='F'" nzStatus="processing" style="margin-right: 5px;"></nz-badge>
+                      <nz-badge *ngIf="data.direction==='F'" nzStatus="processing" style="margin-right: 5px;">
+                      </nz-badge>
                       <i class="direction-icon" *ngIf="data.direction==='F'" nz-icon nzType="swap-right"
                         nzTheme="outline"></i>
                       {{ data.address }}
                       <i class="direction-icon" *ngIf="data.direction==='B'" nz-icon nzType="swap-right"
                         nzTheme="outline"></i>
-                        <nz-badge *ngIf="data.direction==='B'" nzStatus="processing" style="margin-left: 5px;"></nz-badge>
+                      <nz-badge *ngIf="data.direction==='B'" nzStatus="processing" style="margin-left: 5px;"></nz-badge>
                     </td>
 
                     <td>{{ data.totalAmount | crypto: 'satoshi' : 'btc'}} BTC</td>
