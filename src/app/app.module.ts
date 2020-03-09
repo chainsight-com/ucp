@@ -51,7 +51,7 @@ const menus: any[] = [
     level: 1,
     icon: 'lock',
     children: [],
-    // disabled: true,
+    disabled: true,
   },
   {
     id: 'address-scan',
@@ -90,7 +90,7 @@ const menus: any[] = [
     path: '/quick-scan',
     url: null,
     icon: 'lock',
-    // disabled: true,
+    disabled: true,
     level: 1,
     children: []
   },
@@ -101,7 +101,7 @@ const menus: any[] = [
     path: '/kyc-lookup',
     url: null,
     icon: 'lock',
-    // disabled: true,
+    disabled: true,
     level: 1,
     children: []
   },
@@ -119,7 +119,7 @@ const menus: any[] = [
         path: '/holder-group',
         url: null,
         icon: 'lock',
-        // disabled: true,
+        disabled: true,
         level: 2,
         children: []
       },
@@ -130,7 +130,7 @@ const menus: any[] = [
         url: null,
         level: 2,
         icon: 'lock',
-        // disabled: true,
+        disabled: true,
         children: []
       }
     ]
@@ -149,7 +149,7 @@ const menus: any[] = [
         path: '/holder-scan',
         url: null,
         icon: 'lock',
-        // disabled: true,
+        disabled: true,
         level: 2,
         children: []
       },
@@ -160,7 +160,7 @@ const menus: any[] = [
         url: null,
         level: 2,
         icon: 'lock',
-        // disabled: true,
+        disabled: true,
         children: []
       },
       {
@@ -170,7 +170,7 @@ const menus: any[] = [
         url: null,
         level: 2,
         icon: 'lock',
-        // disabled: true,
+        disabled: true,
         children: []
       }
     ]
@@ -182,7 +182,7 @@ const menus: any[] = [
     url: null,
     level: 1,
     icon: 'lock',
-    // disabled: true,
+    disabled: true,
     children: []
   },
   {
@@ -199,7 +199,7 @@ const menus: any[] = [
         path: '/wallet-config',
         url: null,
         icon: 'lock',
-        // disabled: true,
+        disabled: true,
         level: 2,
         children: []
       },
@@ -210,7 +210,7 @@ const menus: any[] = [
         url: null,
         level: 2,
         icon: 'lock',
-        // disabled: true,
+        disabled: true,
         children: []
       },
       {
@@ -220,7 +220,7 @@ const menus: any[] = [
         url: null,
         level: 2,
         icon: 'lock',
-        // disabled: true,
+        disabled: true,
         children: []
       }
     ]

@@ -2,21 +2,21 @@
 @import "~ng-zorro-antd/style/index.min.css";
 /* Import basic styles */
 @import "~ng-zorro-antd/button/style/index.min.css"; /* Import styles of the component */
-Html, body {
+html,
+body {
   height: 100%;
   margin: 0px;
   padding: 0px;
 }
-.ant-badge{
-  font-size: 10px!important;
-  line-height: 2!important;
+.ant-badge {
+  font-size: 10px !important;
+  line-height: 2 !important;
 }
 
 .func-area {
   height: 10%;
 
   .area-title {
-
   }
 
   .pfy-search-input {
@@ -48,7 +48,6 @@ Html, body {
       margin: 0 0 15px;
     }
   }
-
 }
 
 .pfy-form-btn {
@@ -77,3 +76,25 @@ Html, body {
   }
 }
 
+.markdown-body {
+  code {
+    color: #1890ff;
+    background-color: #e6f7ff;
+    box-sizing: border-box;
+    margin: 0 8px 0 0;
+    padding: 0 7px;
+    font-variant: tabular-nums;
+    list-style: none;
+    font-feature-settings: "tnum";
+    display: inline-block;
+    height: auto;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+    border: 1px solid #91d5ff;
+    border-radius: 4px;
+    cursor: default;
+    opacity: 1;
+    transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  }
+}

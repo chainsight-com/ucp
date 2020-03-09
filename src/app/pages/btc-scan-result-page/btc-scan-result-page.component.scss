@@ -1,6 +1,6 @@
 .diagramsPanel {
-  width:100%;
-  white-space:nowrap;
+  width: 100%;
+  white-space: nowrap;
 }
 
 .diagramDiv {
@@ -21,7 +21,6 @@
 .flow-diagram {
   width: 100%;
   height: 850px;
-
 }
 canvas {
   position: relative;
@@ -32,22 +31,3 @@ canvas {
 }
 
 
-#wrapper code,
-#wrapper kbd,
-#wrapper pre,
-#wrapper samp {
-  font-family: monospace, monospace;
-  font-size: 1em;
-}
-#wrapper h1 code,
-#wrapper h2 code,
-#wrapper h3 code,
-#wrapper h4 code,
-#wrapper h5 code,
-#wrapper h6 code {
-  font-size: inherit;
-}
-#wrapper code {
-  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-  font-size: 85%;
-}
