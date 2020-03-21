@@ -7,7 +7,7 @@ import {ZXingScannerModule} from '@zxing/ngx-scanner';
 import {en_US, NgZorroAntdModule, NZ_I18N} from 'ng-zorro-antd';
 import {registerLocaleData} from '@angular/common';
 import en from '@angular/common/locales/zh';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthServiceConfig, GoogleLoginProvider, SocialLoginModule} from 'angularx-social-login';
 import {JwtModule} from '@auth0/angular-jwt';
@@ -28,7 +28,7 @@ import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-s
 import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
 import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
 import {ZilScanResultPageComponent} from './pages/zil-scan-result-page/zil-scan-result-page.component';
-import {CoreNgZorroModule, JwtService} from '@profyu/core-ng-zorro';
+import {CoreNgZorroModule} from '@profyu/core-ng-zorro';
 import {QuickScanAddFormComponent} from './component/quick-scan-add-form/quick-scan-add-form.component';
 import {QuickScanAddComponent} from './pages/quick-scan-add/quick-scan-add.component';
 import {QuickScanResultComponent} from './pages/quick-scan-result/quick-scan-result.component';
@@ -40,6 +40,9 @@ import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder
 import { HolderGroupComponent } from './pages/holder-group/holder-group.component';
 import { HolderGroupAddComponent } from './pages/holder-group-add/holder-group-add.component';
 import { MarkdownModule } from 'ngx-markdown';
+import {JwtInterceptor} from './interceptors/JwtInterceptor';
+import {LogoutInterceptor} from './interceptors/LogoutInterceptor';
+import {JwtService} from './services/jwt.service';
 
 const menus: any[] = [
 
@@ -309,8 +312,8 @@ registerLocaleData(en);
       provide: AuthServiceConfig,
       useFactory: authServiceConfigFactory
     },
-    // {provide: HTTP_INTERCEPTORS, useClass: LogoutInterceptor, multi: true},
-    // {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: LogoutInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     {provide: 'MENU_TREE_DATA', useValue: menus}
   ],
   bootstrap: [AppComponent]

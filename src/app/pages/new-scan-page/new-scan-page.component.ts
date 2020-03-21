@@ -18,7 +18,7 @@ import {
 import { Router } from '@angular/router';
 import { QrScannerService } from 'src/app/services/qr-scanner.service';
 import { Subject } from 'rxjs';
-import {JwtService} from '@profyu/core-ng-zorro';
+import {JwtService} from '../../services/jwt.service';
 
 
 @Component({

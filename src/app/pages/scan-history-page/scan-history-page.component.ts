@@ -10,7 +10,7 @@ import {
 } from '@profyu/unblock-ng-sdk';
 import {filter, take} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
-import {JwtService} from '@profyu/core-ng-zorro';
+import {JwtService} from '../../services/jwt.service';
 
 @Component({
   selector: 'app-scan-history-page',
