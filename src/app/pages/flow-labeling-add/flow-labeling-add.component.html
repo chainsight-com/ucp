@@ -1,0 +1,51 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Flow Labeling</nz-breadcrumb-item>
+  <nz-breadcrumb-item>New Flow Labeling</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="pfy-page-content">
+  <div class="center">
+    <form nz-form [formGroup]="validateForm">
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">Currency</nz-form-label>
+        <nz-form-control nzErrorTip="Please input the Currency!">
+          <input type="text" nz-input formControlName="currency" placeholder="Currency"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">Root Addresses CSV</nz-form-label>
+        <nz-form-control>
+          <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload">
+            <button nz-button><i nz-icon nzType="upload"></i><span>CSV File Upload</span></button>
+          </nz-upload>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">Max Level</nz-form-label>
+        <nz-form-control>
+          <nz-slider formControlName="maxLevel"></nz-slider>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">RangePicker</nz-form-label>
+        <nz-form-control>
+          <nz-range-picker formControlName="rangePicker"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">Label Name</nz-form-label>
+        <nz-form-control nzErrorTip="Please input the Label Name!">
+          <input type="text" nz-input formControlName="label" placeholder="Label Name"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <div class="pfy-form-btn">
+            <button nz-button nzType="primary" (click)="submitForm()">Submit</button>
+            <button nz-button (click)="handleCancel()">Cancel</button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</div>

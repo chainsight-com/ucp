@@ -22,6 +22,8 @@ import { HolderDetailAddressAddComponent } from './pages/holder-detail-address-a
 import { HolderDetailScanHistoryComponent } from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
 import { HolderGroupAddComponent } from './pages/holder-group-add/holder-group-add.component';
 import { HolderGroupComponent } from './pages/holder-group/holder-group.component';
+import {FlowLabelingComponent} from './pages/flow-labeling/flow-labeling.component';
+import {FlowLabelingAddComponent} from './pages/flow-labeling-add/flow-labeling-add.component';
 
 
 const routes: Routes = [
@@ -50,6 +52,8 @@ const routes: Routes = [
   {path: 'holder-scan-result/:id', component: HolderScanResultComponent},
   {path: 'holder-scan-schedule', component: HolderScanScheduleComponent},
   {path: 'holder-scan-schedule-add', component: HolderScanScheduleAddComponent},
+  {path: 'flow-labeling', component: FlowLabelingComponent},
+  {path: 'flow-labeling-add', component: FlowLabelingAddComponent},
   {path: '**', component: NewScanPageComponent}
 ];
 

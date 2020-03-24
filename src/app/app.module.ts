@@ -37,12 +37,14 @@ import {HolderDetailProfileComponent} from './pages/holder-detail-profile/holder
 import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
 import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
 import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
-import { HolderGroupComponent } from './pages/holder-group/holder-group.component';
-import { HolderGroupAddComponent } from './pages/holder-group-add/holder-group-add.component';
-import { MarkdownModule } from 'ngx-markdown';
+import {HolderGroupComponent} from './pages/holder-group/holder-group.component';
+import {HolderGroupAddComponent} from './pages/holder-group-add/holder-group-add.component';
+import {MarkdownModule} from 'ngx-markdown';
 import {JwtInterceptor} from './interceptors/JwtInterceptor';
 import {LogoutInterceptor} from './interceptors/LogoutInterceptor';
 import {JwtService} from './services/jwt.service';
+import {FlowLabelingComponent} from './pages/flow-labeling/flow-labeling.component';
+import {FlowLabelingAddComponent} from './pages/flow-labeling-add/flow-labeling-add.component';
 
 const menus: any[] = [
 
@@ -152,7 +154,7 @@ const menus: any[] = [
         path: '/holder-scan',
         url: null,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         level: 2,
         children: []
       },
@@ -163,7 +165,7 @@ const menus: any[] = [
         url: null,
         level: 2,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         children: []
       },
       {
@@ -173,10 +175,19 @@ const menus: any[] = [
         url: null,
         level: 2,
         icon: 'lock',
-        disabled: true,
+        // disabled: true,
         children: []
       }
     ]
+  },
+  {
+    id: 'flow',
+    name: 'FLOW LABELING',
+    path: '/flow-labeling',
+    url: null,
+    level: 1,
+    icon: 'area-chart',
+    children: []
   },
   {
     id: 'ubo-identification',
@@ -252,6 +263,7 @@ export function tokenGetter() {
 // }
 
 registerLocaleData(en);
+
 // G6.track(false);
 
 @NgModule({
@@ -282,6 +294,8 @@ registerLocaleData(en);
     HolderDetailAddressComponent,
     HolderGroupComponent,
     HolderGroupAddComponent,
+    FlowLabelingComponent,
+    FlowLabelingAddComponent,
   ],
   imports: [
     BrowserModule,
