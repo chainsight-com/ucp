@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
-import {HolderGroupApiService, HolderGroupCreation, HolderGroupUpdates} from '@profyu/unblock-ng-sdk';
+import {HolderGroupApiService} from '@profyu/unblock-ng-sdk';
 import {NzMessageService, UploadFile, UploadXHRArgs} from 'ng-zorro-antd';
-import {HttpClient, HttpEvent, HttpEventType, HttpRequest, HttpResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-flow-labeling-add',
@@ -26,7 +26,6 @@ export class FlowLabelingAddComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private router: Router,
               private userService: UserService,
-              private holderGroupApiService: HolderGroupApiService,
               private message: NzMessageService,
               private http: HttpClient) {
   }

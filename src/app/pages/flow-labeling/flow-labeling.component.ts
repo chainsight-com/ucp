@@ -84,7 +84,8 @@ export class FlowLabelingComponent implements OnInit, OnDestroy {
       }
     }
   ];
-  private unsubscribe$ = new Subject<void>();
+  public unsubscribe$ = new Subject<void>();
+  public projectId: number;
 
   constructor(private router: Router,
               private userService: UserService,
@@ -97,22 +98,22 @@ export class FlowLabelingComponent implements OnInit, OnDestroy {
     ).subscribe(project => {
       console.log(project);
       if (!!project) {
-        // this.projectApiService.getProjectHolderGroupsUsingGET(project.id, this.currentPage, this.pageSize).subscribe(x => {
-        //   this.listOfData = x.content;
-        //   this.total = x.totalElements;
-        // });
+        this.projectId = project.id;
+        this.reload();
       }
     });
   }
 
   reload() {
-    // this.projectApiService.getProjectHolderGroupsUsingGET(
-    //   this.userService.project$.getValue().id,
-    //   this.currentPage, this.pageSize
-    // ).subscribe(x => {
-    //   this.listOfData = x.content;
-    //   this.total = x.totalElements;
-    // });
+    if (!!this.projectId) {
+      // this.projectApiService.getProjectHolderGroupsUsingGET(
+      //   this.projectId,
+      //   this.currentPage, this.pageSize
+      // ).subscribe(x => {
+      //   this.listOfData = x.content;
+      //   this.total = x.totalElements;
+      // });
+    }
   }
 
   addFlowLabeling() {
