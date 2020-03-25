@@ -3,7 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../services/user.service';
 import {HolderGroupApiService, HolderGroupCreation, HolderGroupUpdates} from '@profyu/unblock-ng-sdk';
-import {NzMessageService, UploadFile} from 'ng-zorro-antd';
+import {NzMessageService, UploadFile, UploadXHRArgs} from 'ng-zorro-antd';
+import {HttpClient, HttpEvent, HttpEventType, HttpRequest, HttpResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-flow-labeling-add',
@@ -16,16 +17,18 @@ export class FlowLabelingAddComponent implements OnInit {
   public id: number;
   public isEditing = false;
   fileList: UploadFile[] = [];
-  beforeUpload = (file: UploadFile): boolean => {
-    this.fileList = this.fileList.concat(file);
-    return false;
-  };
+  currencyOpt = [
+    {name: 'BTC', val: 'btc'},
+    {name: 'ZIL', val: 'zil'},
+    {name: 'ETH', val: 'eth'}
+  ];
 
   constructor(private fb: FormBuilder,
               private router: Router,
               private userService: UserService,
               private holderGroupApiService: HolderGroupApiService,
-              private message: NzMessageService) {
+              private message: NzMessageService,
+              private http: HttpClient) {
   }
 
   ngOnInit(): void {
@@ -70,6 +73,23 @@ export class FlowLabelingAddComponent implements OnInit {
     //       });
     //   }
     // }
+  }
+
+  customReq(item: UploadXHRArgs) {
+    // Create a FormData here to store files and other parameters.
+    const formData = new FormData();
+    // tslint:disable-next-line:no-any
+    formData.append('file', item.file as any);
+    formData.append('id', '1000');
+
+    return this.http.post<any>('http://localhost:8080/savefile', formData, {
+      reportProgress: true,
+      observe: 'events'
+    }).subscribe((event: any) => {
+      if (typeof (event) === 'object') {
+        console.log(event.body);
+      }
+    });
   }
 
   handleCancel() {
