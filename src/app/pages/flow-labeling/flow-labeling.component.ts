@@ -1,13 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TblAction, TblColumn} from '@profyu/core-ng-zorro';
-import {HolderGroupApiService, HolderGroupDto, ProjectApiService} from '@profyu/unblock-ng-sdk';
-import {Subject} from 'rxjs';
-import {NzMessageService, NzModalRef, NzModalService} from 'ng-zorro-antd';
-import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from '../../services/user.service';
-import {takeUntil} from 'rxjs/operators';
-import {formatDate} from '@angular/common';
-import {UtilsService} from '../../services/utils.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { TblAction, TblColumn } from '@profyu/core-ng-zorro';
+import { HolderGroupApiService, HolderGroupDto, ProjectApiService, FlowLabelingDto } from '@profyu/unblock-ng-sdk';
+import { Subject, Observable, interval } from 'rxjs';
+import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { takeUntil, switchMap } from 'rxjs/operators';
+import { formatDate } from '@angular/common';
+import { UtilsService } from '../../services/utils.service';
 
 @Component({
   selector: 'app-flow-labeling',
@@ -16,38 +16,13 @@ import {UtilsService} from '../../services/utils.service';
 })
 export class FlowLabelingComponent implements OnInit, OnDestroy {
 
-  public listOfData: Array<any> = [
-    {
-      'status': 1,
-      'currency': 'BTC',
-      'label': 'sanction',
-      'maxLevel': 3,
-      'startedTime': '2011-10-12T00:01:10.000+0000',
-      'endedTime': '2019-12-01T07:57:28.000+0000'
-    },
-    {
-      'status': 2,
-      'currency': 'ZIL',
-      'label': 'sanction',
-      'maxLevel': 4,
-      'startedTime': '2011-10-12T00:01:10.000+0000',
-      'endedTime': '2019-12-01T07:57:28.000+0000'
-    },
-    {
-      'status': 1,
-      'currency': 'ETH',
-      'label': 'sanction',
-      'maxLevel': 3,
-      'startedTime': '2011-10-12T00:01:10.000+0000',
-      'endedTime': '2019-12-01T07:57:28.000+0000'
-    }
-  ];
+  public listOfData: Array<any> = [];
   public isLoading = false;
   public currentPage = 0;
   public total = 0;
   public pageSizeOptions = [30, 50, 100];
   public pageSize = this.pageSizeOptions[0];
-  public tblColumns: Array<TblColumn<any>> = [
+  public tblColumns: Array<TblColumn<FlowLabelingDto>> = [
     {
       property: 'status',
       title: 'Status',
@@ -59,37 +34,45 @@ export class FlowLabelingComponent implements OnInit, OnDestroy {
     },
     {
       property: 'currency',
-      title: 'Currency'
+      title: 'Currency',
+      formatter: (data) => {
+        return data.currency.name.toUpperCase();
+      }
     },
     {
-      property: 'label',
+      property: 'labelName',
       title: 'Label'
     },
     {
       property: 'maxLevel',
-      title: 'MaxLevel'
+      title: 'Max Level'
     },
     {
-      property: '',
-      title: 'Started Time',
+      property: 'startingTime',
+      title: 'Starting Time',
       formatter: data => {
-        return this.utilService.transformDateShort(data.startedTime);
+        return this.utilService.transformDateShort(data.startingTime);
       }
     },
     {
-      property: '',
-      title: 'Ended Time',
+      property: 'endingTime',
+      title: 'Ending Time',
       formatter: data => {
-        return this.utilService.transformDateShort(data.endedTime);
+        return this.utilService.transformDateShort(data.endingTime);
       }
-    }
+    },
+    {
+      property: 'labeledAddresses',
+      title: 'Labeled Addresses'
+    },
   ];
   public unsubscribe$ = new Subject<void>();
   public projectId: number;
 
   constructor(private router: Router,
-              private userService: UserService,
-              private utilService: UtilsService) {
+    private userService: UserService,
+    private projectApiService: ProjectApiService,
+    private utilService: UtilsService) {
   }
 
   ngOnInit() {
@@ -102,17 +85,26 @@ export class FlowLabelingComponent implements OnInit, OnDestroy {
         this.reload();
       }
     });
+
+    interval(5000)
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe(
+        data => {
+          this.reload();
+        }
+      );
   }
 
   reload() {
     if (!!this.projectId) {
-      // this.projectApiService.getProjectHolderGroupsUsingGET(
-      //   this.projectId,
-      //   this.currentPage, this.pageSize
-      // ).subscribe(x => {
-      //   this.listOfData = x.content;
-      //   this.total = x.totalElements;
-      // });
+      this.projectApiService.getProjectFlowLabelingUsingGET(
+        this.projectId,
+        this.currentPage, this.pageSize
+      ).subscribe(x => {
+        this.listOfData = x.content;
+        this.total = x.totalElements;
+      });
     }
   }
 
@@ -127,16 +119,18 @@ export class FlowLabelingComponent implements OnInit, OnDestroy {
     this.pageSize = pageSize;
   }
 
-  levelFormatter(data) {
+  levelFormatter(data: FlowLabelingDto.StatusEnum) {
     let res = null;
     switch (data) {
-      case 1:
+      case FlowLabelingDto.StatusEnum.COMPLETED:
         res = {
           color: 'green',
           title: 'Completed'
         };
         break;
-      case 2:
+      case FlowLabelingDto.StatusEnum.PENDING:
+      case FlowLabelingDto.StatusEnum.RUNNING:
+
         res = {
           color: 'blue',
           title: 'Running'
@@ -145,7 +139,7 @@ export class FlowLabelingComponent implements OnInit, OnDestroy {
       default:
         res = {
           color: 'yellow',
-          title: 'N/A'
+          title: 'Unknown'
         };
     }
     return res;

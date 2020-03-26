@@ -10,7 +10,7 @@
         <nz-form-control nzErrorTip="Please input the Currency!">
           <nz-select formControlName="currency" nzPlaceHolder="Choose">
             <nz-option
-              *ngFor="let opt of currencyOpt"
+              *ngFor="let opt of currencyOpts"
               nzValue="{{opt.val}}"
               nzLabel="{{opt.name}}">
             </nz-option>
@@ -32,13 +32,14 @@
       <nz-form-item>
         <nz-form-label [nzNoColon]="true">Max Level</nz-form-label>
         <nz-form-control>
-          <nz-slider formControlName="maxLevel"></nz-slider>
+          <nz-slider formControlName="maxLevel" [nzDefaultValue]="3" [nzTooltipVisible]="'always'"
+          [nzMin]="2" [nzMax]="10" [nzStep]="1"></nz-slider>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-label [nzNoColon]="true">RangePicker</nz-form-label>
+        <nz-form-label [nzNoColon]="true">Time Range</nz-form-label>
         <nz-form-control>
-          <nz-range-picker formControlName="rangePicker"></nz-range-picker>
+          <nz-range-picker formControlName="dateRange"></nz-range-picker>
         </nz-form-control>
       </nz-form-item>
 
@@ -51,7 +52,7 @@
       <nz-form-item>
         <nz-form-control>
           <div class="pfy-form-btn">
-            <button nz-button nzType="primary" (click)="submitForm()">Submit</button>
+            <button nz-button nzType="primary" [nzLoading]="isSubmitting" (click)="submitForm()">Submit</button>
             <button nz-button (click)="handleCancel()">Cancel</button>
           </div>
         </nz-form-control>
