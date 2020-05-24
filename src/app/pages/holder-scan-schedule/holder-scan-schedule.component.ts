@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {TblColumn} from '@profyu/core-ng-zorro';
 import {ActivatedRoute, Router} from '@angular/router';
 import {formatDate} from '@angular/common';
 import {UtilsService} from '../../services/utils.service';
+import {TblColumn} from "../../shared/table/tbl-column";
 
 @Component({
   selector: 'app-holder-scan-schedule',

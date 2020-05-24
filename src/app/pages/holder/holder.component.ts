@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {TblColumn} from '@profyu/core-ng-zorro/lib/model/tblColumn';
 import {Router} from '@angular/router';
 import {formatDate} from '@angular/common';
-import {TblAction} from '@profyu/core-ng-zorro';
+import {TblColumn} from "../../shared/table/tbl-column";
+import {TblAction} from "../../shared/table/tbl-action";
 
 @Component({
   selector: 'app-holder',

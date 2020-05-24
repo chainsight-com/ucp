@@ -1,0 +1,47 @@
+<nz-modal [nzVisible]="true" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="null" [nzClosable]="false"
+          [nzWidth]="300">
+  <ng-template #modalTitle>
+    UnBlock Analysis
+  </ng-template>
+  <ng-template #modalContent>
+    <nz-spin [nzSpinning]="isSpinning" [nzDelay]="200">
+      <form nz-form [formGroup]="validateForm" class="login-form">
+        <nz-form-item>
+          <nz-form-control [nzErrorTip]="errorTpl">
+            <nz-input-group [nzPrefix]="prefixTemplateEmail">
+              <input #account type="text" nz-input formControlName="email" placeholder="Email"/>
+              <ng-template #errorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  Please input your email!
+                </ng-container>
+                <ng-container *ngIf="control.hasError('confirm')">
+                  Account or password is invalid!
+                </ng-container>
+              </ng-template>
+            </nz-input-group>
+            <ng-template #prefixTemplateEmail><i nz-icon nzType="mail"></i></ng-template>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your password!">
+            <nz-input-group [nzPrefix]="prefixTemplatePwd">
+              <input type="password" nz-input formControlName="password" placeholder="Password"/>
+            </nz-input-group>
+            <ng-template #prefixTemplatePwd><i nz-icon nzType="lock"></i></ng-template>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <button (click)="login()" nz-button nzBlock nzType="primary" nzShape="round">Login</button>
+            <button (click)="loginWithGoogle()" class="my-2" nz-button nzBlock nzType="primary" nzShape="round"><i
+              nz-icon
+              type="google"></i>Login with Google
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-spin>
+  </ng-template>
+</nz-modal>
+
+

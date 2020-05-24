@@ -1,60 +1,75 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { ScanPageComponent } from './pages/scan-page/scan-page.component';
-import { NewScanPageComponent } from './pages/new-scan-page/new-scan-page.component';
-import { ScanHistoryPageComponent } from './pages/scan-history-page/scan-history-page.component';
-import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
-import { BtcScanResultPageComponent } from './pages/btc-scan-result-page/btc-scan-result-page.component';
-import { EthScanResultPageComponent } from './pages/eth-scan-result-page/eth-scan-result-page.component';
-import { XrpScanResultPageComponent } from './pages/xrp-scan-result-page/xrp-scan-result-page.component';
-import { QuickScanComponent } from './pages/quick-scan/quick-scan.component';
-import { HolderComponent } from './pages/holder/holder.component';
-import { HolderScanResultComponent } from './pages/holder-scan-result/holder-scan-result.component';
-import { HolderScanScheduleComponent } from './pages/holder-scan-schedule/holder-scan-schedule.component';
-import { HolderScanScheduleAddComponent } from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
-import { HolderScanComponent } from './pages/holder-scan/holder-scan.component';
-import { ZilScanResultPageComponent } from './pages/zil-scan-result-page/zil-scan-result-page.component';
-import { QuickScanAddComponent } from './pages/quick-scan-add/quick-scan-add.component';
-import { HolderAddComponent } from './pages/holder-add/holder-add.component';
-import { HolderDetailProfileComponent } from './pages/holder-detail-profile/holder-detail-profile.component';
-import { HolderDetailAddressComponent } from './pages/holder-detail-address/holder-detail-address.component';
-import { HolderDetailAddressAddComponent } from './pages/holder-detail-address-add/holder-detail-address-add.component';
-import { HolderDetailScanHistoryComponent } from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
-import { HolderGroupAddComponent } from './pages/holder-group-add/holder-group-add.component';
-import { HolderGroupComponent } from './pages/holder-group/holder-group.component';
-import {FlowLabelingComponent} from './pages/flow-labeling/flow-labeling.component';
-import {FlowLabelingAddComponent} from './pages/flow-labeling-add/flow-labeling-add.component';
+import {NgModule} from '@angular/core';
+import {Route, RouterModule, Routes} from '@angular/router';
+import {ScanPageComponent} from './pages/scan-page/scan-page.component';
+import {AddressScanAddPageComponent} from './pages/address-scan/address-scan-add-page/address-scan-add-page.component';
+import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
+import {AddressScanPageComponent} from './pages/address-scan/address-scan-page/address-scan-page.component';
+import {HolderComponent} from './pages/holder/holder.component';
+import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
+import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
+import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
+import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
+import {HolderAddComponent} from './pages/holder-add/holder-add.component';
+import {HolderDetailProfileComponent} from './pages/holder-detail-profile/holder-detail-profile.component';
+import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
+import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
+import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
+import {HolderGroupAddComponent} from './pages/holder-group-add/holder-group-add.component';
+import {HolderGroupComponent} from './pages/holder-group/holder-group.component';
+import {FlowLabelingPageComponent} from './pages/flow-labeling/flow-labeling-page/flow-labeling-page.component';
+import {FlowLabelingAddComponent} from './pages/flow-labeling/flow-labeling-add/flow-labeling-add.component';
+import {AddressScanDetailPageComponent} from "./pages/address-scan/address-scan-detail-page/address-scan-detail-page.component";
+import {AuthGuardService} from "./services/auth-guard.service";
+import {LoginOutline} from "@ant-design/icons-angular/icons";
+import {LoginPageComponent} from "./pages/login-page/login-page.component";
+import {LayoutComponent} from "./shared/layout/layout.component";
+import {AddressScanBatchPageComponent} from "./pages/address-scan-batch/address-scan-batch-page/address-scan-batch-page.component";
+import {AddressScanBatchAddPageComponent} from "./pages/address-scan-batch/address-scan-batch-add-page/address-scan-batch-add-page.component";
+import {NotAuthorizedPageComponent} from "./pages/not-authorized-page/not-authorized-page.component";
+import {PfyRoute} from "./shared/pfy-route";
 
 
 const routes: Routes = [
-  {path: 'new-scan', component: NewScanPageComponent},
-  {path: 'dashboard', component: DashboardPageComponent},
-  {path: 'new-scan', component: NewScanPageComponent},
-  {path: 'scan-history', component: ScanHistoryPageComponent},
-  {path: 'btc-scan-result/:id', component: BtcScanResultPageComponent},
-  {path: 'eth-scan-result/:id', component: EthScanResultPageComponent},
-  {path: 'xrp-scan-result/:id', component: XrpScanResultPageComponent},
-  {path: 'zil-scan-result/:id', component: ZilScanResultPageComponent},
-  {path: 'qr-scan', component: ScanPageComponent},
-  {path: 'quick-scan', component: QuickScanComponent},
-  {path: 'quick-scan-add', component: QuickScanAddComponent},
-  {path: 'holder-group', component: HolderGroupComponent},
-  {path: 'holder-group-add', component: HolderGroupAddComponent},
-  {path: 'holder-group-add/:id', component: HolderGroupAddComponent},
-  {path: 'holder', component: HolderComponent},
-  {path: 'holder-add', component: HolderAddComponent},
-  {path: 'holder-add/:id', component: HolderAddComponent},
-  {path: 'holder-detail-profile/:id', component: HolderDetailProfileComponent},
-  {path: 'holder-detail-address/:id', component: HolderDetailAddressComponent},
-  {path: 'holder-detail-address-add/:id', component: HolderDetailAddressAddComponent},
-  {path: 'holder-detail-scan-history/:id', component: HolderDetailScanHistoryComponent},
-  {path: 'holder-scan', component: HolderScanComponent},
-  {path: 'holder-scan-result/:id', component: HolderScanResultComponent},
-  {path: 'holder-scan-schedule', component: HolderScanScheduleComponent},
-  {path: 'holder-scan-schedule-add', component: HolderScanScheduleAddComponent},
-  {path: 'flow-labeling', component: FlowLabelingComponent},
-  {path: 'flow-labeling-add', component: FlowLabelingAddComponent},
-  {path: '**', component: NewScanPageComponent}
+  {
+    path: '',
+    children: [
+
+      {path: 'dashboard', component: DashboardPageComponent},
+      {path: 'address-scan', component: AddressScanPageComponent, },
+      {path: 'address-scan/create', component: AddressScanAddPageComponent, },
+      {path: 'address-scan/:id', component: AddressScanDetailPageComponent, },
+      {path: 'address-scan-batch', component: AddressScanBatchPageComponent, },
+      {path: 'address-scan-batch/create', component: AddressScanBatchAddPageComponent, },
+      {path: 'qr-scan', component: ScanPageComponent, },
+      {path: 'holder-group', component: HolderGroupComponent, },
+      {path: 'holder-group-add', component: HolderGroupAddComponent, },
+      {path: 'holder-group-add/:id', component: HolderGroupAddComponent, },
+      {path: 'holder', component: HolderComponent, },
+      {path: 'holder-add', component: HolderAddComponent, },
+      {path: 'holder-add/:id', component: HolderAddComponent, },
+      {path: 'holder-detail-profile/:id', component: HolderDetailProfileComponent, },
+      {path: 'holder-detail-address/:id', component: HolderDetailAddressComponent, },
+      {path: 'holder-detail-address-add/:id', component: HolderDetailAddressAddComponent, },
+      {
+        path: 'holder-detail-scan-history/:id',
+        component: HolderDetailScanHistoryComponent,
+
+      },
+      {path: 'holder-scan', component: HolderScanComponent, },
+      {path: 'holder-scan-result/:id', component: HolderScanResultComponent, },
+      {path: 'holder-scan-schedule', component: HolderScanScheduleComponent, },
+      {path: 'holder-scan-schedule-add', component: HolderScanScheduleAddComponent, },
+      {path: 'flow-labeling-page', component: FlowLabelingPageComponent, },
+      {path: 'flow-labeling-page-add', component: FlowLabelingAddComponent, },
+
+
+    ],
+    component: LayoutComponent,
+    canActivate: [AuthGuardService]
+  },
+  {path: 'login', component: LoginPageComponent},
+  {path: 'error/403', component: NotAuthorizedPageComponent},
+  {path: '**', component: LoginPageComponent}
 ];
 
 @NgModule({

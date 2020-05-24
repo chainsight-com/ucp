@@ -1,0 +1,88 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Address Scan Batch</nz-breadcrumb-item>
+  <nz-breadcrumb-item>New</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div>
+  <div style="padding:24px; background: #fff; min-height: 550px;">
+    <div nz-row>
+      <div nz-col nzSpan="12" nzOffset="6">
+        <nz-card nzTitle="Create a new address scan batch">
+          <form nz-form [formGroup]="form">
+            <nz-form-item>
+              <nz-form-label [nzNoColon]="true">Name</nz-form-label>
+              <nz-form-control nzErrorTip="Please input the Name">
+                <input type="text" nz-input formControlName="name" placeholder="Name"/>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzNoColon]="true">Currency</nz-form-label>
+              <nz-form-control nzErrorTip="Please input the Currency!">
+                <nz-select formControlName="currencyId" nzPlaceHolder="Choose">
+                  <nz-option
+                    *ngFor="let currency of currencies"
+                    nzValue="{{currency.id}}"
+                    nzLabel="{{currency.name.toUpperCase()}}">
+                  </nz-option>
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzNoColon]="true">Addresses CSV</nz-form-label>
+              <nz-form-control>
+                <nz-upload
+                  [(nzFileList)]="fileList"
+                  [nzAccept]="'.csv'"
+                  [nzLimit]="1"
+                  [nzCustomRequest]="upoadReq">
+                  <button nz-button><i nz-icon nzType="upload"></i><span>CSV File Upload</span></button>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control>
+                <label nz-checkbox formControlName="forwardEnabled" (ngModelChange)="forwardEnableChanged($event)">Forward Scan</label>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item style="margin-top: 32px;" *ngIf="form.get('forwardEnabled')?.value">
+              <nz-form-label [nzSpan]="6"  nzRequired nzFor="forwardMaxLevel">Forward Max Level</nz-form-label>
+              <nz-form-control [nzSpan]="18">
+                <nz-slider formControlName="forwardMaxLevel" id="forwardMaxLevel" [nzDefaultValue]="3"
+                           [nzTooltipVisible]="'always'" [nzMin]="2" [nzMax]="5" [nzStep]="1"></nz-slider>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control>
+                <label nz-checkbox formControlName="backwardEnabled" (ngModelChange)="backwardEnableChanged($event)">Backward Scan</label>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item style="margin-top: 32px;" *ngIf="form.get('backwardEnabled')?.value">
+              <nz-form-label [nzSpan]="6"  nzRequired nzFor="backwardMaxLevel">Backward Max Level
+              </nz-form-label>
+              <nz-form-control [nzSpan]="18">
+                <nz-slider formControlName="backwardMaxLevel" id="backwardMaxLevel" [nzDefaultValue]="3"
+                           [nzTooltipVisible]="'always'" [nzMin]="2" [nzMax]="5" [nzStep]="1"></nz-slider>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-label [nzNoColon]="true">Time Range</nz-form-label>
+              <nz-form-control>
+                <nz-range-picker formControlName="dateRange"></nz-range-picker>
+              </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+              <nz-form-control>
+                <div class="pfy-form-btn">
+                  <button nz-button nzType="primary" [nzLoading]="isSubmitting" (click)="submit()">Submit</button>
+                  <button nz-button (click)="handleCancel()">Cancel</button>
+                </div>
+              </nz-form-control>
+            </nz-form-item>
+          </form>
+        </nz-card>
+      </div>
+    </div>
+
+
+  </div>
+</div>

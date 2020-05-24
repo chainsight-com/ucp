@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UtilsService} from '../../services/utils.service';
-import {TblColumn} from '@profyu/core-ng-zorro';
+import {TblColumn} from "../../shared/table/tbl-column";
 
 @Component({
   selector: 'app-holder-detail-scan-history',

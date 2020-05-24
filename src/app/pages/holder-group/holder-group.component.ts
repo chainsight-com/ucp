@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TblAction, TblColumn} from '@profyu/core-ng-zorro';
 import {Router} from '@angular/router';
 import {takeUntil} from 'rxjs/operators';
 import {UserService} from '../../services/user.service';
 import {Subject} from 'rxjs';
 import {HolderGroupApiService, HolderGroupDto, ProjectApiService} from '@profyu/unblock-ng-sdk';
 import {NzMessageService, NzModalRef, NzModalService} from 'ng-zorro-antd';
+import {TblColumn} from "../../shared/table/tbl-column";
+import {TblAction} from "../../shared/table/tbl-action";
 
 @Component({
   selector: 'app-holder-group',
@@ -63,7 +64,7 @@ export class HolderGroupComponent implements OnInit, OnDestroy {
       if (!!project) {
         this.projectApiService.getProjectHolderGroupsUsingGET(project.id, this.currentPage, this.pageSize).subscribe(x => {
           this.listOfData = x.content;
-          this.total = x.totalElements;
+          this.total = parseInt(x.totalElements);
         });
       }
     });
@@ -71,11 +72,11 @@ export class HolderGroupComponent implements OnInit, OnDestroy {
 
   reload() {
     this.projectApiService.getProjectHolderGroupsUsingGET(
-      this.userService.project$.getValue().id,
+      this.userService.project.id,
       this.currentPage, this.pageSize
     ).subscribe(x => {
       this.listOfData = x.content;
-      this.total = x.totalElements;
+      this.total = parseInt(x.totalElements);
     });
   }
 

@@ -1,0 +1,62 @@
+<nz-breadcrumb>
+  <nz-breadcrumb-item>Flow Labeling</nz-breadcrumb-item>
+  <nz-breadcrumb-item>New</nz-breadcrumb-item>
+</nz-breadcrumb>
+<div class="pfy-page-content">
+  <div class="center">
+    <form nz-form [formGroup]="validateForm">
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">Currency</nz-form-label>
+        <nz-form-control nzErrorTip="Please input the Currency!">
+          <nz-select formControlName="currency" nzPlaceHolder="Choose">
+            <nz-option
+              *ngFor="let opt of currencyOpts"
+              nzValue="{{opt.val}}"
+              nzLabel="{{opt.name}}">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">Root Addresses CSV</nz-form-label>
+        <nz-form-control>
+          <nz-upload
+            [(nzFileList)]="fileList"
+            [nzAccept]="'.csv'"
+            [nzLimit]="1"
+            [nzCustomRequest]="customReq">
+            <button nz-button><i nz-icon nzType="upload"></i><span>CSV File Upload</span></button>
+          </nz-upload>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">Max Level</nz-form-label>
+        <nz-form-control>
+          <nz-slider formControlName="maxLevel" [nzDefaultValue]="3" [nzTooltipVisible]="'always'"
+          [nzMin]="2" [nzMax]="10" [nzStep]="1"></nz-slider>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">Time Range</nz-form-label>
+        <nz-form-control>
+          <nz-range-picker formControlName="dateRange"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzNoColon]="true">Label Name</nz-form-label>
+        <nz-form-control nzErrorTip="Please input the Label Name!">
+          <input type="text" nz-input formControlName="label" placeholder="Label Name"/>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <div class="pfy-form-btn">
+            <button nz-button nzType="primary" [nzLoading]="isSubmitting" (click)="submitForm()">Submit</button>
+            <button nz-button (click)="handleCancel()">Cancel</button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</div>

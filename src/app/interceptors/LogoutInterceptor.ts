@@ -3,11 +3,12 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
 import {catchError} from 'rxjs/operators';
-import {JwtService} from '../services/jwt.service';
+import {UserService} from "../services/user.service";
+
 
 @Injectable()
 export class LogoutInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private jwtService: JwtService) {
+  constructor(private router: Router, private userService: UserService) {
 
   }
 
@@ -17,7 +18,7 @@ export class LogoutInterceptor implements HttpInterceptor {
       catchError((err: any) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401 || err.status === 403) {
-            this.jwtService.removeToken();
+            this.userService.removeToken();
             this.router.navigateByUrl('/');
           }
         }

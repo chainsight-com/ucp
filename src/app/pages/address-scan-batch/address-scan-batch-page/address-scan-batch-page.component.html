@@ -1,0 +1,30 @@
+<div class="func-area">
+  <div class="pfy-btn-right">
+    <button (click)="addBatch()" nz-button nzType="primary" [disabled]="!(project?.isAddressScanEnabled)">
+      <i nz-icon
+         nzType="plus"
+         nzTheme="outline">
+      </i>New Batch
+    </button>
+    <button (click)="reload(true, false)" nzType="default" nz-button>
+      <i nz-icon
+         nzType="reload"
+         nzTheme="outline">
+      </i>Reload
+    </button>
+  </div>
+</div>
+<div class="pfy-page-content">
+  <pfy-table
+    [tblColumns]="columns"
+    [tblData]="page.content"
+    [tblTotal]="page.totalElements"
+    [(pageIndex)]="pageIdx"
+    [loading]="isLoading"
+    (detailClick)="handleDetailClick($event)"
+    (actionClick)="handleActionClick($event)"
+    [pageable]="true"
+    [pageSizeOptions]="pageSizeOptions"
+    (pageSizeChange)="handlePageSizeChange($event)"
+  ></pfy-table>
+</div>

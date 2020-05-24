@@ -1,0 +1,83 @@
+<nz-table
+  #basicTable
+  [nzBordered]="tblBordered"
+  [nzSize]="tblSize || 'small'"
+  [nzData]="tblData"
+  [nzLoading]="loading || false"
+  [nzPageSize]="pageSize || 10"
+  [nzTotal]="total"
+  [nzPageSizeOptions]="pageSizeOptions || defaultPageSizeOpts"
+  (nzPageIndexChange)="handlePageIndexChange($event)"
+  (nzPageSizeChange)="handlePageSizeChange($event)"
+  [nzShowSizeChanger]="pageable || false"
+  [nzShowPagination]="pageable || false"
+  [nzFrontPagination]="frontPagination"
+>
+  <thead>
+  <tr>
+    <th *ngFor="let col of getColumns" nzWidth="{{getThWidth(col)}}">{{col.title}}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of basicTable.data" (click)="handleRowClick(data)">
+    <ng-container *ngFor="let col of getColumns">
+      <ng-container *ngIf="!!col.actions; else slotBlock">
+        <td>
+          <a *ngFor="let action of getActions(col.actions)"
+             (click)="handleActionClick(data,action)">
+            {{ action.title }}
+            <nz-divider nzType="vertical"></nz-divider>
+          </a>
+          <ng-container *ngIf="getMoreActions(col.actions).length > 0">
+            <a nz-dropdown [nzDropdownMenu]="menu">
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu nzSelectable>
+                  <li nz-menu-item
+                      *ngFor="let action of getMoreActions(col.actions)"
+                      (click)="handleActionClick(data,action)">
+                    {{action.title}}
+                  </li>
+                </ul>
+              </nz-dropdown-menu>
+              More
+              <i nz-icon nzType="ellipsis"></i>
+            </a>
+          </ng-container>
+        </td>
+      </ng-container>
+      <ng-template #slotBlock>
+        <ng-container *ngIf="!!col.slot;else levelBlock">
+          <td>
+            <ng-container *ngTemplateOutlet="getSlot(col);context:{'retVal': data}"></ng-container>
+          </td>
+        </ng-container>
+      </ng-template>
+      <ng-template #levelBlock>
+        <ng-container *ngIf="(!!col.type) && col.type ==='level'; else formatterBlock">
+          <td>
+            <nz-badge
+              nzColor="{{col.formatter(data[col['property']])['color']}}"
+              nzText="{{col.formatter(data[col['property']])['title']}}">
+            </nz-badge>
+          </td>
+        </ng-container>
+      </ng-template>
+      <ng-template #formatterBlock>
+        <ng-container *ngIf="!!col.formatter; else elseBlock">
+          <td>
+            {{col.formatter(data)}}
+          </td>
+        </ng-container>
+      </ng-template>
+      <ng-template #elseBlock>
+        <ng-container *ngIf="!col.detail; else elseDetailBlock">
+          <td>{{ data[col['property']] }}</td>
+        </ng-container>
+      </ng-template>
+      <ng-template #elseDetailBlock>
+        <td><a (click)="handleDetailClick(data)">{{ data[col['property']] }}</a></td>
+      </ng-template>
+    </ng-container>
+  </tr>
+  </tbody>
+</nz-table>

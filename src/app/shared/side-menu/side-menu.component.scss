@@ -1,0 +1,84 @@
+.content {
+  //background: #fff;
+  height: 100%;
+}
+.app-sider-logo {
+  color:  black;
+  background-color: #000000;
+  text-align: center;
+  font-size: 1.2em;
+  padding: 5px;
+  //border-top: 1px solid #eee;
+  //border-bottom: 1px solid #eee;
+  height:50px;
+  img {
+    height: 40px;
+  }
+  span {
+    margin: 5px;
+  }
+}
+.loginInfo{
+  height:20px;
+}
+.search{
+  height:40px;
+  div{
+    text-align: center;
+    vertical-align: middle ;
+    line-height: 40px;
+  }
+}
+.side-menu-search-input{
+  border:#ffffff 0px solid;
+  border-radius: 0px;
+}
+
+.hidden {
+  display: none !important;
+}
+*:focus {
+  outline: none;
+}
+
+::-webkit-scrollbar-track {
+  border: 1px solid #000000;
+  padding: 2px 0;
+  background-color: #000000;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  //box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  opacity: .8;
+  background-color: #000000;
+  border: 1px solid #000000;
+}
+.menu{
+  height: calc(100vh - 50px);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  //background: white;
+}
+
+.toggleBtn {
+  height: 40px;
+  background-color: #f7f7f7;
+  border: 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  color: #bcbcbc;
+  bottom: 0;
+}
+.side-menu{
+  background:#fff;
+  height: 100vh;
+  box-shadow: 0 8px 10px -5px rgba(0,0,0,.2), 0 16px 24px 2px rgba(0,0,0,.14), 0 6px 30px 5px rgba(0,0,0,.12);;
+}
+.ant-menu-inline {
+  border-right: 0px solid #e8e8e8;
+}

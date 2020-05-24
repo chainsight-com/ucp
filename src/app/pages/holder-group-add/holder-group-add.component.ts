@@ -13,7 +13,7 @@ import {NzMessageService} from 'ng-zorro-antd';
 export class HolderGroupAddComponent implements OnInit {
 
   validateForm: FormGroup;
-  public id: number;
+  public id: string;
   public isEditing = false;
 
   constructor(private fb: FormBuilder,
@@ -22,7 +22,7 @@ export class HolderGroupAddComponent implements OnInit {
               private holderGroupApiService: HolderGroupApiService,
               private message: NzMessageService,
               private route: ActivatedRoute) {
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.id = this.route.snapshot.paramMap.get('id');
     if (!!this.id) {
       this.isEditing = true;
     }
@@ -65,7 +65,7 @@ export class HolderGroupAddComponent implements OnInit {
       } else {
         const newVal = {
           name: this.validateForm.value.name,
-          projectId: this.userService.project$.getValue().id
+          projectId: this.userService.project
         } as HolderGroupCreation;
 
         this.holderGroupApiService.createHolderGroupUsingPOST(newVal)

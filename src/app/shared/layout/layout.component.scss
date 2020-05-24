@@ -1,0 +1,171 @@
+.logoff {
+  background-color: black;
+  opacity: 90%;
+  z-index: 100000;
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  display: table;
+  h2 {
+    color: white;
+  }
+
+  .logout {
+    vertical-align: middle;
+    width: 50%;
+    display: table-cell;
+  }
+}
+
+.side-menu {
+  background: #fff;
+  height: 100vh;
+  box-shadow: 0 8px 10px -5px rgba(0, 0, 0, .2), 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12);;
+}
+
+.content {
+  height: 100vh;
+}
+
+::-webkit-scrollbar-track {
+  border: 1px solid #ffffff;
+  padding: 2px 0;
+  background-color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  //box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  opacity: .8;
+  background-color: #aaa;
+  border: 1px solid #ffffff;
+}
+
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+nz-header {
+  background: #fff;
+  padding: 0;
+
+  .avatar {
+    float: right;
+
+    span {
+      margin: 5px;
+    }
+  }
+
+  div {
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .header-title {
+    margin-bottom: 0;
+    padding-right: 12px;
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 600;
+    font-size: 22px;
+
+  }
+
+  .header-subtitle {
+    margin: 5px 0;
+    margin-right: 12px;
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 14px;
+
+  }
+  .header-tag{
+    margin-right: 12px;
+  }
+}
+
+nz-content {
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+.inner-content {
+  margin: 30px 20px 0px 20px;
+  background: #fff;
+  height: calc(100vh - 124px);
+  border-radius: 5px;
+  padding: 20px 20px 30px 20px;
+  overflow-y: scroll;
+}
+
+nz-footer {
+  text-align: center;
+  height: 30px;
+  padding: 5px;
+}
+
+.backdrop {
+  //height: 100vh;
+  //width: 100%;
+  //background-color: #001529;
+}
+
+.grandParentContaniner {
+  display: table;
+  //height: 100vh;
+  margin: 0 auto;
+}
+
+.parentContainer {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.parentContainer #searchForm {
+  padding: 10px;
+  background: #fff;
+  //border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 500px;
+  margin-bottom: 180px;
+  /*  your login form width */
+}
+
+.logo {
+  margin-bottom: 32px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 100%;
+  height: 100px;
+
+
+}
+
+.login-form {
+  max-width: 300px;
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-form-button {
+  width: 100%;
+}

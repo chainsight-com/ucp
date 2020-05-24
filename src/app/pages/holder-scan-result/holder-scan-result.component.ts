@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {TblColumn} from '@profyu/core-ng-zorro';
 import {formatDate} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
+import {TblColumn} from "../../shared/table/tbl-column";
 
 @Component({
   selector: 'app-holder-scan-result',

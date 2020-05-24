@@ -1,0 +1,194 @@
+<nz-page-header [nzTitle]="addressScan?.currency.name.toUpperCase() +' Address 一 ' + addressScan.address">
+</nz-page-header>
+<div nz-row>
+  <div nz-col>
+    <nz-breadcrumb style="margin: 16px;">
+      <nz-breadcrumb-item>Address Scan</nz-breadcrumb-item>
+      <nz-breadcrumb-item>Result 一 {{addressScan.address}}</nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div>
+</div>
+
+
+
+<div style="padding: 12px;">
+  <nz-row [nzGutter]="16">
+    <nz-col [nzSpan]="4">
+      <nz-card>
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[5] : '...'" [nzTitle]="'Critical'" [nzValueStyle]="{ color: '#EB2F96' }">
+        </nz-statistic>
+
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="4">
+      <nz-card>
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[4] : '...'" [nzTitle]="'High'" [nzValueStyle]="{ color: '#f5222d' }">
+        </nz-statistic>
+
+      </nz-card>
+    </nz-col>
+
+    <nz-col [nzSpan]="4">
+      <nz-card>
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[3] : '...'" [nzTitle]="'Medium'" [nzValueStyle]="{ color: '#fa8c16' }">
+        </nz-statistic>
+
+      </nz-card>
+    </nz-col>
+
+    <nz-col [nzSpan]="4">
+      <nz-card>
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[2] : '...'" [nzTitle]="'Low'" [nzValueStyle]="{ color: '#2f54eb' }">
+        </nz-statistic>
+        <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="4">
+      <nz-card>
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[1] : '...'" [nzTitle]="'Normal'" [nzValueStyle]="{ color: '#52c41a' }">
+        </nz-statistic>
+
+      </nz-card>
+    </nz-col>
+
+  </nz-row>
+</div>
+
+<nz-content style="margin:24px 16px 0;">
+  <nz-spin [nzSpinning]="isLoadingPipeline">
+    <div style="padding:24px; background: #fff; min-height: 550px;">
+      <div nz-row>
+        <div nz-col nzSpan="23">
+          <nz-tabset [nzTabPosition]="'right'" [nzType]="'line'">
+            <nz-tab [nzTitle]="'Issues'">
+
+              <div nz-row style="margin-bottom: 20px;">
+                <div nz-col nzSpan="12">
+                  <h2>Issues</h2>
+                </div>
+                <div nz-col nzSpan="12" style="text-align: right;">
+                  <nz-radio-group [(ngModel)]="category" (ngModelChange)="reloadWitnessPage(true, category)">
+                    <label nz-radio-button [nzValue]="null">All</label>
+                    <label nz-radio-button [nzValue]="'SEND'">Send</label>
+                    <label nz-radio-button [nzValue]="'RECEIVE'">Receive</label>
+                    <label nz-radio-button [nzValue]="'OTHER'">Other</label>
+                  </nz-radio-group>
+                </div>
+              </div>
+              <nz-table #issueTable [nzLoading]="isWitnessLoading" [nzData]="witnessResultPage.content"
+                nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="witnessPageIdx"
+                [(nzPageSize)]="witnessPageSize" [nzTotal]="witnessResultPage.totalElements"
+                (nzPageIndexChange)="reloadWitnessPage(false, category)" (nzPageSizeChange)="reloadWitnessPage(true, category)">
+                <thead>
+                  <tr>
+                    <th>
+                      Rule ID
+                    </th>
+                    <th>
+                      Category
+                    </th>
+                    <th style="width: 100px;">Risk Level</th>
+
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr *ngFor="let data of issueTable.data">
+                    <td>
+                      <a href="#">{{ data.ruleId }}</a>
+                    </td>
+                    <td>
+                      {{ data.category }}
+                    </td>
+                    <td>
+                      <nz-badge *ngIf="data.riskLevel === 5" nzColor="pink" nzText="Critical"></nz-badge>
+                      <nz-badge *ngIf="data.riskLevel === 4" nzColor="red" nzText="High"></nz-badge>
+                      <nz-badge *ngIf="data.riskLevel === 3" nzColor="orange" nzText="Medium"></nz-badge>
+                      <nz-badge *ngIf="data.riskLevel === 2" nzColor="geekblue" nzText="Low"></nz-badge>
+                      <nz-badge *ngIf="data.riskLevel === 1" nzColor="green" nzText="Normal"></nz-badge>
+                    </td>
+
+                    <td >
+                      <markdown class="markdown-body" ngPreserveWhitespaces>{{data.description}}</markdown>
+                      <!-- <code></code> -->
+                    </td>
+
+
+                  </tr>
+                </tbody>
+              </nz-table>
+            </nz-tab>
+            <nz-tab [nzTitle]="'Taint'">
+              <h2>Taint Table</h2>
+              <nz-table #basicTable [nzLoading]="isTaintRecordLoading" [nzData]="taintRecordPage.content"
+                nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="taintRecordPageIdx"
+                [(nzPageSize)]="taintRecordPageSize" [nzTotal]="taintRecordPage.totalElements"
+                (nzPageIndexChange)="reloadAddressTaintJobResultPage(false)"
+                (nzPageSizeChange)="reloadAddressTaintJobResultPage(true)">
+                <thead>
+                  <tr>
+                    <th>
+                      Address
+                    </th>
+                    <th>Total Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <tr *ngFor="let data of basicTable.data">
+                    <td>
+                      <nz-badge *ngIf="data.direction==='F'" nzStatus="processing" style="margin-right: 5px;">
+                      </nz-badge>
+                      <i class="direction-icon" *ngIf="data.direction==='F'" nz-icon nzType="swap-right"
+                        nzTheme="outline"></i>
+                      {{ data.address }}
+                      <i class="direction-icon" *ngIf="data.direction==='B'" nz-icon nzType="swap-right"
+                        nzTheme="outline"></i>
+                      <nz-badge *ngIf="data.direction==='B'" nzStatus="processing" style="margin-left: 5px;"></nz-badge>
+                    </td>
+
+                    <td>{{ data.totalAmount | cc: addressScan.currency.unitRate}} {{addressScan.currency.name.toUpperCase()}}</td>
+
+                  </tr>
+                </tbody>
+              </nz-table>
+            </nz-tab>
+            <nz-tab [nzTitle]="'Flow'" (nzSelect)="flowTabSelected()">
+              <nz-spin [nzSpinning]="isLoadingDiagram" nzTip="Loading...">
+                <div nz-row>
+                  <div nz-col nzSpan="24">
+                    <h2>Flow Analysis</h2>
+                  </div>
+                </div>
+                <div nz-row>
+                  <div nz-col nzSpan="22" nzOffset="1" style="text-align: right;">
+                    <button (click)="loadMoreEdges()" nz-button nzType="primary" nzShape="round"><i nz-icon
+                        nzType="reload" nzTheme="outline"></i>Load More</button>
+                  </div>
+                </div>
+
+                <div nz-row>
+                  <div nz-col nzSpan="22" nzOffset="1">
+                    <nz-divider></nz-divider>
+                  </div>
+                </div>
+
+                <div nz-row>
+                  <div nz-col nzSpan="24">
+                    <div class="flow-diagram" #flowDiagramDiv></div>
+                  </div>
+                </div>
+              </nz-spin>
+
+
+
+            </nz-tab>
+          </nz-tabset>
+        </div>
+      </div>
+
+    </div>
+  </nz-spin>
+
+</nz-content>

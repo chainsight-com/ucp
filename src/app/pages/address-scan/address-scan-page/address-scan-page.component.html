@@ -1,0 +1,29 @@
+<div class="func-area">
+  <div class="pfy-btn-right">
+    <button (click)="addScan()" nz-button nzType="primary" [disabled]="!(project?.isAddressScanEnabled)">
+      <i nz-icon
+         nzType="plus"
+         nzTheme="outline">
+      </i>
+      New Scan</button>
+    <button (click)="reload(true, false)" nzType="default" nz-button>
+      <i nz-icon
+         nzType="reload"
+         nzTheme="outline">
+      </i>Reload
+    </button>
+  </div>
+</div>
+<div class="pfy-page-content">
+  <pfy-table
+    [tblColumns]="columns"
+    [tblData]="page.content"
+    [tblTotal]="page.totalElements"
+    [(pageIndex)]="pageIdx"
+    [loading]="isLoading"
+    (detailClick)="handleDetailClick($event)"
+    [pageable]="true"
+    [pageSizeOptions]="pageSizeOptions"
+    (pageSizeChange)="handlePageSizeChange($event)"
+  ></pfy-table>
+</div>
