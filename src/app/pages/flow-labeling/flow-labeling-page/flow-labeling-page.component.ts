@@ -46,12 +46,16 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
       }
     },
     {
-      property: 'labelName',
-      title: 'Label'
+      property: 'tag',
+      title: 'Tag'
     },
     {
-      property: 'maxLevel',
-      title: 'Max Level'
+      property: 'forwardMaxLevel',
+      title: 'Forward LV'
+    },
+    {
+      property: 'backwardMaxLevel',
+      title: 'Backward LB'
     },
     {
       property: 'startingTime',
@@ -114,7 +118,7 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
   }
 
   addFlowLabeling() {
-    this.router.navigate(['/flow-labeling-page-add']);
+    this.router.navigate(['/flow-labeling-page','create']);
   }
 
   handleDetailClick(row) {
@@ -127,15 +131,20 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
   levelFormatter(data: FlowLabelingDto.StatusEnum) {
     let res = null;
     switch (data) {
-      case FlowLabelingDto.StatusEnum.COMPLETED:
+      case 'PENDING':
+      case 'SUBMITTED':
+        res = {
+          color: 'yellow',
+          title: 'Submitted'
+        };
+        break;
+      case 'COMPLETED':
         res = {
           color: 'green',
           title: 'Completed'
         };
         break;
-      case FlowLabelingDto.StatusEnum.PENDING:
-      case FlowLabelingDto.StatusEnum.RUNNING:
-
+      case 'RUNNING':
         res = {
           color: 'blue',
           title: 'Running'

@@ -60,7 +60,7 @@ const routes: Routes = [
       {path: 'holder-scan-schedule', component: HolderScanScheduleComponent, },
       {path: 'holder-scan-schedule-add', component: HolderScanScheduleAddComponent, },
       {path: 'flow-labeling-page', component: FlowLabelingPageComponent, },
-      {path: 'flow-labeling-page-add', component: FlowLabelingAddComponent, },
+      {path: 'flow-labeling-page/create', component: FlowLabelingAddComponent, },
 
 
     ],
