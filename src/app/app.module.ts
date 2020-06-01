@@ -48,6 +48,7 @@ import {TableComponent} from "./shared/table/table.component";
 import {MenuTreeService} from "./services/menu-tree.service";
 import { AddressScanBatchPageComponent } from './pages/address-scan-batch/address-scan-batch-page/address-scan-batch-page.component';
 import { AddressScanBatchAddPageComponent } from './pages/address-scan-batch/address-scan-batch-add-page/address-scan-batch-add-page.component';
+import {HighlightDirective} from "./directives/text-highlight.directive";
 
 const menus: any[] = [
 
@@ -263,6 +264,7 @@ registerLocaleData(en);
     DashboardPageComponent,
     AddressScanDetailPageComponent,
     CryptoPipe,
+    HighlightDirective,
     HolderComponent,
     HolderScanScheduleAddComponent,
     HolderScanScheduleComponent,

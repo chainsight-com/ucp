@@ -92,7 +92,7 @@ export class AddressScanAddPageComponent implements OnInit, OnDestroy {
       startingTime: formValue.dateRange[0],
       endingTime: formValue.dateRange[1],
       timeoutSecs: 3600,
-      batchMode: false
+      batchMode: false,
     };
 
 
