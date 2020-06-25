@@ -5,7 +5,8 @@
          nzType="plus"
          nzTheme="outline">
       </i>
-      New Scan</button>
+      New Scan
+    </button>
     <button (click)="reload(true, false)" nzType="default" nz-button>
       <i nz-icon
          nzType="reload"
@@ -18,12 +19,13 @@
   <pfy-table
     [tblColumns]="columns"
     [tblData]="page.content"
-    [tblTotal]="page.totalElements"
+    [total]="totalElements"
     [(pageIndex)]="pageIdx"
     [loading]="isLoading"
     (detailClick)="handleDetailClick($event)"
     [pageable]="true"
     [pageSizeOptions]="pageSizeOptions"
     (pageSizeChange)="handlePageSizeChange($event)"
+    (pageIndexChange)="reload(false, false)"
   ></pfy-table>
 </div>

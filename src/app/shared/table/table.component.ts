@@ -40,7 +40,7 @@ export class TableComponent implements OnInit {
   @Input('slotTemplate')
   slotContent: TemplateRef<any>;
 
-  @Input('tblTotal')
+  @Input()
   total: number;
 
   frontPagination: boolean;

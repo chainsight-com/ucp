@@ -5,26 +5,46 @@ import {AuthService} from "angularx-social-login";
 import {filter, map, mergeMap, take, takeUntil, tap} from "rxjs/operators";
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {NzMessageService} from "ng-zorro-antd";
+import {LoginState} from "../models/LoginState";
+import {HttpClient} from "@angular/common/http";
 
-export const LOCAL_TOKEN_KEY = 'access_token';
-export const LOCAL_ME = 'me';
+// export const LOCAL_TOKEN_KEY = 'access_token';
+// export const LOCAL_ME = 'me';
+export const LOGIN_STATE = 'login_state';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private _loginStatus$ = new BehaviorSubject<boolean>(false);
-  private _account$ = new BehaviorSubject<AccountDto>(null);
+  private _loginState$ = new BehaviorSubject<LoginState>(null);
+  // private _account$ = new BehaviorSubject<AccountDto>(null);
   private _project$ = new BehaviorSubject<ProjectDto>(null);
   private _availableProjects = new BehaviorSubject<ProjectDto[]>([]);
 
-  public get account$(): Observable<AccountDto> {
-    return this._account$;
+  public get loginState$(): Observable<LoginState> {
+    return this._loginState$;
   }
+
+  // public get account$(): Observable<AccountDto> {
+  //   return this._account$;
+  // }
 
   public get project$(): Observable<ProjectDto> {
     return this._project$;
+  }
+
+  public get loginState(): LoginState {
+    const memLoginState = this._loginState$.getValue()
+    if (memLoginState) {
+      return memLoginState;
+    }
+    const loginStateStr = localStorage.getItem(LOGIN_STATE);
+    if (loginStateStr) {
+      return JSON.parse(loginStateStr);
+    }
+    return null;
+
   }
 
   public get project(): ProjectDto {
@@ -39,21 +59,29 @@ export class UserService {
     return this._availableProjects.getValue();
   }
 
+  public get token(): string {
+    if (this.loginState) {
+      return this.loginState.accessToken;
+    }
+    return null;
+  }
+
 
   constructor(
     private jwtHelper: JwtHelperService,
     private authService: AuthService,
     private accountApiService: AccountApiService,
     private message: NzMessageService,
+    private httpClient: HttpClient
   ) {
-    this._account$
-      .subscribe((account) => {
-        if (!account) {
+    this._loginState$
+      .subscribe((loginState) => {
+        if (!loginState) {
           this._project$.next(null);
           this._availableProjects.next([]);
           return;
         }
-        this.accountApiService.getAccountProjectUsingGET(account.id)
+        this.accountApiService.getAccountProjectUsingGET(loginState.me.id)
           .pipe(
             take(1)
           ).subscribe(pms => {
@@ -63,8 +91,7 @@ export class UserService {
             this._project$.next(projects[0]);
           } else {
             message.error('No project is available for this account');
-            this.removeToken();
-
+            this.signOut();
           }
         });
 
@@ -73,50 +100,54 @@ export class UserService {
   }
 
   init() {
-    if (this.isTokenExpired()) {
-      this.removeToken();
+    if (this.hasValidToken()) {
+      this.signIn(this.token);
     } else {
-      this.writeToken(this.getToken());
+      this.signOut();
     }
   }
 
-  public get loginStatus$(): Observable<boolean> {
-    return this._loginStatus$;
-  }
 
-
-  isTokenExpired(): boolean {
-    const jwtStr = this.getToken();
+  hasValidToken(): boolean {
+    const jwtStr = this.token;
     // console.log(jwtStr);
     if (jwtStr) {
-      return this.jwtHelper.isTokenExpired(jwtStr);
-    } else {
-      return true;
+      return !this.jwtHelper.isTokenExpired(jwtStr);
     }
+    return false;
   }
 
-  writeToken(value: string) {
-    localStorage.setItem(LOCAL_TOKEN_KEY, value);
-    this._loginStatus$.next(true);
-
+  signIn(value: string) {
+    const loginState = {
+      accessToken: null,
+      me: null
+    }
+    loginState.accessToken = value
+    // localStorage.setItem(LOCAL_TOKEN_KEY, value);
     const tknObj = this.jwtHelper.decodeToken(value);
-    this.accountApiService.getMeUsingGET().subscribe(account => {
-      localStorage.setItem(LOCAL_ME, JSON.stringify(account));
-      this._account$.next(account);
-    });
+    this.httpClient.get(`${this.accountApiService.configuration.basePath}/api/account/me`, {
+      headers: {
+        'Authorization': `Bearer ${value}`
+      }
+    })
+      .subscribe((account: AccountDto) => {
+        loginState.me = account;
+        localStorage.setItem(LOGIN_STATE, JSON.stringify(loginState));
+        // this._account$.next(account);
+        this._loginState$.next(loginState);
+      });
+
   }
 
-  getToken(): string {
-    return localStorage.getItem(LOCAL_TOKEN_KEY);
-  }
 
-  async removeToken() {
-    if (this.getToken()) {
-      localStorage.removeItem(LOCAL_TOKEN_KEY);
-      localStorage.removeItem(LOCAL_ME);
-    }
-    this._loginStatus$.next(false);
-    this._account$.next(null);
+
+
+  async signOut() {
+    localStorage.removeItem(LOGIN_STATE);
+    this._loginState$.next(null);
+    // this._account$.next(null);
+    this._project$.next(null);
+    this._availableProjects.next([]);
     try {
       await this.authService.signOut(true);
     } catch (err) {
@@ -127,11 +158,10 @@ export class UserService {
 
 
   public getMe(): AccountDto {
-    const accountJson = localStorage.getItem(LOCAL_ME);
-    if (!accountJson) {
+    if (!this.loginState) {
       return null;
     }
-    return JSON.parse(accountJson);
+    return this.loginState.me;
   }
 
   public switchProject(project: ProjectDto) {

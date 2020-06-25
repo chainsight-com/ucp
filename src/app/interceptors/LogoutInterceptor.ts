@@ -18,7 +18,7 @@ export class LogoutInterceptor implements HttpInterceptor {
       catchError((err: any) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401 || err.status === 403) {
-            this.userService.removeToken();
+            this.userService.signOut();
             this.router.navigateByUrl('/error/403');
           }
         }

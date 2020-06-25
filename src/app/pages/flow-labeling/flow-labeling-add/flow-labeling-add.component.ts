@@ -54,7 +54,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
       forwardMaxLevel: [3, [Validators.required]],
       backwardEnabled: [true],
       backwardMaxLevel: [3, [Validators.required]],
-      dateRange: [null],
+      dateRange: [null, Validators.required],
       tag: [null, Validators.required]
     });
 
@@ -70,6 +70,9 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
     for (const i in this.form.controls) {
       this.form.controls[i].markAsDirty();
       this.form.controls[i].updateValueAndValidity();
+    }
+    if (this.form.invalid) {
+      return;
     }
     const formValue = this.form.value;
     this.isSubmitting = true;

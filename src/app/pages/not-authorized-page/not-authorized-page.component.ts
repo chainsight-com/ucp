@@ -15,12 +15,7 @@ export class NotAuthorizedPageComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.userService.removeToken();
-    try {
-      await this.authService.signOut(true);
-    } catch (err) {
-      console.error(err);
-    }
+    await this.userService.signOut();
   }
 
 }

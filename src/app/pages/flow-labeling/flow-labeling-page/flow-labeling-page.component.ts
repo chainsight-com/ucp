@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   HolderGroupApiService,
   HolderGroupDto,
@@ -6,13 +6,13 @@ import {
   FlowLabelingDto,
   ProjectDto
 } from '@profyu/unblock-ng-sdk';
-import { Subject, Observable, interval } from 'rxjs';
-import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from '../../../services/user.service';
-import { takeUntil, switchMap } from 'rxjs/operators';
-import { formatDate } from '@angular/common';
-import { UtilsService } from '../../../services/utils.service';
+import {Subject, Observable, interval} from 'rxjs';
+import {NzMessageService, NzModalRef, NzModalService} from 'ng-zorro-antd';
+import {ActivatedRoute, Router} from '@angular/router';
+import {UserService} from '../../../services/user.service';
+import {takeUntil, switchMap} from 'rxjs/operators';
+import {formatDate} from '@angular/common';
+import {UtilsService} from '../../../services/utils.service';
 import {TblColumn} from "../../../shared/table/tbl-column";
 
 @Component({
@@ -24,8 +24,8 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
 
   public listOfData: Array<any> = [];
   public isLoading = false;
-  public currentPage: number = 0;
-  public total: number = 0;
+  public pageIndex: number = 1;
+  public totalElements: number = 1;
   public pageSizeOptions = [30, 50, 100];
   public pageSize = this.pageSizeOptions[0];
   public tblColumns: Array<TblColumn<FlowLabelingDto>> = [
@@ -80,9 +80,9 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
   public project: ProjectDto;
 
   constructor(private router: Router,
-    private userService: UserService,
-    private projectApiService: ProjectApiService,
-    private utilService: UtilsService) {
+              private userService: UserService,
+              private projectApiService: ProjectApiService,
+              private utilService: UtilsService) {
   }
 
   ngOnInit() {
@@ -99,26 +99,26 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.unsubscribe$)
       ).subscribe(
-        data => {
-          this.reload();
-        }
-      );
+      data => {
+        this.reload();
+      }
+    );
   }
 
   reload() {
     if (!!this.project) {
       this.projectApiService.getProjectFlowLabelingUsingGET(
         this.project.id,
-        this.currentPage, this.pageSize
+        this.pageIndex - 1, this.pageSize
       ).subscribe(x => {
         this.listOfData = x.content;
-        this.total = parseInt(x.totalElements);
+        this.totalElements = parseInt(x.totalElements);
       });
     }
   }
 
   addFlowLabeling() {
-    this.router.navigate(['/flow-labeling-page','create']);
+    this.router.navigate(['/flow-labeling-page', 'create']);
   }
 
   handleDetailClick(row) {

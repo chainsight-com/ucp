@@ -12,7 +12,6 @@ import {
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {AccountCredentials, AccountDto, ProjectDto} from '@profyu/unblock-ng-sdk';
-import {UserContext} from "../../models/UserContext";
 import {Menu} from "../side-menu/menu";
 import {filter, map, mergeMap, take, takeUntil, tap} from "rxjs/operators";
 import {AuthService} from "angularx-social-login";
@@ -62,10 +61,10 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     // account
-    this.userService.account$.pipe(
+    this.userService.loginState$.pipe(
       takeUntil(this.unsubscribe$)
-    ).subscribe(account => {
-      this.account = account;
+    ).subscribe(loginState => {
+      this.account = loginState.me;
     });
     // project
     this.userService.availableProjects$.pipe(
@@ -133,7 +132,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async logout() {
-    await this.userService.removeToken();
+    await this.userService.signOut();
     this.router.navigateByUrl('/login');
   }
 

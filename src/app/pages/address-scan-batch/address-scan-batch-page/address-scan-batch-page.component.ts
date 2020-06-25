@@ -62,6 +62,7 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
   public pageSize = 30;
   public pageSizeOptions = [30, 50, 100];
   public pageIdx = 1;
+  public totalElements = 1;
   public isLoading = false;
   public project: ProjectDto;
 
@@ -100,16 +101,17 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
   reload(reset: boolean, silent: boolean) {
 
     if (reset) {
-      this.pageIdx = 0;
+      this.pageIdx = 1;
     }
     if (!silent) {
       this.isLoading = true;
     }
-    this.addressScanBatchApiService.paginateAddressScanBatchUsingGET(this.pageIdx, this.pageSize, this.userService.project.id)
+    this.addressScanBatchApiService.paginateAddressScanBatchUsingGET(this.pageIdx-1, this.pageSize, this.userService.project.id)
       .pipe(
         take(1),
       ).subscribe(page => {
       this.page = page;
+      this.totalElements = Number(page.totalElements);
     }, console.error, () => {
       this.isLoading = false;
     });

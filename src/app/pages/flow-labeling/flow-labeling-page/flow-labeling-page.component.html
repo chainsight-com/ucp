@@ -12,8 +12,8 @@
   <pfy-table
     [tblColumns]="tblColumns"
     [tblData]="listOfData"
-    [tblTotal]="total"
-    [(pageIndex)]="currentPage"
+    [total]="totalElements"
+    [(pageIndex)]="pageIndex"
     [loading]="isLoading"
     (detailClick)="handleDetailClick($event)"
     [pageable]="true"

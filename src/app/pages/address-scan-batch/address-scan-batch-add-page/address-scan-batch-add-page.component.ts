@@ -86,6 +86,10 @@ export class AddressScanBatchAddPageComponent implements OnInit {
       this.form.controls[i].updateValueAndValidity();
     }
 
+    if (this.form.invalid) {
+      return;
+    }
+
     const formValue = this.form.value;
 
     const body: AddressScanBatchCreationFromBlob = {

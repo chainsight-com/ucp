@@ -9,7 +9,7 @@ export let EMPTY_PAGE: Page<any> = {
   number: 0,
   numberOfElements: 0,
   size: 0,
-  totalElements: 0,
+  totalElements: 1,
   totalPages: 0
 };
 

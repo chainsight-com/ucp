@@ -33,7 +33,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // OAuth login
     this.authService.authState.pipe(
       tap(user => {
         if (!user) {
@@ -52,8 +51,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       }),
       mergeMap((cred) => this.authApiService.authenticateWithGoogleUsingPOST(cred))
     ).subscribe((tokenPair) => {
-      this.userService.writeToken(tokenPair.token);
+      this.userService.signIn(tokenPair.token);
     });
+
+
 
     this.userService.project$
       .pipe(
@@ -85,7 +86,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         // catchError((err, caught) => err),
       ).subscribe(
       (tokenPair) => {
-        this.userService.writeToken(tokenPair.token);
+        this.userService.signIn(tokenPair.token);
       }, (error) => {
         console.log(error);
         this.message.error(`<span class="pfy-message-error">${error.message}</span>`);

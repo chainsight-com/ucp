@@ -11,20 +11,14 @@ export class JwtInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!this.userService.isTokenExpired()) {
-      const token = this.userService.getToken();
+    if (this.userService.hasValidToken() && !request.headers.has('Authorization')) {
+      const token = this.userService.token;
       return next.handle(
         request.clone({
           headers: request.headers.append('Authorization', 'Bearer ' + token)
         })
       );
     }
-    const token = this.userService.getToken();
-    return next.handle(
-      request.clone({
-        headers: request.headers.append('Authorization', 'Bearer ' + token)
-      })
-    );
     return next.handle(request);
   }
 }
