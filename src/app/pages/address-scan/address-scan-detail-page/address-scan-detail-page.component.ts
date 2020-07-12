@@ -54,7 +54,13 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   public flowGraph: GraphDto = {};
 
-  public witnessSummary: { [key: number]: number };
+  public witnessSummary: { [key: number]: number } = {
+    5: 0,
+    4: 0,
+    3: 0,
+    2: 0,
+    1: 0,
+  };
 
   public maxDays = 1;
   public dateRange = [0, 1];
@@ -111,6 +117,12 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       this.dateRangeMarks = {0: moment(this.addressScan.startingTime).format('YYYY-MM-DD')};
       this.dateRangeMarks[this.maxDays] = moment(this.addressScan.endingTime).format('YYYY-MM-DD');
       this.dateRange = [0, this.maxDays];
+      this.witnessSummary[5] = Number(sc.riskCriticalCount);
+      this.witnessSummary[4] = Number(sc.riskHighCount);
+      this.witnessSummary[3] = Number(sc.riskMediumCount);
+      this.witnessSummary[2] = Number(sc.riskLowCount);
+      this.witnessSummary[1] = Number(sc.riskNormalCount);
+
       this.reloadWitnessPage(true);
       this.reloadAddressTaintJobResultPage(true);
     }, console.error, () => {
@@ -139,22 +151,22 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       this.witnessPageIdx = 0;
     }
     this.isWitnessLoading = true;
-    this.addressScanApiService.listAddressScanWitnessSummaryUsingGET(this.addressScan.id)
-      .pipe(
-        take(1),
-      ).subscribe(summary => {
-      this.witnessSummary = summary.reduce(function (map, obj) {
-        map[obj.riskLevel] = parseInt(obj.witnessCount);
-        return map;
-      },{
-        5: 0,
-        4: 0,
-        3: 0,
-        2: 0,
-        1: 0,
-      })
-
-    });
+    // this.addressScanApiService.listAddressScanWitnessSummaryUsingGET(this.addressScan.id)
+    //   .pipe(
+    //     take(1),
+    //   ).subscribe(summary => {
+    //   this.witnessSummary = summary.reduce(function (map, obj) {
+    //     map[obj.riskLevel] = parseInt(obj.witnessCount);
+    //     return map;
+    //   }, {
+    //     5: 0,
+    //     4: 0,
+    //     3: 0,
+    //     2: 0,
+    //     1: 0,
+    //   })
+    //
+    // });
     this.addressScanApiService.paginateAddressScanWitnessUsingGET(this.addressScan.id, this.witnessPageIdx, this.witnessPageSize, category)
       .pipe(
         take(1),
