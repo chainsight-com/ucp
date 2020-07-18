@@ -66,7 +66,15 @@ export class AddressScanPageComponent implements OnInit, OnDestroy {
       formatter: data => {
         return formatDate(data.createdTime, 'short', 'en-US', '');
       }
-    }
+    },
+    {
+      property: 'riskCriticalCount',
+      title: 'Cirtical Risks'
+    },
+    {
+      property: 'riskHighCount',
+      title: 'High Risks'
+    },
   ];
 
 
