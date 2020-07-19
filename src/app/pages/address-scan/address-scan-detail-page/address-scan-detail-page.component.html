@@ -1,4 +1,4 @@
-<nz-page-header [nzTitle]="addressScan?.currency.name.toUpperCase() +' Address 一 ' + addressScan.address">
+<nz-page-header [nzTitle]="addressScan?.currency?.name.toUpperCase() +' Address 一 ' + addressScan.address">
 </nz-page-header>
 <div nz-row>
   <div nz-col>
@@ -10,27 +10,20 @@
 </div>
 
 
-
 <div style="padding: 12px;">
   <nz-row [nzGutter]="16">
     <nz-col [nzSpan]="4">
       <nz-card>
-        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[5] : '...'" [nzTitle]="'Critical'" [nzValueStyle]="{ color: '#EB2F96' }">
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[5] : '...'" [nzTitle]="'Critical'"
+                      [nzValueStyle]="{ color: '#EB2F96' }">
         </nz-statistic>
 
       </nz-card>
     </nz-col>
     <nz-col [nzSpan]="4">
       <nz-card>
-        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[4] : '...'" [nzTitle]="'High'" [nzValueStyle]="{ color: '#f5222d' }">
-        </nz-statistic>
-
-      </nz-card>
-    </nz-col>
-
-    <nz-col [nzSpan]="4">
-      <nz-card>
-        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[3] : '...'" [nzTitle]="'Medium'" [nzValueStyle]="{ color: '#fa8c16' }">
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[4] : '...'" [nzTitle]="'High'"
+                      [nzValueStyle]="{ color: '#f5222d' }">
         </nz-statistic>
 
       </nz-card>
@@ -38,14 +31,25 @@
 
     <nz-col [nzSpan]="4">
       <nz-card>
-        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[2] : '...'" [nzTitle]="'Low'" [nzValueStyle]="{ color: '#2f54eb' }">
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[3] : '...'" [nzTitle]="'Medium'"
+                      [nzValueStyle]="{ color: '#fa8c16' }">
+        </nz-statistic>
+
+      </nz-card>
+    </nz-col>
+
+    <nz-col [nzSpan]="4">
+      <nz-card>
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[2] : '...'" [nzTitle]="'Low'"
+                      [nzValueStyle]="{ color: '#2f54eb' }">
         </nz-statistic>
         <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
       </nz-card>
     </nz-col>
     <nz-col [nzSpan]="4">
       <nz-card>
-        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[1] : '...'" [nzTitle]="'Normal'" [nzValueStyle]="{ color: '#52c41a' }">
+        <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[1] : '...'" [nzTitle]="'Normal'"
+                      [nzValueStyle]="{ color: '#52c41a' }">
         </nz-statistic>
 
       </nz-card>
@@ -76,81 +80,82 @@
                 </div>
               </div>
               <nz-table #issueTable [nzLoading]="isWitnessLoading" [nzData]="witnessResultPage.content"
-                nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="witnessPageIdx"
-                [(nzPageSize)]="witnessPageSize" [nzTotal]="witnessResultPage.totalElements"
-                (nzPageIndexChange)="reloadWitnessPage(false, category)" (nzPageSizeChange)="reloadWitnessPage(true, category)">
+                        nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="witnessPageIdx"
+                        [(nzPageSize)]="witnessPageSize" [nzTotal]="witnessResultPage.totalElements"
+                        (nzPageIndexChange)="reloadWitnessPage(false, category)"
+                        (nzPageSizeChange)="reloadWitnessPage(true, category)">
                 <thead>
-                  <tr>
-                    <th>
-                      Rule ID
-                    </th>
-                    <th>
-                      Category
-                    </th>
-                    <th style="width: 100px;">Risk Level</th>
+                <tr>
+                  <th>
+                    Rule ID
+                  </th>
+                  <th>
+                    Category
+                  </th>
+                  <th style="width: 100px;">Risk Level</th>
 
-                    <th>Description</th>
-                  </tr>
+                  <th>Description</th>
+                </tr>
                 </thead>
                 <tbody>
 
-                  <tr *ngFor="let data of issueTable.data">
-                    <td>
-                      <a href="#">{{ data.ruleId }}</a>
-                    </td>
-                    <td>
-                      {{ data.category }}
-                    </td>
-                    <td>
-                      <nz-badge *ngIf="data.riskLevel === 5" nzColor="pink" nzText="Critical"></nz-badge>
-                      <nz-badge *ngIf="data.riskLevel === 4" nzColor="red" nzText="High"></nz-badge>
-                      <nz-badge *ngIf="data.riskLevel === 3" nzColor="orange" nzText="Medium"></nz-badge>
-                      <nz-badge *ngIf="data.riskLevel === 2" nzColor="geekblue" nzText="Low"></nz-badge>
-                      <nz-badge *ngIf="data.riskLevel === 1" nzColor="green" nzText="Normal"></nz-badge>
-                    </td>
+                <tr *ngFor="let data of issueTable.data">
+                  <td>
+                    <a href="#">{{ data.ruleId }}</a>
+                  </td>
+                  <td>
+                    {{ data.category }}
+                  </td>
+                  <td>
+                    <nz-badge *ngIf="data.riskLevel === 5" nzColor="pink" nzText="Critical"></nz-badge>
+                    <nz-badge *ngIf="data.riskLevel === 4" nzColor="red" nzText="High"></nz-badge>
+                    <nz-badge *ngIf="data.riskLevel === 3" nzColor="orange" nzText="Medium"></nz-badge>
+                    <nz-badge *ngIf="data.riskLevel === 2" nzColor="geekblue" nzText="Low"></nz-badge>
+                    <nz-badge *ngIf="data.riskLevel === 1" nzColor="green" nzText="Normal"></nz-badge>
+                  </td>
 
-                    <td >
-                      <markdown class="markdown-body" ngPreserveWhitespaces>{{data.description}}</markdown>
-                      <!-- <code></code> -->
-                    </td>
+                  <td>
+                    <markdown class="markdown-body" ngPreserveWhitespaces>{{data.description}}</markdown>
+                    <!-- <code></code> -->
+                  </td>
 
 
-                  </tr>
+                </tr>
                 </tbody>
               </nz-table>
             </nz-tab>
             <nz-tab [nzTitle]="'Taint'">
               <h2>Taint Table</h2>
               <nz-table #basicTable [nzLoading]="isTaintRecordLoading" [nzData]="taintRecordPage.content"
-                nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="taintRecordPageIdx"
-                [(nzPageSize)]="taintRecordPageSize" [nzTotal]="taintRecordPage.totalElements"
-                (nzPageIndexChange)="reloadAddressTaintJobResultPage(false)"
-                (nzPageSizeChange)="reloadAddressTaintJobResultPage(true)">
+                        nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="taintRecordPageIdx"
+                        [(nzPageSize)]="taintRecordPageSize" [nzTotal]="taintRecordPage.totalElements"
+                        (nzPageIndexChange)="reloadAddressTaintJobResultPage(false)"
+                        (nzPageSizeChange)="reloadAddressTaintJobResultPage(true)">
                 <thead>
-                  <tr>
-                    <th>
-                      Address
-                    </th>
-                    <th>Total Amount</th>
-                  </tr>
+                <tr>
+                  <th>
+                    Address
+                  </th>
+                  <th>Total Amount</th>
+                </tr>
                 </thead>
                 <tbody>
 
-                  <tr *ngFor="let data of basicTable.data">
-                    <td>
-                      <nz-badge *ngIf="data.direction==='F'" nzStatus="processing" style="margin-right: 5px;">
-                      </nz-badge>
-                      <i class="direction-icon" *ngIf="data.direction==='F'" nz-icon nzType="swap-right"
-                        nzTheme="outline"></i>
-                      {{ data.address }}
-                      <i class="direction-icon" *ngIf="data.direction==='B'" nz-icon nzType="swap-right"
-                        nzTheme="outline"></i>
-                      <nz-badge *ngIf="data.direction==='B'" nzStatus="processing" style="margin-left: 5px;"></nz-badge>
-                    </td>
+                <tr *ngFor="let data of basicTable.data">
+                  <td>
+                    <nz-badge *ngIf="data.direction==='F'" nzStatus="processing" style="margin-right: 5px;">
+                    </nz-badge>
+                    <i class="direction-icon" *ngIf="data.direction==='F'" nz-icon nzType="swap-right"
+                       nzTheme="outline"></i>
+                    {{ data.address }}
+                    <i class="direction-icon" *ngIf="data.direction==='B'" nz-icon nzType="swap-right"
+                       nzTheme="outline"></i>
+                    <nz-badge *ngIf="data.direction==='B'" nzStatus="processing" style="margin-left: 5px;"></nz-badge>
+                  </td>
 
-                    <td>{{ data.totalAmount | cc: addressScan.currency.unitRate}} {{addressScan.currency.name.toUpperCase()}}</td>
+                  <td>{{ data.totalAmount | cc: addressScan.currency.unitRate}} {{addressScan.currency.name.toUpperCase()}}</td>
 
-                  </tr>
+                </tr>
                 </tbody>
               </nz-table>
             </nz-tab>
@@ -164,7 +169,10 @@
                 <div nz-row>
                   <div nz-col nzSpan="22" nzOffset="1" style="text-align: right;">
                     <button (click)="loadMoreEdges()" nz-button nzType="primary" nzShape="round"><i nz-icon
-                        nzType="reload" nzTheme="outline"></i>Load More</button>
+                                                                                                    nzType="reload"
+                                                                                                    nzTheme="outline"></i>Load
+                      More
+                    </button>
                   </div>
                 </div>
 
@@ -182,7 +190,22 @@
               </nz-spin>
 
 
-
+            </nz-tab>
+            <nz-tab [nzTitle]="'Case'">
+              <nz-spin [nzSpinning]="isAddressCaseLoading" nzTip="Loading...">
+                <nz-empty *ngIf="!addressCase" [nzNotFoundContent]="contentTpl"
+                          [nzNotFoundFooter]="footerTpl">
+                  <ng-template #contentTpl>
+                    <span>Address </span>
+                    <span nz-text><code>{{addressScan?.address}}</code></span>
+                    <span> is not an opened case</span>
+                  </ng-template>
+                  <ng-template #footerTpl>
+                    <button nz-button nzType="primary" (click)="openCase()">Open Now</button>
+                  </ng-template>
+                </nz-empty>
+                <app-address-case-detail-page  *ngIf="addressCase" [addressCaseId]="addressCase?.id" [showComments]="true" [showScans]="false" ></app-address-case-detail-page>
+              </nz-spin>
             </nz-tab>
           </nz-tabset>
         </div>

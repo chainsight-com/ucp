@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-quick-scan-add-form',
+  selector: 'app-address-scan-add-form',
   templateUrl: './quick-scan-add-form.component.html',
   styleUrls: ['./quick-scan-add-form.component.scss']
 })

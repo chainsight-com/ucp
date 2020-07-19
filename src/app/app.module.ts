@@ -49,6 +49,9 @@ import {MenuTreeService} from "./services/menu-tree.service";
 import { AddressScanBatchPageComponent } from './pages/address-scan-batch/address-scan-batch-page/address-scan-batch-page.component';
 import { AddressScanBatchAddPageComponent } from './pages/address-scan-batch/address-scan-batch-add-page/address-scan-batch-add-page.component';
 import {HighlightDirective} from "./directives/text-highlight.directive";
+import { AddressCasePageComponent } from './pages/address-case/address-case-page/address-case-page.component';
+import { AddressCaseAddPageComponent } from './pages/address-case/address-case-add-page/address-case-add-page.component';
+import { AddressCaseDetailPageComponent } from './pages/address-case/address-case-detail-page/address-case-detail-page.component';
 
 const menus: any[] = [
 
@@ -80,6 +83,18 @@ const menus: any[] = [
     subtitle: 'Batch address flow scanning',
     context: null,
     path: '/address-scan-batch',
+    url: null,
+    icon: 'area-chart',
+    disabled: false,
+    level: 1,
+    children: []
+  },
+  {
+    id: 'address-case-page',
+    name: 'Case Management',
+    subtitle: 'Address case management',
+    context: null,
+    path: '/address-case',
     url: null,
     icon: 'area-chart',
     disabled: false,
@@ -286,6 +301,9 @@ registerLocaleData(en);
     LoginPageComponent,
     AddressScanBatchPageComponent,
     AddressScanBatchAddPageComponent,
+    AddressCasePageComponent,
+    AddressCaseAddPageComponent,
+    AddressCaseDetailPageComponent,
   ],
   imports: [
     BrowserModule,

@@ -53,12 +53,19 @@
         </ng-container>
       </ng-template>
       <ng-template #levelBlock>
-        <ng-container *ngIf="(!!col.type) && col.type ==='level'; else formatterBlock">
+        <ng-container *ngIf="(!!col.type) && col.type ==='level'; else tagBlock">
           <td>
             <nz-badge
               nzColor="{{col.formatter(data[col['property']])['color']}}"
               nzText="{{col.formatter(data[col['property']])['title']}}">
             </nz-badge>
+          </td>
+        </ng-container>
+      </ng-template>
+      <ng-template #tagBlock>
+        <ng-container *ngIf="(!!col.type) && col.type ==='tag'; else formatterBlock">
+          <td>
+            <nz-tag nzColor="{{col.formatter(data[col['property']])['color']}}">{{col.formatter(data[col['property']])['title']}}</nz-tag>
           </td>
         </ng-container>
       </ng-template>

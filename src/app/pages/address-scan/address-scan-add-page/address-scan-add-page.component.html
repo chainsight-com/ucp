@@ -13,7 +13,7 @@
             <nz-form-item>
               <nz-form-label [nzNoColon]="true">Currency</nz-form-label>
               <nz-form-control nzErrorTip="Please input the Currency!">
-                <nz-select formControlName="currencyId" nzPlaceHolder="Choose">
+                <nz-select formControlName="currencyId" nzPlaceHolder="Choose" [nzDisabled]="!!currencyId">
                   <nz-option
                     *ngFor="let currency of currencies"
                     nzValue="{{currency.id}}"
@@ -26,7 +26,7 @@
               <nz-form-label nzRequired nzFor="address">Address</nz-form-label>
               <nz-form-control>
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input nz-input formControlName="address" id="address" />
+                  <input nz-input formControlName="address" id="address" [disabled]="!!address"/>
                 </nz-input-group>
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch (click)="qrScan()"><i nz-icon type="qrcode"></i></button>

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
 import {
   AccountDto,
   AddressScanApiService, AddressScanDto, ProjectDto
@@ -13,13 +13,22 @@ import {TblColumn} from "../../../shared/table/tbl-column";
 import {interval, Subject} from "rxjs";
 
 @Component({
-  selector: 'app-quick-scan',
+  selector: 'app-address-scan-page',
   templateUrl: './address-scan-page.component.html',
   styleUrls: ['./address-scan-page.component.scss']
 })
-export class AddressScanPageComponent implements OnInit, OnDestroy {
+export class AddressScanPageComponent implements OnInit, OnChanges, OnDestroy {
   private unsubscribe$ = new Subject<void>();
+
+  // filters
+  @Input()
   public batchId: string;
+  @Input()
+  public currencyId: string;
+  @Input()
+  public address: string;
+
+
   public me: AccountDto;
   public columns: Array<TblColumn<any>> = [
     {
@@ -113,14 +122,15 @@ export class AddressScanPageComponent implements OnInit, OnDestroy {
         }
 
       });
-
-
     interval(5000)
       .pipe(
         takeUntil(this.unsubscribe$)
       ).subscribe(
       data => {
-        this.reload(false, true);
+        if (this.userService.project) {
+          this.reload(false, true);
+        }
+
       }
     );
   }
@@ -131,10 +141,10 @@ export class AddressScanPageComponent implements OnInit, OnDestroy {
     if (reset) {
       this.pageIdx = 1;
     }
-    if(!silent){
+    if (!silent) {
       this.isLoading = true;
     }
-    this.addressScanApiService.paginateAddressScanUsingGET(this.pageIdx-1, this.pageSize, this.userService.project.id, this.batchId)
+    this.addressScanApiService.paginateAddressScanUsingGET(this.pageIdx - 1, this.pageSize, this.userService.project.id, this.batchId, this.currencyId, this.address)
       .pipe(
         take(1),
       ).subscribe(page => {
@@ -146,7 +156,17 @@ export class AddressScanPageComponent implements OnInit, OnDestroy {
   }
 
   addScan() {
-    this.router.navigate(['/address-scan/create']);
+    const query: any = {};
+    if (this.currencyId) {
+      query.currencyId = this.currencyId;
+    }
+    if (this.address) {
+      query.address = this.address
+    }
+
+    this.router.navigate(['/address-scan/create'], {
+      queryParams: query
+    });
   }
 
   handlePageSizeChange(pageSize) {
@@ -207,9 +227,16 @@ export class AddressScanPageComponent implements OnInit, OnDestroy {
     return res;
   }
 
+  ngOnChanges(changes) {
+    if (changes.batchId || changes.currencyId || changes.address) {
+      this.reload(true, false)
+    }
+  }
+
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
 
 }

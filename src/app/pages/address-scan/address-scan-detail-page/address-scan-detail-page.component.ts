@@ -1,8 +1,10 @@
 import {Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Output, AfterViewInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Subject, pipe} from 'rxjs';
-import {takeUntil, take, mergeMap} from 'rxjs/operators';
+import {takeUntil, take, mergeMap, finalize} from 'rxjs/operators';
 import {
+  AddressCaseApiService,
+  AddressCaseDto,
   AddressScanApiService,
   AddressScanDto, GraphDto, PageOfTaintRecordDto, PageOfWitnessDto
 } from '@profyu/unblock-ng-sdk';
@@ -30,6 +32,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   // graph
   public graphEdgeSize = 300;
+
+  // address case
+  private isAddressCaseLoading = false;
+  public addressCase: AddressCaseDto;
 
   // witness
   public isWitnessLoading = false;
@@ -75,9 +81,11 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject<void>();
 
+
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
-              private addressScanApiService: AddressScanApiService) {
+              private addressScanApiService: AddressScanApiService,
+              private addressCaseApiService: AddressCaseApiService) {
   }
 
 
@@ -125,6 +133,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
       this.reloadWitnessPage(true);
       this.reloadAddressTaintJobResultPage(true);
+      this.reloadAddressCase()
     }, console.error, () => {
       this.isLoadingPipeline = false;
     });
@@ -177,6 +186,23 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       this.isWitnessLoading = false;
     });
 
+  }
+
+  public reloadAddressCase() {
+    this.isAddressCaseLoading = true
+    this.addressCaseApiService.paginateAddressCaseUsingGET(0, 1, this.addressScan.project.id, this.addressScan.currency.id, this.addressScan.address)
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.isAddressCaseLoading = false;
+        })
+      ).subscribe(page => {
+      if (page.content.length > 0) {
+        this.addressCase = page.content[0];
+      } else {
+        this.addressCase = null;
+      }
+    }, console.error);
   }
 
   initDiagram(tag?: string) {
@@ -469,6 +495,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   };
 
+
   getAvgScoreEvColor(avgScoreEv: number) {
     if (avgScoreEv < 0.0005) {
       return '#3F8600';
@@ -502,4 +529,11 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   }
 
 
+  openCase() {
+    const query: any = {
+      currencyId: this.addressScan.currency.id,
+      address: this.addressScan.address
+    };
+    this.router.navigate(['/address-case/create'], {queryParams: query});
+  }
 }

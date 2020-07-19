@@ -1,0 +1,113 @@
+<div nz-row *ngIf="!addressCaseId">
+  <div nz-col>
+    <nz-breadcrumb style="margin: 16px;">
+      <nz-breadcrumb-item>Case Management</nz-breadcrumb-item>
+      <nz-breadcrumb-item>Address 一 {{addressCase?.address}}</nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div>
+</div>
+<div nz-row>
+  <div nz-col>
+    <h3 nz-title>{{addressCase?.title}}</h3>
+  </div>
+</div>
+<div nz-row>
+  <div nz-col nzSpan="24">
+    <span><nz-tag
+      nzColor="{{statusFormatter(addressCase?.status)?.color}}">{{statusFormatter(addressCase?.status)?.title}}</nz-tag></span>
+    <span nz-text nzType="secondary">{{formatAuthor(addressCase)}}
+      opened this case @ {{readableDuration(this.addressCase?.createdTime)}}</span>
+  </div>
+</div>
+<br/>
+<div nz-row>
+  <div nz-col nzSpan="6">
+    <span nz-text>Currency:</span>
+    <span nz-text nzType="secondary">{{addressCase?.currency?.name.toUpperCase()}}</span>
+  </div>
+  <div nz-col nzSpan="18">
+    <span nz-text>Address:</span>
+    <span nz-text nzType="secondary" nzCopyable [nzContent]="addressCase?.address"></span>
+  </div>
+</div>
+<br/>
+<div nz-row>
+  <div nz-col nzSpan="6">
+    <span nz-text>Risk Level:</span>
+    <nz-select [(ngModel)]="level" nzPlaceHolder="Choose" [nzLoading]="isSubmittingLevel">
+      <nz-option
+        *ngFor="let riskLevel of riskLevels"
+        nzValue="{{riskLevel.value}}"
+        nzLabel="{{riskLevel.label}}">
+      </nz-option>
+    </nz-select>
+  </div>
+  <div nz-col nzSpan="6">
+    <span nz-text>Status:</span>
+    <nz-select [(ngModel)]="status" nzPlaceHolder="Choose" [nzLoading]="isSubmittingStatus">
+      <nz-option
+        *ngFor="let status of addressCaseStatusList"
+        nzValue="{{status.value}}"
+        nzLabel="{{status.label}}">
+      </nz-option>
+    </nz-select>
+  </div>
+
+</div>
+<br/>
+<br/>
+<nz-content style="margin:24px 16px 0;">
+  <nz-spin [nzSpinning]="isLoadingAddressCase">
+    <div style="padding:24px; background: #fff; min-height: 550px;">
+
+      <div nz-row>
+        <div nz-col nzSpan="23">
+          <nz-tabset [nzTabPosition]="'top'" [nzType]="'line'">
+            <nz-tab [nzTitle]="'Comments'" *ngIf="showComments">
+
+              <div nz-row style="margin-bottom: 20px;">
+                <div nz-col nzSpan="12">
+                  <h2>Comments</h2>
+                </div>
+              </div>
+              <nz-list [nzDataSource]="comments" [nzRenderItem]="comment" [nzItemLayout]="'horizontal'">
+                <ng-template #comment let-comment>
+                  <nz-comment [nzAuthor]="formatAuthor(comment)"
+                              [nzDatetime]="readableDuration(comment.createdTime)">
+                    <nz-avatar nz-comment-avatar nzIcon="user"></nz-avatar>
+                    <nz-comment-content>
+                      <p>{{ comment.comment }}</p>
+                    </nz-comment-content>
+                    <!--                    <nz-comment-action>Reply to</nz-comment-action>-->
+                  </nz-comment>
+                </ng-template>
+              </nz-list>
+              <form nz-form [formGroup]="commentForm">
+                <nz-comment>
+                  <nz-avatar nz-comment-avatar nzIcon="user"></nz-avatar>
+                  <nz-comment-content>
+                    <nz-form-item>
+                      <textarea formControlName="comment" nz-input rows="4"></textarea>
+                    </nz-form-item>
+                    <nz-form-item>
+                      <button nz-button nzType="primary" [nzLoading]="isSubmittingComment" (click)="submitComment()"
+                              [disabled]="!commentForm.get('comment').value">
+                        Add Comment
+                      </button>
+                    </nz-form-item>
+                  </nz-comment-content>
+                </nz-comment>
+              </form>
+            </nz-tab>
+            <nz-tab [nzTitle]="'Scans'" *ngIf="showScans">
+              <app-address-scan-page *ngIf="addressCase" [currencyId]="addressCase?.currencyId"
+                                     [address]="addressCase?.address"></app-address-scan-page>
+            </nz-tab>
+          </nz-tabset>
+        </div>
+      </div>
+
+    </div>
+  </nz-spin>
+
+</nz-content>

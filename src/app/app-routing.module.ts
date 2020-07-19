@@ -27,6 +27,9 @@ import {AddressScanBatchPageComponent} from "./pages/address-scan-batch/address-
 import {AddressScanBatchAddPageComponent} from "./pages/address-scan-batch/address-scan-batch-add-page/address-scan-batch-add-page.component";
 import {NotAuthorizedPageComponent} from "./pages/not-authorized-page/not-authorized-page.component";
 import {PfyRoute} from "./shared/pfy-route";
+import {AddressCasePageComponent} from "./pages/address-case/address-case-page/address-case-page.component";
+import {AddressCaseAddPageComponent} from "./pages/address-case/address-case-add-page/address-case-add-page.component";
+import {AddressCaseDetailPageComponent} from "./pages/address-case/address-case-detail-page/address-case-detail-page.component";
 
 
 const routes: Routes = [
@@ -35,11 +38,17 @@ const routes: Routes = [
     children: [
 
       {path: 'dashboard', component: DashboardPageComponent},
+
+      {path: 'address-case', component: AddressCasePageComponent, },
+      {path: 'address-case/create', component: AddressCaseAddPageComponent, },
+      {path: 'address-case/:id', component: AddressCaseDetailPageComponent, },
+
       {path: 'address-scan', component: AddressScanPageComponent, },
       {path: 'address-scan/create', component: AddressScanAddPageComponent, },
       {path: 'address-scan/:id', component: AddressScanDetailPageComponent, },
       {path: 'address-scan-batch', component: AddressScanBatchPageComponent, },
       {path: 'address-scan-batch/create', component: AddressScanBatchAddPageComponent, },
+
       {path: 'qr-scan', component: ScanPageComponent, },
       {path: 'holder-group', component: HolderGroupComponent, },
       {path: 'holder-group-add', component: HolderGroupAddComponent, },

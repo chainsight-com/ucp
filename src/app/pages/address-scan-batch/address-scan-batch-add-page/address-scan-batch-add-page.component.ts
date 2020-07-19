@@ -14,7 +14,7 @@ import {NzMessageService, UploadFile, UploadXHRArgs} from "ng-zorro-antd";
 import {Router} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {HttpClient} from "@angular/common/http";
-import {take, takeUntil} from "rxjs/operators";
+import {finalize, take, takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-address-scan-batch-add-page',
@@ -106,12 +106,13 @@ export class AddressScanBatchAddPageComponent implements OnInit {
 
     this.isSubmitting = true;
     this.addressScanBatchApiService.createAddressScanBatchFromBlobUsingPOST(body).pipe(
-      take(1)
+      take(1),
+      finalize(() => {
+        this.isSubmitting = false;
+      })
     ).subscribe(resBody => {
       this.router.navigate(['/address-scan-batch']);
-    }, (err) => console.error(err), () => {
-      this.isSubmitting = false;
-    });
+    }, (err) => console.error(err));
 
 
   }

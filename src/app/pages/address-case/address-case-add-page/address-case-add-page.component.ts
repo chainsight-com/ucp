@@ -2,22 +2,32 @@ import {Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges} from '@an
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 
 import {HttpClient} from '@angular/common/http';
-import {filter, finalize, take, takeUntil} from 'rxjs/operators';
+import {catchError, filter, finalize, take, takeUntil} from 'rxjs/operators';
 import {
-  AccountApiService, AccountDto, AddressScanApiService, AddressScanCreation, CurrencyDto, ProjectDto,
+  AccountApiService,
+  AccountDto, AddressCaseApiService,
+  AddressCaseCreation,
+  AddressCaseDto,
+  AddressScanApiService,
+  AddressScanCreation,
+  CurrencyDto,
+  ProjectDto, RestApiException,
 } from '@profyu/unblock-ng-sdk';
 import {ActivatedRoute, Router} from '@angular/router';
 import {QrScannerService} from 'src/app/services/qr-scanner.service';
 import {Subject} from 'rxjs';
 import {UserService} from "../../../services/user.service";
+import ApiErrorCodeEnum = RestApiException.ApiErrorCodeEnum;
+import {NzMessageService} from "ng-zorro-antd";
+import {RISK_LEVEL_LIST, AddressCaseRiskLevelOption} from "../../../models/address-case-risk-level-option";
 
 
 @Component({
-  selector: 'app-new-scan-page',
-  templateUrl: './address-scan-add-page.component.html',
-  styleUrls: ['./address-scan-add-page.component.scss']
+  selector: 'app-address-case-add-page',
+  templateUrl: './address-case-add-page.component.html',
+  styleUrls: ['./address-case-add-page.component.scss']
 })
-export class AddressScanAddPageComponent implements OnInit, OnChanges, OnDestroy {
+export class AddressCaseAddPageComponent implements OnInit, OnChanges {
 
   @Input()
   private currencyId: string;
@@ -28,14 +38,17 @@ export class AddressScanAddPageComponent implements OnInit, OnChanges, OnDestroy
   public isSubmitting = false;
   private unsubscribe$ = new Subject<void>();
   currencies: CurrencyDto[];
+  public riskLevels = RISK_LEVEL_LIST;
+
 
   constructor(private router: Router,
               private qrScannerService: QrScannerService,
               private fb: FormBuilder,
               private httpClient: HttpClient,
-              private addressScanApi: AddressScanApiService,
+              private addressCaseApi: AddressCaseApiService,
               private accountApiService: AccountApiService,
               private userService: UserService,
+              private message: NzMessageService,
               private activatedRoute: ActivatedRoute) {
   }
 
@@ -53,14 +66,12 @@ export class AddressScanAddPageComponent implements OnInit, OnChanges, OnDestroy
       });
 
     this.form = this.fb.group({
+      title: [null, [Validators.required]],
       currencyId: [null, [Validators.required]],
       address: ['', [Validators.required]],
-      forwardEnabled: [true],
-      forwardMaxLevel: [3, [Validators.required]],
-      backwardEnabled: [true],
-      backwardMaxLevel: [3, [Validators.required]],
-      dateRange: [[]],
+      level: [null, [Validators.required]],
     });
+
 
     this.qrScannerService.code$
       .pipe(
@@ -108,29 +119,31 @@ export class AddressScanAddPageComponent implements OnInit, OnChanges, OnDestroy
 
     const formValue = this.form.value;
 
-    const body: AddressScanCreation = {
+    const body: AddressCaseCreation = {
       projectId: this.userService.project.id,
+      title: formValue.title,
       currencyId: formValue.currencyId,
       address: formValue.address,
-      forwardMaxLevel: formValue.forwardMaxLevel,
-      backwardMaxLevel: formValue.backwardMaxLevel,
-      startingTime: formValue.dateRange[0],
-      endingTime: formValue.dateRange[1],
-      timeoutSecs: 3600,
-      batchMode: false,
+      level: formValue.level
     };
 
 
     this.isSubmitting = true;
-    this.addressScanApi.createAddressScanUsingPOST(body)
+    this.addressCaseApi.createAddressCaseUsingPOST(body)
       .pipe(
         take(1),
         finalize(() => {
           this.isSubmitting = false;
         })
-      ).subscribe(pipeline => {
-      this.router.navigate(['address-scan']);
-    }, console.error);
+      ).subscribe(resBody => {
+      this.router.navigate(['address-case']);
+    }, (req) => {
+      console.error(req);
+      const body = req.error;
+      if (body.apiErrorCode == ApiErrorCodeEnum.DUPLICATEDADDRESSCASE) {
+        this.message.error('Case already exists');
+      }
+    });
 
   }
 
@@ -143,25 +156,6 @@ export class AddressScanAddPageComponent implements OnInit, OnChanges, OnDestroy
     this.unsubscribe$.complete();
   }
 
-  forwardEnableChanged(forwardEnabled: boolean): void {
-    const ctrl = this.form.get('forwardMaxLevel');
-    if (!forwardEnabled) {
-      ctrl.setValue(0);
-    } else {
-      ctrl.reset();
-    }
-    ctrl.updateValueAndValidity();
-  }
-
-  backwardEnableChanged(backwardEnabled: boolean): void {
-    const ctrl = this.form.get('backwardMaxLevel');
-    if (!backwardEnabled) {
-      ctrl.setValue(0);
-    } else {
-      ctrl.reset();
-    }
-    ctrl.updateValueAndValidity();
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.currencyId) {
