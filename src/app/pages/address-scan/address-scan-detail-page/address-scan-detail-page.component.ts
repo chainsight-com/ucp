@@ -34,7 +34,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   public graphEdgeSize = 300;
 
   // address case
-  private isAddressCaseLoading = false;
+  public isAddressCaseLoading = false;
   public addressCase: AddressCaseDto;
 
   // witness

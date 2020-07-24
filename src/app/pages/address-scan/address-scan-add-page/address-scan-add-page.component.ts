@@ -20,9 +20,9 @@ import {UserService} from "../../../services/user.service";
 export class AddressScanAddPageComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
-  private currencyId: string;
+  public currencyId: string;
   @Input()
-  private address: string;
+  public address: string;
 
   public form: FormGroup;
   public isSubmitting = false;

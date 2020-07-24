@@ -30,9 +30,9 @@ import {RISK_LEVEL_LIST, AddressCaseRiskLevelOption} from "../../../models/addre
 export class AddressCaseAddPageComponent implements OnInit, OnChanges {
 
   @Input()
-  private currencyId: string;
+  public currencyId: string;
   @Input()
-  private address: string;
+  public address: string;
 
   public form: FormGroup;
   public isSubmitting = false;
