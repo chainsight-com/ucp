@@ -6,7 +6,7 @@ import {
   AddressCaseApiService,
   AddressCaseDto,
   AddressScanApiService,
-  AddressScanDto, GraphDto, PageOfTaintRecordDto, PageOfWitnessDto
+  AddressScanDto, FlowGraphDto, PageOfTaintRecordDto, PageOfWitnessDto
 } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
@@ -58,7 +58,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   // filter
   public category?: RuleCategory = null;
 
-  public flowGraph: GraphDto = {};
+  public flowGraph: FlowGraphDto = {};
 
   public witnessSummary: { [key: number]: number } = {
     5: 0,
@@ -421,7 +421,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     }
 
 
-    this.addressScanApiService.getAddressScanGraphUsingGET(this.addressScan.id, 0, this.graphEdgeSize).pipe(
+    this.addressScanApiService.getAddressScanFlowGraphUsingGET(this.addressScan.id, 0, this.graphEdgeSize).pipe(
       take(1)
     ).subscribe((graph) => {
 

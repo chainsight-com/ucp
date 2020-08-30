@@ -18,7 +18,7 @@ import {
   AddressCaseCommentDto, AddressCaseCreation,
   AddressCaseDto,
   AddressScanApiService,
-  AddressScanDto, GraphDto, PageOfTaintRecordDto, PageOfWitnessDto
+  AddressScanDto, FlowGraphDto, PageOfTaintRecordDto, PageOfWitnessDto
 } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 

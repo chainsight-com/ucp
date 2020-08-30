@@ -150,6 +150,12 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
           title: 'Running'
         };
         break;
+      case 'FAILED':
+        res = {
+          color: 'red',
+          title: 'Error'
+        };
+        break;
       default:
         res = {
           color: 'yellow',
