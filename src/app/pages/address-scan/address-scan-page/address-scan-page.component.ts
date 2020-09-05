@@ -84,14 +84,6 @@ export class AddressScanPageComponent implements OnInit, OnChanges, OnDestroy {
       property: 'riskHighCount',
       title: 'High Risks'
     },
-    {
-      actions: [{
-        name: 'adsf',
-        title: 'ASDF',
-        more: true
-      }],
-      title: 'High Risks'
-    },
   ];
 
 
