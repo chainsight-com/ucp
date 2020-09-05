@@ -1,0 +1,5 @@
+<ul class="menu" #ctxMenu>
+  <li *ngFor="let action of nodeActions" class="menu-item" (click)="onNodeActionClick(action.name)">{{action.title}}</li>
+</ul>
+<div class="diagram" #diagramDiv></div>
+

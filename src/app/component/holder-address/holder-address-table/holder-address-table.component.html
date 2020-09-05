@@ -1,0 +1,13 @@
+<div class="pfy-page-content">
+  <pfy-table
+    [tblColumns]="columns"
+    [tblData]="page.content"
+    [total]="totalElements"
+    [(pageIndex)]="pageIdx"
+    [loading]="isLoading"
+    (detailClick)="handleDetailClick($event)"
+    [pageable]="true"
+    [pageSizeOptions]="pageSizeOptions"
+    (pageSizeChange)="handlePageSizeChange($event)"
+    (pageIndexChange)="reload(false, false)"
+  ></pfy-table>

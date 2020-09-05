@@ -18,19 +18,8 @@ import {BASE_PATH} from '@profyu/unblock-ng-sdk';
 import {environment} from 'src/environments/environment';
 import {CryptoPipe} from './pipes/crypto.pipe';
 import {AddressScanPageComponent} from './pages/address-scan/address-scan-page/address-scan-page.component';
-import {HolderComponent} from './pages/holder/holder.component';
-import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
-import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
-import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
-import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
 import {QuickScanAddFormComponent} from './component/quick-scan-add-form/quick-scan-add-form.component';
-import {HolderAddComponent} from './pages/holder-add/holder-add.component';
-import {HolderDetailProfileComponent} from './pages/holder-detail-profile/holder-detail-profile.component';
-import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
-import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
-import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
-import {HolderGroupComponent} from './pages/holder-group/holder-group.component';
-import {HolderGroupAddComponent} from './pages/holder-group-add/holder-group-add.component';
+
 import {MarkdownModule} from 'ngx-markdown';
 import {JwtInterceptor} from './interceptors/JwtInterceptor';
 import {LogoutInterceptor} from './interceptors/LogoutInterceptor';
@@ -52,6 +41,10 @@ import {HighlightDirective} from "./directives/text-highlight.directive";
 import { AddressCasePageComponent } from './pages/address-case/address-case-page/address-case-page.component';
 import { AddressCaseAddPageComponent } from './pages/address-case/address-case-add-page/address-case-add-page.component';
 import { AddressCaseDetailPageComponent } from './pages/address-case/address-case-detail-page/address-case-detail-page.component';
+import { SummedClusterGraphComponent } from './component/summed-cluster-graph/summed-cluster-graph.component';
+import { AddressInfoComponent } from './component/address-info/address-info.component';
+import { HolderAddressTableComponent } from './component/holder-address/holder-address-table/holder-address-table.component';
+import { ScoredTagComponent } from './component/scored-tag/scored-tag.component';
 
 const menus: any[] = [
 
@@ -280,20 +273,8 @@ registerLocaleData(en);
     AddressScanDetailPageComponent,
     CryptoPipe,
     HighlightDirective,
-    HolderComponent,
-    HolderScanScheduleAddComponent,
-    HolderScanScheduleComponent,
-    HolderScanResultComponent,
-    HolderScanComponent,
     AddressScanPageComponent,
     QuickScanAddFormComponent,
-    HolderAddComponent,
-    HolderDetailProfileComponent,
-    HolderDetailScanHistoryComponent,
-    HolderDetailAddressAddComponent,
-    HolderDetailAddressComponent,
-    HolderGroupComponent,
-    HolderGroupAddComponent,
     FlowLabelingPageComponent,
     FlowLabelingAddComponent,
     CcPipe,
@@ -304,6 +285,10 @@ registerLocaleData(en);
     AddressCasePageComponent,
     AddressCaseAddPageComponent,
     AddressCaseDetailPageComponent,
+    SummedClusterGraphComponent,
+    AddressInfoComponent,
+    HolderAddressTableComponent,
+    ScoredTagComponent,
   ],
   imports: [
     BrowserModule,

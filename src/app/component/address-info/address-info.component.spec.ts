@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HolderScanResultComponent } from './holder-scan-result.component';
+import { AddressInfoComponent } from './address-info.component';
 
-describe('HolderScanResultComponent', () => {
-  let component: HolderScanResultComponent;
-  let fixture: ComponentFixture<HolderScanResultComponent>;
+describe('AddressInfoComponent', () => {
+  let component: AddressInfoComponent;
+  let fixture: ComponentFixture<AddressInfoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HolderScanResultComponent ]
+      declarations: [ AddressInfoComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HolderScanResultComponent);
+    fixture = TestBed.createComponent(AddressInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

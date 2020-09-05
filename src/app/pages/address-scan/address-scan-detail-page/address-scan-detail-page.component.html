@@ -191,6 +191,14 @@
 
 
             </nz-tab>
+            <nz-tab [nzTitle]="'Cluster'">
+              <ng-template nz-tab>
+
+                <app-summed-cluster-graph *ngIf="addressScan"
+                                          [addressScanId]="addressScan?.id"
+                                          [nodeActions]="clusterGraphActions" (onNodeAction)="handleClusterGraphAction($event)"></app-summed-cluster-graph>
+              </ng-template>
+            </nz-tab>
             <nz-tab [nzTitle]="'Case'">
               <nz-spin [nzSpinning]="isAddressCaseLoading" nzTip="Loading...">
                 <nz-empty *ngIf="!addressCase" [nzNotFoundContent]="contentTpl"
@@ -213,5 +221,11 @@
 
     </div>
   </nz-spin>
+
+  <!--Cluster Detail Drawer-->
+
+  <nz-drawer [nzVisible]="showClusterDrawer" [nzWidth]="720" [nzClosable]="false" (nzOnClose)="closeClusterDrawer()">
+    <app-address-info [projectId]="addressScan?.project.id" [currencyId]="addressScan.currency.id" [address]="selectedClusterNode?.clusterId" [tags]="selectedClusterNode?.tags"></app-address-info>
+  </nz-drawer>
 
 </nz-content>

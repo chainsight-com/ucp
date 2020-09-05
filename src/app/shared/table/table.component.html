@@ -23,17 +23,17 @@
     <ng-container *ngFor="let col of getColumns">
       <ng-container *ngIf="!!col.actions; else slotBlock">
         <td>
-          <a *ngFor="let action of getActions(col.actions)"
+          <a *ngFor="let action of getActions(data ,col.actions)"
              (click)="handleActionClick(data,action)">
             {{ action.title }}
             <nz-divider nzType="vertical"></nz-divider>
           </a>
-          <ng-container *ngIf="getMoreActions(col.actions).length > 0">
+          <ng-container *ngIf="getMoreActions(data, col.actions).length > 0">
             <a nz-dropdown [nzDropdownMenu]="menu">
               <nz-dropdown-menu #menu="nzDropdownMenu">
                 <ul nz-menu nzSelectable>
                   <li nz-menu-item
-                      *ngFor="let action of getMoreActions(col.actions)"
+                      *ngFor="let action of getMoreActions(data, col.actions)"
                       (click)="handleActionClick(data,action)">
                     {{action.title}}
                   </li>
@@ -55,9 +55,9 @@
       <ng-template #levelBlock>
         <ng-container *ngIf="(!!col.type) && col.type ==='level'; else tagBlock">
           <td>
-            <nz-badge
-              nzColor="{{col.formatter(data[col['property']])['color']}}"
-              nzText="{{col.formatter(data[col['property']])['title']}}">
+            <nz-badge *ngIf="col.formatter(data)"
+              nzColor="{{col.formatter(data)['color']}}"
+              nzText="{{col.formatter(data)['title']}}">
             </nz-badge>
           </td>
         </ng-container>
@@ -65,7 +65,7 @@
       <ng-template #tagBlock>
         <ng-container *ngIf="(!!col.type) && col.type ==='tag'; else formatterBlock">
           <td>
-            <nz-tag nzColor="{{col.formatter(data[col['property']])['color']}}">{{col.formatter(data[col['property']])['title']}}</nz-tag>
+            <nz-tag nzColor="{{col.formatter(data)['color']}}">{{col.formatter(data)['title']}}</nz-tag>
           </td>
         </ng-container>
       </ng-template>

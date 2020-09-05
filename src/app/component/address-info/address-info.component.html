@@ -1,0 +1,39 @@
+<nz-descriptions [nzColumn]="2" nzTitle="Address Information">
+  <nz-descriptions-item nzTitle="Address" [nzSpan]="2">{{address}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Tags" [nzSpan]="2">
+    <app-scored-tag [tags]="tags"></app-scored-tag>
+  </nz-descriptions-item>
+</nz-descriptions>
+<nz-divider></nz-divider>
+<nz-descriptions [nzColumn]="2" nzTitle="Case Information">
+  <nz-descriptions-item nzTitle="Title" [nzSpan]="2">{{addressCase?.title}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Status" [nzSpan]="1">{{addressCase?.status}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Risk" [nzSpan]="1">{{addressCase?.level}}</nz-descriptions-item>
+</nz-descriptions>
+<nz-divider></nz-divider>
+<div>
+  <nz-avatar [nzShape]="'square'" [nzSize]="64" [nzIcon]="'user'"></nz-avatar>
+</div>
+<br>
+<nz-descriptions [nzColumn]="2" nzTitle="Holder Information">
+  <nz-descriptions-item nzTitle="Client ID" [nzSpan]="1">{{holder?.clientId}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Legal Name" [nzSpan]="1">{{holder?.legalName}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Risk" [nzSpan]="1">
+    <nz-badge
+      nzColor="{{holderLevelFormatter(holder?.level)['color']}}"
+      nzText="{{holderLevelFormatter(holder?.level)['title']}}">
+    </nz-badge>
+  </nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Address" [nzSpan]="2">{{holder?.address}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Phone" [nzSpan]="1">{{holder?.phone}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Birth Date"
+                        [nzSpan]="1">{{holder?.birthDate | date: 'yyyy/MM/dd'}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Nationality" [nzSpan]="1">{{holder?.nationality}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Occupation" [nzSpan]="1">{{holder?.occupation}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Passport ID" [nzSpan]="2">{{holder?.passportId}}</nz-descriptions-item>
+</nz-descriptions>
+<nz-divider></nz-divider>
+<h4 nz-title>Held Addresses</h4>
+<br>
+<app-holder-address-table [holderId]="holder?.id"></app-holder-address-table>
+

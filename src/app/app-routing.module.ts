@@ -4,18 +4,6 @@ import {ScanPageComponent} from './pages/scan-page/scan-page.component';
 import {AddressScanAddPageComponent} from './pages/address-scan/address-scan-add-page/address-scan-add-page.component';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
 import {AddressScanPageComponent} from './pages/address-scan/address-scan-page/address-scan-page.component';
-import {HolderComponent} from './pages/holder/holder.component';
-import {HolderScanResultComponent} from './pages/holder-scan-result/holder-scan-result.component';
-import {HolderScanScheduleComponent} from './pages/holder-scan-schedule/holder-scan-schedule.component';
-import {HolderScanScheduleAddComponent} from './pages/holder-scan-schedule-add/holder-scan-schedule-add.component';
-import {HolderScanComponent} from './pages/holder-scan/holder-scan.component';
-import {HolderAddComponent} from './pages/holder-add/holder-add.component';
-import {HolderDetailProfileComponent} from './pages/holder-detail-profile/holder-detail-profile.component';
-import {HolderDetailAddressComponent} from './pages/holder-detail-address/holder-detail-address.component';
-import {HolderDetailAddressAddComponent} from './pages/holder-detail-address-add/holder-detail-address-add.component';
-import {HolderDetailScanHistoryComponent} from './pages/holder-detail-scan-history/holder-detail-scan-history.component';
-import {HolderGroupAddComponent} from './pages/holder-group-add/holder-group-add.component';
-import {HolderGroupComponent} from './pages/holder-group/holder-group.component';
 import {FlowLabelingPageComponent} from './pages/flow-labeling/flow-labeling-page/flow-labeling-page.component';
 import {FlowLabelingAddComponent} from './pages/flow-labeling/flow-labeling-add/flow-labeling-add.component';
 import {AddressScanDetailPageComponent} from "./pages/address-scan/address-scan-detail-page/address-scan-detail-page.component";
@@ -50,24 +38,6 @@ const routes: Routes = [
       {path: 'address-scan-batch/create', component: AddressScanBatchAddPageComponent, },
 
       {path: 'qr-scan', component: ScanPageComponent, },
-      {path: 'holder-group', component: HolderGroupComponent, },
-      {path: 'holder-group-add', component: HolderGroupAddComponent, },
-      {path: 'holder-group-add/:id', component: HolderGroupAddComponent, },
-      {path: 'holder', component: HolderComponent, },
-      {path: 'holder-add', component: HolderAddComponent, },
-      {path: 'holder-add/:id', component: HolderAddComponent, },
-      {path: 'holder-detail-profile/:id', component: HolderDetailProfileComponent, },
-      {path: 'holder-detail-address/:id', component: HolderDetailAddressComponent, },
-      {path: 'holder-detail-address-add/:id', component: HolderDetailAddressAddComponent, },
-      {
-        path: 'holder-detail-scan-history/:id',
-        component: HolderDetailScanHistoryComponent,
-
-      },
-      {path: 'holder-scan', component: HolderScanComponent, },
-      {path: 'holder-scan-result/:id', component: HolderScanResultComponent, },
-      {path: 'holder-scan-schedule', component: HolderScanScheduleComponent, },
-      {path: 'holder-scan-schedule-add', component: HolderScanScheduleAddComponent, },
       {path: 'flow-labeling-page', component: FlowLabelingPageComponent, },
       {path: 'flow-labeling-page/create', component: FlowLabelingAddComponent, },
 

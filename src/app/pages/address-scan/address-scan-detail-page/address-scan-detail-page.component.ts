@@ -6,7 +6,7 @@ import {
   AddressCaseApiService,
   AddressCaseDto,
   AddressScanApiService,
-  AddressScanDto, FlowGraphDto, PageOfTaintRecordDto, PageOfWitnessDto
+  AddressScanDto, ClusterNodeDto, FlowGraphDto, PageOfTaintRecordDto, PageOfWitnessDto
 } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
@@ -32,6 +32,20 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   // graph
   public graphEdgeSize = 300;
+
+  // cluster
+  public clusterGraphActions = [
+    {
+      name: "detail",
+      title: "Detail"
+    }
+  ];
+  public showClusterDrawer: boolean = false;
+  public selectedClusterNode: ClusterNodeDto;
+
+  public get selectedClusterTags(): string {
+    return this.selectedClusterNode.tags.map(t => t.tag).join(", ")
+  }
 
   // address case
   public isAddressCaseLoading = false;
@@ -535,5 +549,17 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       address: this.addressScan.address
     };
     this.router.navigate(['/address-case/create'], {queryParams: query});
+  }
+
+  closeClusterDrawer() {
+    this.showClusterDrawer = false;
+  }
+
+  handleClusterGraphAction(e: { action: string; node: ClusterNodeDto }) {
+    if(e.action === 'detail'){
+      this.selectedClusterNode = e.node;
+      this.showClusterDrawer = true;
+    }
+
   }
 }

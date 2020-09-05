@@ -107,12 +107,20 @@ export class TableComponent implements OnInit {
     this.rowClick.emit(row);
   }
 
-  getActions(actions: Array<{ name: string, title: string, more?: boolean }>) {
+  getActions(row: any, actions: Array<{ name: string, title: string, more?: boolean }> | ((any) => Array<{ name: string, title: string, more?: boolean }>)) {
+    if (typeof actions === "function") {
+      return (actions as (any) => Array<{ name: string, title: string, more?: boolean }>)(row).filter(act => !act.more);
+    }
+    console.log(typeof actions);
     return actions.filter(act => !act.more);
   }
 
-  getMoreActions(actions: Array<{ name: string, title: string, more?: boolean }>) {
+  getMoreActions(row: any, actions: Array<{ name: string, title: string, more?: boolean }> | ((any) => Array<{ name: string, title: string, more?: boolean }>)) {
+    if (typeof actions === "function") {
+      return (actions as (any) => Array<{ name: string, title: string, more?: boolean }>)(row).filter(act => act.more);
+    }
     return actions.filter(act => act.more);
+
   }
 
   getThWidth(col: TblColumn<any>) {

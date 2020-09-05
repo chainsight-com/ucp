@@ -2,7 +2,7 @@ export class TblColumn<T> {
   title: string;
   property?: keyof T;
   width?: number;
-  actions?: Array<{ name: string, title: string, more?: boolean }>;
+  actions?: Array<{ name: string, title: string, more?: boolean }> | ((any) => Array<{ name: string, title: string, more?: boolean }>);
   hidden?: boolean;
   slot?: string;
   detail?: boolean;
