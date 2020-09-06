@@ -34,15 +34,15 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
       title: 'Status',
       type: 'level',
       width: 180,
-      formatter: (data) => {
-        return this.levelFormatter(data);
+      formatter: (row) => {
+        return this.levelFormatter(row.status);
       }
     },
     {
       property: 'currency',
       title: 'Currency',
-      formatter: (data) => {
-        return data.currency.name.toUpperCase();
+      formatter: (row) => {
+        return row.currency.name.toUpperCase();
       }
     },
     {
@@ -60,15 +60,15 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
     {
       property: 'startingTime',
       title: 'Starting Time',
-      formatter: data => {
-        return this.utilService.transformDateShort(data.startingTime);
+      formatter: row => {
+        return this.utilService.transformDateShort(row.startingTime);
       }
     },
     {
       property: 'endingTime',
       title: 'Ending Time',
-      formatter: data => {
-        return this.utilService.transformDateShort(data.endingTime);
+      formatter: row => {
+        return this.utilService.transformDateShort(row.endingTime);
       }
     },
     {

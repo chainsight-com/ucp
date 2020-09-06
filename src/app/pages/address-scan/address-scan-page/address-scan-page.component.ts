@@ -30,21 +30,19 @@ export class AddressScanPageComponent implements OnInit, OnChanges, OnDestroy {
 
 
   public me: AccountDto;
-  public columns: Array<TblColumn<any>> = [
+  public columns: Array<TblColumn<AddressScanDto>> = [
     {
-      property: 'status',
       title: 'Status',
       type: 'level',
       width: 150,
-      formatter: (data) => {
-        return this.statusFormatter(data);
+      formatter: (row) => {
+        return this.statusFormatter(row.status);
       }
     },
     {
-      property: 'currency',
       title: 'Currency',
-      formatter: data => {
-        return data.currency.name.toUpperCase();
+      formatter: row => {
+        return row.currency.name.toUpperCase();
       },
       detail: false
     },
@@ -62,18 +60,16 @@ export class AddressScanPageComponent implements OnInit, OnChanges, OnDestroy {
       title: 'Backward LV'
     },
     {
-      property: '',
       title: 'Time Range',
-      formatter: data => {
-        return formatDate(data.startingTime, 'short', 'en-US', '') + '-' +
-          formatDate(data.endingTime, 'short', 'en-US', '');
+      formatter: row => {
+        return formatDate(row.startingTime, 'short', 'en-US', '') + '-' +
+          formatDate(row.endingTime, 'short', 'en-US', '');
       }
     },
     {
-      property: '',
       title: 'Created Time',
-      formatter: data => {
-        return formatDate(data.createdTime, 'short', 'en-US', '');
+      formatter: row => {
+        return formatDate(row.createdTime, 'short', 'en-US', '');
       }
     },
     {
@@ -178,10 +174,10 @@ export class AddressScanPageComponent implements OnInit, OnChanges, OnDestroy {
     this.router.navigate(['address-scan', row.id]);
   }
 
-  statusFormatter(data) {
+  statusFormatter(status: AddressScanDto.StatusEnum) {
 
     let res = null;
-    switch (data) {
+    switch (status) {
       case 'COMPLETED':
         res = {
           color: '#52c41a',
@@ -210,12 +206,6 @@ export class AddressScanPageComponent implements OnInit, OnChanges, OnDestroy {
         res = {
           color: 'red',
           title: 'Error'
-        };
-        break;
-      case 'TIMEOUT':
-        res = {
-          color: 'red',
-          title: 'Timeout'
         };
         break;
       default:

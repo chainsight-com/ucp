@@ -27,12 +27,11 @@ export class HolderAddressTableComponent implements OnInit, OnChanges {
   private unsubscribe$ = new Subject<void>();
   public batchId: string;
   public me: AccountDto;
-  public columns: Array<TblColumn<any>> = [
+  public columns: Array<TblColumn<HolderAddressDto>> = [
     {
-      property: 'currency',
       title: 'Currency',
-      formatter: (data: HolderAddressDto) => {
-        return (data as any).currency.name.toUpperCase();
+      formatter: (row) => {
+        return row.currency.name.toUpperCase();
       },
       detail: false
     },
@@ -45,29 +44,29 @@ export class HolderAddressTableComponent implements OnInit, OnChanges {
       title: 'Case Status',
       type: 'level',
       width: 150,
-      formatter: (data: HolderAddressDto) => {
-        return !!data.addressCase ? this.caseStatusFormatter(data.addressCase.status) : null;
+      formatter: (row) => {
+        return !!row.addressCase ? this.caseStatusFormatter(row.addressCase.status) : null;
       }
     },
     {
       title: 'Title',
       detail: false,
-      formatter: (data: HolderAddressDto) => {
-        return !!data.addressCase ? data.addressCase.title : null;
+      formatter: (row) => {
+        return !!row.addressCase ? row.addressCase.title : null;
       }
     },
     {
       title: 'Risk Level',
       type: 'tag',
-      formatter: (data: HolderAddressDto) => {
-        return !!data.addressCase ? this.caseLevelFormatter(data.addressCase.level) : null;
+      formatter: (row) => {
+        return !!row.addressCase ? this.caseLevelFormatter(row.addressCase.level) : null;
       }
     },
     {
       title: 'Action',
       actions: (data: HolderAddressDto) => {
         return !!data.addressCase ? [{name: 'goto-address-case', title: 'View'}] : [{name: 'create-address-case', title: 'Create Case'}]
-    }
+       }
     }
   ];
 

@@ -84,7 +84,7 @@ export class TableComponent implements OnInit {
     this.actionClick.emit({
       row,
       action: action.name
-    } as TblAction);
+    } as TblAction<any>);
   }
 
   handleDetailClick(row: any) {

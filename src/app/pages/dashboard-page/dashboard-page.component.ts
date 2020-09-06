@@ -4,7 +4,7 @@ import {
   AddressScanDto, CurrencyDto,
   PageOfTxDto,
   ProjectApiService,
-  ProjectDto, TxApiService
+  ProjectDto, TxApiService, TxDto
 } from "@profyu/unblock-ng-sdk";
 import {UserService} from "../../services/user.service";
 import {filter, mergeMap, take, takeUntil, tap} from "rxjs/operators";
@@ -24,20 +24,18 @@ export class DashboardPageComponent implements OnInit {
 
   private unsubscribe$ = new Subject<void>();
   public project: ProjectDto;
-  public columns: Array<TblColumn<any>> = [
+  public columns: Array<TblColumn<TxDto>> = [
     {
-      property: '',
       title: 'Time',
-      formatter: data => {
-        return formatDate(data.createdTime, 'short', 'en-US', '');
+      formatter: row => {
+        return formatDate(row.createdTime, 'short', 'en-US', '');
       }
     },
     {
-      property: 'type',
       title: 'Type',
       detail: false,
-      formatter: data => {
-        return this.formatTxType(data.type);
+      formatter: row => {
+        return this.formatTxType(row.type);
       }
     },
     {

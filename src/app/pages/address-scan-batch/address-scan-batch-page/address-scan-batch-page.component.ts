@@ -24,14 +24,14 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject<void>();
   public batchId: string;
-  public columns: Array<TblColumn<any>> = [
+  public columns: Array<TblColumn<AddressScanBatchDto>> = [
     {
       property: 'status',
       title: 'Status',
       type: 'level',
       width: 150,
-      formatter: (data) => {
-        return this.statusFormatter(data);
+      formatter: (row) => {
+        return this.statusFormatter(row.status);
       }
     },
     {
@@ -40,10 +40,9 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
       detail: false
     },
     {
-      property: '',
       title: 'Created Time',
-      formatter: data => {
-        return formatDate(data.createdTime, 'short', 'en-US', '');
+      formatter: row => {
+        return formatDate(row.createdTime, 'short', 'en-US', '');
       }
     },
     {
@@ -129,7 +128,7 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
   handleDetailClick(row: AddressScanBatchDto) {
   }
 
-  handleActionClick(val: TblAction) {
+  handleActionClick(val: TblAction<AddressScanBatchDto>) {
     const row: AddressScanBatchDto = val.row;
     switch (val.action) {
       case 'view':
@@ -140,10 +139,10 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  statusFormatter(data) {
+  statusFormatter(status: AddressScanDto.StatusEnum) {
 
     let res = null;
-    switch (data) {
+    switch (status) {
       case 'COMPLETED':
         res = {
           color: '#52c41a',

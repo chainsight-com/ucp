@@ -24,14 +24,14 @@ export class AddressCasePageComponent implements OnInit {
   private unsubscribe$ = new Subject<void>();
   public batchId: string;
   public me: AccountDto;
-  public columns: Array<TblColumn<any>> = [
+  public columns: Array<TblColumn<AddressCaseDto>> = [
     {
       property: 'status',
       title: 'Status',
       type: 'level',
       width: 150,
-      formatter: (data) => {
-        return this.statusFormatter(data);
+      formatter: (row) => {
+        return this.statusFormatter(row.status);
       }
     },
     {
@@ -42,8 +42,8 @@ export class AddressCasePageComponent implements OnInit {
     {
       property: 'currency',
       title: 'Currency',
-      formatter: data => {
-        return data.currency.name.toUpperCase();
+      formatter: row => {
+        return row.currency.name.toUpperCase();
       },
       detail: false
     },
@@ -56,15 +56,14 @@ export class AddressCasePageComponent implements OnInit {
       property: 'level',
       title: 'Risk Level',
       type: 'tag',
-      formatter: (data) => {
-        return this.levelFormatter(data);
+      formatter: (row) => {
+        return this.levelFormatter(row.level);
       }
     },
     {
-      property: '',
       title: 'Created Time',
-      formatter: data => {
-        return formatDate(data.createdTime, 'short', 'en-US', '');
+      formatter: row => {
+        return formatDate(row.createdTime, 'short', 'en-US', '');
       }
     }
   ];

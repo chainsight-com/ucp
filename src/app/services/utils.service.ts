@@ -10,7 +10,7 @@ export class UtilsService {
 
   }
 
-  transformDateShort(date: string) {
+  transformDateShort(date: Date) {
     let res = null;
     try {
       res = formatDate(date, 'short', 'en-US', '');
