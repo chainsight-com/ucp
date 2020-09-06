@@ -22,7 +22,8 @@ import {
   ClusterGraphDto,
   ClusterNodeDto
 } from '@profyu/unblock-ng-sdk';
-import {GraphLinksModel} from "gojs";
+import {GraphLinksModel, GraphObject} from "gojs";
+import {Cluster} from "cluster";
 
 export const textStyle = {font: 'bold 12pt Segoe UI, sans-serif', stroke: 'black', margin: new go.Margin(5, 5, 0, 5)}
 
@@ -52,7 +53,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
   @Output()
   public onNodesSelected: EventEmitter<ClusterNodeDto[]> = new EventEmitter<ClusterNodeDto[]>();
   @Output()
-  public onNodeAction: EventEmitter<{action: string, node: ClusterNodeDto}> = new EventEmitter<{action: string, node: ClusterNodeDto}>();
+  public onNodeAction: EventEmitter<{ action: string, node: ClusterNodeDto }> = new EventEmitter<{ action: string, node: ClusterNodeDto }>();
 
 
   public addressScan: AddressScanDto;
@@ -60,7 +61,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
   private diagramRef: ElementRef;
   private diagram: go.Diagram;
   public pageIdx = 0;
-  public pageSize = 30;
+  public pageSize = 10;
   public isLoading = false;
 
   @ViewChild('ctxMenu', {static: false})
@@ -96,9 +97,10 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
 
   reloadPage() {
     this.isLoading = true;
-    this.addressScanApiService.getAddressScanClusterGraphUsingGET(this.addressScan.id, this.pageIdx, this.pageSize).pipe(
-      take(1)
-    ).subscribe((graph) => {
+    this.addressScanApiService.getAddressScanClusterGraphUsingGET(this.addressScan.id, this.pageIdx, this.pageSize)
+      .pipe(
+        take(1)
+      ).subscribe((graph) => {
       this.render(graph.nodes, graph.edges.content);
       this.isLoading = false;
     }, console.error, () => {
@@ -126,7 +128,12 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
           textColor: '#ffffff',
           toolTipText: null,
           tags: node.tags.map(t => t.tag),
-          payload: node
+          payload: node,
+          neighborPage: {
+            pageIdx: 0,
+            pageSize: 10,
+            isLast: false,
+          }
         };
       }));
 
@@ -187,6 +194,22 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
         initialAutoScale: go.Diagram.UniformToFill,
         'animationManager.isEnabled': false,
         layout: $(go.LayeredDigraphLayout),
+        ObjectDoubleClicked: (e) => {
+          const subject = e.subject as GraphObject;
+          if (subject.part instanceof go.Node) {
+            const node = subject.part as go.Node;
+            if (!node.data.neighborPage.isLast) {
+              this.loadNeighbor(node.data.payload,
+                node.data.neighborPage.pageIdx,
+                node.data.neighborPage.pageSize,
+                (isLast) => {
+                  node.data.neighborPage.isLast = isLast;
+                });
+            }
+
+          }
+
+        }
         // ChangedSelection: (e) => {
         //   console.log("select", e)
         //   const firstSel = e.diagram.selection.first();
@@ -295,5 +318,19 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
   onNodeActionClick(actionName: string) {
     const data = this.diagram.selection.first().data.payload;
     this.onNodeAction.emit({action: actionName, node: data});
+  }
+
+  loadNeighbor(node: ClusterNodeDto, pageIdx: number, pageSize: number, isLastUpdater: (isLast: boolean) => void) {
+    this.isLoading = true;
+    this.addressScanApiService.getAddressScanClusterGraphNeighborUsingGET(this.addressScanId, pageIdx, pageSize, [node.clusterId])
+      .pipe(
+        take(1)
+      ).subscribe((graph) => {
+      this.render(graph.nodes, graph.edges.content);
+      isLastUpdater(graph.edges.last)
+      this.isLoading = false;
+    }, console.error, () => {
+      this.isLoading = false;
+    });
   }
 }
