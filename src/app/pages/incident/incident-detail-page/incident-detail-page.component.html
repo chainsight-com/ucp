@@ -1,0 +1,55 @@
+<div nz-row>
+  <div nz-col>
+    <nz-breadcrumb style="margin: 16px;">
+      <nz-breadcrumb-item>Incident</nz-breadcrumb-item>
+      <nz-breadcrumb-item>{{incident?.title}}</nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div>
+</div>
+<div nz-row>
+  <div nz-col>
+    <h3 nz-title>{{incident?.title}}</h3>
+  </div>
+</div>
+<div nz-row>
+  <div nz-col nzSpan="24">
+    <span><nz-tag
+      nzColor="{{statusFormatter(incident?.status)?.color}}">{{statusFormatter(incident?.status)?.title}}</nz-tag></span>
+    <span nz-text nzType="secondary">{{formatAuthor(incident)}}
+      opened this incident @ {{readableDuration(this.incident?.createdTime)}}</span>
+  </div>
+</div>
+<br/>
+<br/>
+<div nz-row>
+  <div nz-col nzSpan="6">
+    <span nz-text>Status:</span>
+    <nz-select [(ngModel)]="status" nzPlaceHolder="Choose" [nzLoading]="isSubmittingStatus">
+      <nz-option
+        *ngFor="let status of incidentStatusList"
+        nzValue="{{status.value}}"
+        nzLabel="{{status.label}}">
+      </nz-option>
+    </nz-select>
+  </div>
+</div>
+<br/>
+
+<br/>
+<nz-content style="margin:24px 16px 0;">
+  <div style="padding:24px; background: #fff; min-height: 550px;">
+    <div nz-row>
+      <div nz-col nzSpan="23">
+        <nz-tabset [nzTabPosition]="'top'" [nzType]="'line'">
+          <nz-tab [nzTitle]="'Scans'">
+            <app-address-scan-table [incidentId]="incidentId" (detailClick)="onAddressScanClick($event)"></app-address-scan-table>
+          </nz-tab>
+        </nz-tabset>
+      </div>
+    </div>
+  </div>
+</nz-content>
+
+<nz-drawer [nzVisible]="showAddressScanDrawer" [nzPlacement]="'bottom'"  [nzHeight]="400" [nzClosable]="false" (nzOnClose)="closeAddressScanDrawer()">
+  <app-summed-cluster-graph [addressScanId]="currentAddressScan?.id"></app-summed-cluster-graph>
+</nz-drawer>

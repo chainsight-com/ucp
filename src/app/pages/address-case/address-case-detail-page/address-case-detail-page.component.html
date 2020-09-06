@@ -100,8 +100,30 @@
               </form>
             </nz-tab>
             <nz-tab [nzTitle]="'Scans'" *ngIf="showScans">
-              <app-address-scan-page *ngIf="addressCase" [currencyId]="addressCase?.currencyId"
-                                     [address]="addressCase?.address"></app-address-scan-page>
+              <div nz-row>
+                <div nz-col [nzSpan]="24">
+                  <button (click)="addScan()" nz-button nzType="primary">
+                    <i nz-icon
+                       nzType="plus"
+                       nzTheme="outline">
+                    </i>
+                    New Scan
+                  </button>
+                  <button (click)="addressScanTable.reload(true, false)" nzType="default" nz-button>
+                    <i nz-icon
+                       nzType="reload"
+                       nzTheme="outline">
+                    </i>Reload
+                  </button>
+                </div>
+              </div>
+              <br/>
+              <app-address-scan-table #addressScanTable *ngIf="addressCase"
+                                      [currencyId]="addressCase?.currencyId"
+                                      [address]="addressCase?.address"
+                                      (detailClick)="handleScanClick($event)">
+              </app-address-scan-table>
+
             </nz-tab>
           </nz-tabset>
         </div>
@@ -109,5 +131,4 @@
 
     </div>
   </nz-spin>
-
 </nz-content>

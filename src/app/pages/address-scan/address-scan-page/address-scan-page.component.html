@@ -7,7 +7,7 @@
       </i>
       New Scan
     </button>
-    <button (click)="reload(true, false)" nzType="default" nz-button>
+    <button (click)="addressScanTable.reload(true, false)" nzType="default" nz-button>
       <i nz-icon
          nzType="reload"
          nzTheme="outline">
@@ -16,16 +16,8 @@
   </div>
 </div>
 <div class="pfy-page-content">
-  <pfy-table
-    [tblColumns]="columns"
-    [tblData]="page.content"
-    [total]="totalElements"
-    [(pageIndex)]="pageIdx"
-    [loading]="isLoading"
-    (detailClick)="handleDetailClick($event)"
-    [pageable]="true"
-    [pageSizeOptions]="pageSizeOptions"
-    (pageSizeChange)="handlePageSizeChange($event)"
-    (pageIndexChange)="reload(false, false)"
-  ></pfy-table>
+  <app-address-scan-table #addressScanTable
+                          [autoReload]="true"
+                          [projectId]="project?.id"
+                          (detailClick)="handleDetailClick($event)"></app-address-scan-table>
 </div>

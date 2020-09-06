@@ -18,6 +18,7 @@ import {PfyRoute} from "./shared/pfy-route";
 import {AddressCasePageComponent} from "./pages/address-case/address-case-page/address-case-page.component";
 import {AddressCaseAddPageComponent} from "./pages/address-case/address-case-add-page/address-case-add-page.component";
 import {AddressCaseDetailPageComponent} from "./pages/address-case/address-case-detail-page/address-case-detail-page.component";
+import {IncidentDetailPageComponent} from "./pages/incident/incident-detail-page/incident-detail-page.component";
 
 
 const routes: Routes = [
@@ -36,6 +37,8 @@ const routes: Routes = [
       {path: 'address-scan/:id', component: AddressScanDetailPageComponent, },
       {path: 'address-scan-batch', component: AddressScanBatchPageComponent, },
       {path: 'address-scan-batch/create', component: AddressScanBatchAddPageComponent, },
+
+      {path: 'incident/:id', component: IncidentDetailPageComponent },
 
       {path: 'qr-scan', component: ScanPageComponent, },
       {path: 'flow-labeling-page', component: FlowLabelingPageComponent, },

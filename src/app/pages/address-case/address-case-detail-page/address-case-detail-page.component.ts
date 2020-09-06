@@ -33,6 +33,7 @@ import {CcPipe} from "../../../pipes/cc.pipe";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {RISK_LEVEL_MAP, RISK_LEVEL_LIST} from "../../../models/address-case-risk-level-option";
 import {ADDRESS_CASE_STATUS_LIST, ADDRESS_CASE_STATUS_MAP} from "../../../models/address-case-status-option";
+import {AddressScanTableComponent} from "../../../component/address-scan/address-scan-table/address-scan-table.component";
 
 @Component({
   selector: 'app-address-case-detail-page',
@@ -47,6 +48,9 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
   public showComments: boolean = true
   @Input()
   public showScans: boolean = true
+
+  @ViewChild("addressScanTable", {static: false})
+  public addressScanTable: AddressScanTableComponent;
 
 
   // address case
@@ -98,6 +102,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
   public commentForm: FormGroup;
 
   private unsubscribe$ = new Subject<void>();
+
 
 
   constructor(private router: Router,
@@ -282,4 +287,18 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  addScan() {
+    this.router.navigate(['/address-scan/create'], {
+      queryParams: {
+        currencyId: this.addressCase.currencyId,
+        address: this.addressCase.address
+      }
+    });
+  }
+  handleScanClick(row: AddressScanDto) {
+    this.router.navigate(['address-scan', row.id]);
+  }
+
+
 }

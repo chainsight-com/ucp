@@ -25,8 +25,6 @@ import {RISK_LEVEL_MAP} from "../../../models/address-case-risk-level-option";
 export class HolderAddressTableComponent implements OnInit, OnChanges {
 
   private unsubscribe$ = new Subject<void>();
-  public batchId: string;
-  public me: AccountDto;
   public columns: Array<TblColumn<HolderAddressDto>> = [
     {
       title: 'Currency',

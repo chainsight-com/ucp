@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {
   AccountDto,
   AddressScanApiService, AddressScanDto, ProjectDto
@@ -11,6 +11,7 @@ import {EMPTY_PAGE, Page} from "../../../models/type/page";
 import {UserService} from "../../../services/user.service";
 import {TblColumn} from "../../../shared/table/tbl-column";
 import {interval, Subject} from "rxjs";
+import {AddressScanTableComponent} from "../../../component/address-scan/address-scan-table/address-scan-table.component";
 
 @Component({
   selector: 'app-address-scan-page',
@@ -20,76 +21,12 @@ import {interval, Subject} from "rxjs";
 export class AddressScanPageComponent implements OnInit, OnChanges, OnDestroy {
   private unsubscribe$ = new Subject<void>();
 
-  // filters
-  @Input()
-  public batchId: string;
-  @Input()
-  public currencyId: string;
-  @Input()
-  public address: string;
-
-
   public me: AccountDto;
-  public columns: Array<TblColumn<AddressScanDto>> = [
-    {
-      title: 'Status',
-      type: 'level',
-      width: 150,
-      formatter: (row) => {
-        return this.statusFormatter(row.status);
-      }
-    },
-    {
-      title: 'Currency',
-      formatter: row => {
-        return row.currency.name.toUpperCase();
-      },
-      detail: false
-    },
-    {
-      property: 'address',
-      title: 'Address',
-      detail: true
-    },
-    {
-      property: 'forwardMaxLevel',
-      title: 'Forward LV',
-    },
-    {
-      property: 'backwardMaxLevel',
-      title: 'Backward LV'
-    },
-    {
-      title: 'Time Range',
-      formatter: row => {
-        return formatDate(row.startingTime, 'short', 'en-US', '') + '-' +
-          formatDate(row.endingTime, 'short', 'en-US', '');
-      }
-    },
-    {
-      title: 'Created Time',
-      formatter: row => {
-        return formatDate(row.createdTime, 'short', 'en-US', '');
-      }
-    },
-    {
-      property: 'riskCriticalCount',
-      title: 'Cirtical Risks'
-    },
-    {
-      property: 'riskHighCount',
-      title: 'High Risks'
-    },
-  ];
-
-
-  public page: Page<AddressScanDto> = EMPTY_PAGE;
-  public pageSize = 30;
-  public pageSizeOptions = [30, 50, 100];
-  public pageIdx = 1;
-  public totalElements = 1;
-  public isLoading = false;
   public project: ProjectDto;
+  public batchId: string;
+
+  @ViewChild("addressScanTable", {static: false})
+  public addressScanTable: AddressScanTableComponent;
 
   constructor(
     private addressScanApiService: AddressScanApiService,
@@ -113,119 +50,23 @@ export class AddressScanPageComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe((project) => {
         this.project = project;
-        if (project) {
-          this.reload(true, false);
-        }
-
       });
-    interval(5000)
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      ).subscribe(
-      data => {
-        if (this.userService.project) {
-          this.reload(false, true);
-        }
-
-      }
-    );
-  }
-
-
-  reload(reset: boolean, silent: boolean) {
-
-    if (reset) {
-      this.pageIdx = 1;
-    }
-    if (!silent) {
-      this.isLoading = true;
-    }
-    this.addressScanApiService.paginateAddressScanUsingGET(this.pageIdx - 1, this.pageSize, this.userService.project.id, this.batchId, this.currencyId, this.address)
-      .pipe(
-        take(1),
-      ).subscribe(page => {
-      this.page = page;
-      this.totalElements = Number(page.totalElements);
-    }, console.error, () => {
-      this.isLoading = false;
-    });
   }
 
   addScan() {
-    const query: any = {};
-    if (this.currencyId) {
-      query.currencyId = this.currencyId;
-    }
-    if (this.address) {
-      query.address = this.address
-    }
-
-    this.router.navigate(['/address-scan/create'], {
-      queryParams: query
-    });
-  }
-
-  handlePageSizeChange(pageSize) {
-    this.pageSize = pageSize;
-    this.reload(false, false);
-  }
-
-  handleDetailClick(row) {
-    this.router.navigate(['address-scan', row.id]);
-  }
-
-  statusFormatter(status: AddressScanDto.StatusEnum) {
-
-    let res = null;
-    switch (status) {
-      case 'COMPLETED':
-        res = {
-          color: '#52c41a',
-          title: 'Success'
-        };
-        break;
-      case 'PENDING':
-        res = {
-          color: 'yellow',
-          title: 'Pending'
-        };
-        break;
-      case 'SUBMITTED':
-        res = {
-          color: 'yellow',
-          title: 'Submitted'
-        };
-        break;
-      case 'RUNNING':
-        res = {
-          color: 'blue',
-          title: 'Running'
-        };
-        break;
-      case 'FAILED':
-        res = {
-          color: 'red',
-          title: 'Error'
-        };
-        break;
-      default:
-        res = {
-          color: '#108ee9',
-          title: 'default'
-        };
-    }
-    return res;
+    this.router.navigate(['/address-scan/create']);
   }
 
   ngOnChanges(changes) {
-    if (changes.batchId || changes.currencyId || changes.address) {
-      this.reload(true, false)
-    }
   }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  handleDetailClick(row: AddressScanDto) {
+    this.router.navigate(['address-scan', row.id]);
   }
 
 

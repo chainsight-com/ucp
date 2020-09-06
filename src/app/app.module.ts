@@ -45,6 +45,8 @@ import { SummedClusterGraphComponent } from './component/summed-cluster-graph/su
 import { AddressInfoComponent } from './component/address-info/address-info.component';
 import { HolderAddressTableComponent } from './component/holder-address/holder-address-table/holder-address-table.component';
 import { ScoredTagComponent } from './component/scored-tag/scored-tag.component';
+import { IncidentDetailPageComponent } from './pages/incident/incident-detail-page/incident-detail-page.component';
+import { AddressScanTableComponent } from './component/address-scan/address-scan-table/address-scan-table.component';
 
 const menus: any[] = [
 
@@ -289,6 +291,8 @@ registerLocaleData(en);
     AddressInfoComponent,
     HolderAddressTableComponent,
     ScoredTagComponent,
+    IncidentDetailPageComponent,
+    AddressScanTableComponent,
   ],
   imports: [
     BrowserModule,
