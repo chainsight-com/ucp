@@ -53,7 +53,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
   @Output()
   public onNodesSelected: EventEmitter<ClusterNodeDto[]> = new EventEmitter<ClusterNodeDto[]>();
   @Output()
-  public onNodeAction: EventEmitter<{ action: string, node: ClusterNodeDto }> = new EventEmitter<{ action: string, node: ClusterNodeDto }>();
+  public onNodeAction: EventEmitter<{ action: string, nodes: ClusterNodeDto[] }> = new EventEmitter<{ action: string, nodes: ClusterNodeDto[] }>();
 
 
   public addressScan: AddressScanDto;
@@ -316,8 +316,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
   }
 
   onNodeActionClick(actionName: string) {
-    const data = this.diagram.selection.first().data.payload;
-    this.onNodeAction.emit({action: actionName, node: data});
+    this.onNodeAction.emit({action: actionName, nodes: this.diagram.selection.toArray().map(n => n.data)});
   }
 
   loadNeighbor(node: ClusterNodeDto, pageIdx: number, pageSize: number, isLastUpdater: (isLast: boolean) => void) {

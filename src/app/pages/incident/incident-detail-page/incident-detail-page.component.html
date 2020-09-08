@@ -42,7 +42,8 @@
       <div nz-col nzSpan="23">
         <nz-tabset [nzTabPosition]="'top'" [nzType]="'line'">
           <nz-tab [nzTitle]="'Scans'">
-            <app-address-scan-table [incidentId]="incidentId" (detailClick)="onAddressScanClick($event)"></app-address-scan-table>
+            <app-address-scan-table [incidentId]="incidentId"
+                                    (detailClick)="onAddressScanClick($event)"></app-address-scan-table>
           </nz-tab>
         </nz-tabset>
       </div>
@@ -50,6 +51,24 @@
   </div>
 </nz-content>
 
-<nz-drawer [nzVisible]="showAddressScanDrawer" [nzPlacement]="'bottom'"  [nzHeight]="400" [nzClosable]="false" (nzOnClose)="closeAddressScanDrawer()">
-  <app-summed-cluster-graph [addressScanId]="currentAddressScan?.id"></app-summed-cluster-graph>
+<nz-drawer
+  [nzVisible]="showAddressScanDrawer"
+  [nzOffsetX]="showClusterDrawer ? 180 : 0"
+  [nzWidth]="900"
+  [nzClosable]="false"
+  (nzOnClose)="closeAddressScanDrawer()">
+  <nz-spin [nzSpinning]="isLoadingAddressScanGraph">
+    {{showClusterDrawer}}
+    <app-summed-cluster-graph
+      [addressScanId]="currentAddressScan?.id" [nodeActions]="addressScanGraphActions"
+      (onNodeAction)="onAddressScanGraphAction($event)">
+    </app-summed-cluster-graph>
+  </nz-spin>
+  <nz-drawer [nzVisible]="showClusterDrawer" [nzWidth]="720" [nzClosable]="false" (nzOnClose)="closeClusterDrawer()">
+    <app-address-info [projectId]="incident?.projectId" [currencyId]="selectedClusterNode?.currencyId"
+                      [address]="selectedClusterNode?.clusterId" [tags]="selectedClusterNode?.tags"></app-address-info>
+  </nz-drawer>
 </nz-drawer>
+
+
+

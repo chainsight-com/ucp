@@ -1,9 +1,16 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {
   AddressCaseApiService,
-  AddressCaseCommentApiService, AddressCaseCommentCreation,
+  AddressCaseCommentApiService,
+  AddressCaseCommentCreation,
   AddressCaseCommentDto,
-  AddressCaseDto, AddressScanDto, IncidentAddressScanApiService, IncidentApiService, IncidentDto
+  AddressCaseDto,
+  AddressScanDto,
+  ClusterNodeDto,
+  IncidentAddressScanApiService,
+  IncidentApiService,
+  IncidentClusterApiService, IncidentClusterBulkCreation,
+  IncidentDto
 } from "@profyu/unblock-ng-sdk";
 import {RISK_LEVEL_LIST, RISK_LEVEL_MAP} from "../../../models/address-case-risk-level-option";
 import {ADDRESS_CASE_STATUS_LIST, ADDRESS_CASE_STATUS_MAP} from "../../../models/address-case-status-option";
@@ -14,6 +21,7 @@ import {finalize, take, takeUntil} from "rxjs/operators";
 import * as dateFns from 'date-fns';
 import {INCIDENT_STATUS_LIST} from "../../../models/incident-status-option";
 import {EMPTY_PAGE, Page} from "../../../models/type/page";
+import {NzMessageService} from "ng-zorro-antd";
 
 @Component({
   selector: 'app-incident-detail-page',
@@ -51,13 +59,30 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   private unsubscribe$ = new Subject<void>();
 
+  public isLoadingAddressScanGraph: boolean = false;
   public showAddressScanDrawer = false;
   public currentAddressScan: AddressScanDto;
+  public addressScanGraphActions = [
+    {
+      name: 'add',
+      title: 'Add To Incident'
+    },
+    {
+      name: 'detail',
+      title: 'Detail'
+    }
+  ];
+
+  public showClusterDrawer: boolean = false;
+  public selectedClusterNode: ClusterNodeDto;
+
 
   constructor(private router: Router,
               private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
-              private incidentApiService: IncidentApiService) {
+              private incidentApiService: IncidentApiService,
+              private incidentClusterApiService: IncidentClusterApiService,
+              private messageService: NzMessageService) {
   }
 
 
@@ -180,4 +205,41 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
     this.currentAddressScan = row;
     this.showAddressScanDrawer = true;
   }
+
+  public onAddressScanGraphAction(e: { action: string, nodes: any[] }) {
+    if (e.action === 'detail') {
+      if (e.nodes.length > 0) {
+        this.showClusterDrawer = true;
+        this.selectedClusterNode = e.nodes[0].payload;
+      }
+    } else if (e.action === 'add') {
+      const payload: IncidentClusterBulkCreation = {
+        incidentId: this.incidentId,
+        addressScanId: this.currentAddressScan.id,
+        data: e.nodes.map(n => {
+          return {
+            clusterId: n.payload.clusterId,
+            isAddress: n.payload.addresses.length == 1,
+            title: n.payload.clusterId,
+            subtitle: this.currentAddressScan.currency.name.toUpperCase()
+          };
+        })
+      };
+      this.isLoadingAddressScanGraph = true;
+      this.incidentClusterApiService.createIncidentClusterUsingPOST(payload)
+        .pipe(
+          take(1)
+        )
+        .subscribe(() => {
+          this.messageService.success("Added");
+        }, console.error, () => {
+          this.isLoadingAddressScanGraph = false;
+        });
+    }
+  }
+
+  closeClusterDrawer() {
+    this.showClusterDrawer = false;
+  }
+
 }
