@@ -47,6 +47,8 @@ import { HolderAddressTableComponent } from './component/holder-address/holder-a
 import { ScoredTagComponent } from './component/scored-tag/scored-tag.component';
 import { IncidentDetailPageComponent } from './pages/incident/incident-detail-page/incident-detail-page.component';
 import { AddressScanTableComponent } from './component/address-scan/address-scan-table/address-scan-table.component';
+import { IncidentClusterGraphComponent } from './component/incident-cluster-graph/incident-cluster-graph.component';
+import { AddressScanFormComponent } from './component/address-scan/address-scan-form/address-scan-form.component';
 
 const menus: any[] = [
 
@@ -293,6 +295,8 @@ registerLocaleData(en);
     ScoredTagComponent,
     IncidentDetailPageComponent,
     AddressScanTableComponent,
+    IncidentClusterGraphComponent,
+    AddressScanFormComponent,
   ],
   imports: [
     BrowserModule,

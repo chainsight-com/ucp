@@ -1,15 +1,15 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild} from '@angular/core';
 import {
   AddressCaseApiService,
   AddressCaseCommentApiService,
   AddressCaseCommentCreation,
   AddressCaseCommentDto,
-  AddressCaseDto,
+  AddressCaseDto, AddressScanCreation,
   AddressScanDto,
   ClusterNodeDto,
   IncidentAddressScanApiService,
   IncidentApiService,
-  IncidentClusterApiService, IncidentClusterBulkCreation,
+  IncidentClusterApiService, IncidentClusterBulkCreation, IncidentClusterDto, IncidentClusterNodeDto,
   IncidentDto
 } from "@profyu/unblock-ng-sdk";
 import {RISK_LEVEL_LIST, RISK_LEVEL_MAP} from "../../../models/address-case-risk-level-option";
@@ -21,7 +21,10 @@ import {finalize, take, takeUntil} from "rxjs/operators";
 import * as dateFns from 'date-fns';
 import {INCIDENT_STATUS_LIST} from "../../../models/incident-status-option";
 import {EMPTY_PAGE, Page} from "../../../models/type/page";
-import {NzMessageService} from "ng-zorro-antd";
+import {NzDrawerRef, NzMessageService} from "ng-zorro-antd";
+import {IncidentClusterGraphComponent} from "../../../component/incident-cluster-graph/incident-cluster-graph.component";
+import {AddressScanTableComponent} from "../../../component/address-scan/address-scan-table/address-scan-table.component";
+import {IncidentClusterUpdates} from "@profyu/unblock-ng-sdk/model/incident-cluster-updates";
 
 @Component({
   selector: 'app-incident-detail-page',
@@ -37,6 +40,11 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
   @Input()
   public showScans: boolean = true
 
+  @ViewChild("incidentClusterGraph", {static: false})
+  private incidentClusterGraph: IncidentClusterGraphComponent;
+
+  @ViewChild("addressScanTable", {static: false})
+  private addressScanTable: AddressScanTableComponent;
 
   public isLoadingIncident = false;
   public incident: IncidentDto = {};
@@ -77,17 +85,49 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
   public selectedClusterNode: ClusterNodeDto;
 
 
+  public showAddScanDrawer: boolean = false;
+  public selectedIncidentClusterNode: IncidentClusterNodeDto;
+  public incidentGraphActions = [
+    {
+      name: 'scan',
+      title: 'Scan'
+    },
+    {
+      name: 'attribute',
+      title: 'Attribute'
+    },
+    {
+      name: 'detail',
+      title: 'Detail'
+    }
+  ]
+
+
+  public showIncidentClusterDrawer: boolean = false;
+
+
+  public editIncidentClusterForm: FormGroup;
+  public showEditIncidentClusterDrawer: boolean = false;
+  public isSubmittingEditIncidentCluster: boolean = false;
+
+
   constructor(private router: Router,
               private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
               private incidentApiService: IncidentApiService,
               private incidentClusterApiService: IncidentClusterApiService,
-              private messageService: NzMessageService) {
+              private messageService: NzMessageService,
+              private incidentAddressScanApiService: IncidentAddressScanApiService) {
+    this.editIncidentClusterForm = this.fb.group({
+      title: [null, []],
+      subtitle: [null, []],
+      fillColor: [null, []],
+      strokeColor: [null, []],
+    });
   }
 
 
   ngOnInit() {
-
     this.activatedRoute.params
       .pipe(
         takeUntil(this.unsubscribe$),
@@ -206,11 +246,11 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
     this.showAddressScanDrawer = true;
   }
 
-  public onAddressScanGraphAction(e: { action: string, nodes: any[] }) {
+  public onAddressScanGraphAction(e: { action: string, nodes: ClusterNodeDto[] }) {
     if (e.action === 'detail') {
       if (e.nodes.length > 0) {
         this.showClusterDrawer = true;
-        this.selectedClusterNode = e.nodes[0].payload;
+        this.selectedClusterNode = e.nodes[0];
       }
     } else if (e.action === 'add') {
       const payload: IncidentClusterBulkCreation = {
@@ -218,10 +258,10 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
         addressScanId: this.currentAddressScan.id,
         data: e.nodes.map(n => {
           return {
-            clusterId: n.payload.clusterId,
-            isAddress: n.payload.addresses.length == 1,
-            title: n.payload.clusterId,
-            subtitle: this.currentAddressScan.currency.name.toUpperCase()
+            clusterId: n.clusterId,
+            isAddress: n.addresses.length == 1,
+            title: this.currentAddressScan.currency.name.toUpperCase(),
+            subtitle: n.clusterId,
           };
         })
       };
@@ -231,6 +271,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
           take(1)
         )
         .subscribe(() => {
+          this.incidentClusterGraph.reload();
           this.messageService.success("Added");
         }, console.error, () => {
           this.isLoadingAddressScanGraph = false;
@@ -241,5 +282,99 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
   closeClusterDrawer() {
     this.showClusterDrawer = false;
   }
+
+  addScan() {
+
+  }
+
+  onIncidentGraphAction(e: { action: string; nodes: IncidentClusterNodeDto[] }) {
+    if (e.action === 'scan') {
+      if (e.nodes.length > 0) {
+        this.selectedIncidentClusterNode = e.nodes[0];
+        this.showAddScanDrawer = true;
+      }
+
+    } else if (e.action === 'detail') {
+      if (e.nodes.length > 0) {
+        this.selectedIncidentClusterNode = e.nodes[0];
+        this.showIncidentClusterDrawer = true;
+      }
+    } else if (e.action === 'attribute') {
+      if (e.nodes.length > 0) {
+        this.selectedIncidentClusterNode = e.nodes[0];
+        this.editIncidentClusterForm.reset({
+          title: this.selectedIncidentClusterNode.incidentCluster.title,
+          subtitle: this.selectedIncidentClusterNode.incidentCluster.subtitle,
+          fillColor: this.selectedIncidentClusterNode.incidentCluster.fillColor,
+          strokeColor: this.selectedIncidentClusterNode.incidentCluster.strokeColor,
+        });
+        this.showEditIncidentClusterDrawer = true;
+      }
+    }
+
+  }
+
+  closeAddScanDrawer() {
+    this.showAddScanDrawer = false;
+  }
+
+  onScanSubmitted(created: AddressScanDto) {
+    this.showAddScanDrawer = false;
+
+    this.incidentAddressScanApiService.createIncidentAddressScanUsingPOST({
+      incidentId: this.incidentId,
+      addressScanId: created.id,
+    })
+      .pipe(
+        take(1)
+      ).subscribe(resp => {
+      this.addressScanTable.reload(true, false);
+    }, console.error);
+
+  }
+
+  submitEditIncidentDrawer() {
+    for (const i in this.editIncidentClusterForm.controls) {
+      this.editIncidentClusterForm.controls[i].markAsDirty();
+      this.editIncidentClusterForm.controls[i].updateValueAndValidity();
+    }
+
+    if (this.editIncidentClusterForm.invalid) {
+      return;
+    }
+
+    const formValue = this.editIncidentClusterForm.value;
+
+    const body: IncidentClusterUpdates = {
+      title: formValue.title,
+      subtitle: formValue.subtitle,
+      fillColor: formValue.fillColor,
+      strokeColor: formValue.strokeColor
+    };
+
+
+    this.isSubmittingEditIncidentCluster = true;
+    this.incidentClusterApiService.updateIncidentClusterUsingPUT(this.selectedIncidentClusterNode.incidentCluster.id ,body)
+      .pipe(
+        take(1),
+        finalize(() => {
+          this.isSubmittingEditIncidentCluster = false;
+        })
+      ).subscribe(updated => {
+      this.showEditIncidentClusterDrawer = false;
+      this.incidentClusterGraph.updateCluster(updated.clusterId, updated);
+    }, console.error);
+  }
+
+  closeIncidentClusterDrawer() {
+    this.showIncidentClusterDrawer = false;
+
+  }
+
+  closeEditIncidentClusterDrawer() {
+    this.showEditIncidentClusterDrawer = false;
+
+  }
+
 
 }

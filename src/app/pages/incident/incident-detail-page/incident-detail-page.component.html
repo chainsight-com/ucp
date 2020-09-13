@@ -34,7 +34,8 @@
   </div>
 </div>
 <br/>
-
+<app-incident-cluster-graph #incidentClusterGraph [incidentId]="incidentId" [nodeActions]="incidentGraphActions"
+                            (onNodeAction)="onIncidentGraphAction($event)"></app-incident-cluster-graph>
 <br/>
 <nz-content style="margin:24px 16px 0;">
   <div style="padding:24px; background: #fff; min-height: 550px;">
@@ -42,7 +43,19 @@
       <div nz-col nzSpan="23">
         <nz-tabset [nzTabPosition]="'top'" [nzType]="'line'">
           <nz-tab [nzTitle]="'Scans'">
-            <app-address-scan-table [incidentId]="incidentId"
+            <div nz-row>
+              <div nz-col [nzSpan]="24">
+                <button (click)="addScan()" nz-button nzType="primary">
+                  <i nz-icon
+                     nzType="plus"
+                     nzTheme="outline">
+                  </i>
+                  New Scan
+                </button>
+              </div>
+            </div>
+            <br/>
+            <app-address-scan-table #addressScanTable [incidentId]="incidentId" [autoReload]="true"
                                     (detailClick)="onAddressScanClick($event)"></app-address-scan-table>
           </nz-tab>
         </nz-tabset>
@@ -70,5 +83,57 @@
   </nz-drawer>
 </nz-drawer>
 
+<nz-drawer
+  [nzVisible]="showAddScanDrawer"
+  [nzWidth]="600"
+  [nzClosable]="false"
+  (nzOnClose)="closeAddScanDrawer()">
+  <app-address-scan-form [projectId]="incident?.projectId"
+                         [currencyId]="selectedIncidentClusterNode?.currency?.id"
+                         [address]="selectedIncidentClusterNode?.clusterId"
+                         (onSubmitted)="onScanSubmitted($event)"></app-address-scan-form>
+</nz-drawer>
+
+<nz-drawer [nzVisible]="showIncidentClusterDrawer" [nzWidth]="720" [nzClosable]="false"
+           (nzOnClose)="closeIncidentClusterDrawer()">
+  <app-address-info [projectId]="incident?.projectId" [currencyId]="selectedIncidentClusterNode?.currency?.id"
+                    [address]="selectedIncidentClusterNode?.clusterId"
+                    [tags]="selectedIncidentClusterNode?.tags"></app-address-info>
+</nz-drawer>
 
 
+<nz-drawer
+  [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom': '53px' }"
+  [nzMaskClosable]="false"
+  [nzWidth]="720"
+  [nzVisible]="showEditIncidentClusterDrawer"
+  nzTitle="Attribute"
+  (nzOnClose)="closeEditIncidentClusterDrawer()"
+>
+  <form nz-form [formGroup]="editIncidentClusterForm">
+    <div nz-row nzGutter="8">
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label>Title</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="title" placeholder="please enter title"/>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="24">
+        <nz-form-item>
+          <nz-form-label>Description</nz-form-label>
+          <nz-form-control>
+            <nz-input-group>
+              <textarea formControlName="subtitle" nz-input rows="4"></textarea>
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+  <div class="footer">
+    <button nz-button nzType="default"  (click)="closeEditIncidentClusterDrawer()" style="margin-right: 8px;">Cancel</button>
+    <button nz-button nzType="primary"  (click)="submitEditIncidentDrawer()" [nzLoading]="isSubmittingEditIncidentCluster">Submit</button>
+  </div>
+</nz-drawer>

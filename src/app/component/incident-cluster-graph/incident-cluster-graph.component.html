@@ -1,0 +1,7 @@
+<ul class="menu" #ctxMenu>
+  <li *ngFor="let action of nodeActions" class="menu-item" (click)="onNodeActionClick(action.name)">{{action.title}}</li>
+</ul>
+<nz-spin [nzSpinning]="isLoading" nzTip="Loading...">
+  <div class="diagram" #diagramDiv></div>
+</nz-spin>
+

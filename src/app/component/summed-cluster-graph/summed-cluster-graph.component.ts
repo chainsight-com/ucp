@@ -25,7 +25,6 @@ import {
 import {GraphLinksModel, GraphObject} from "gojs";
 import {Cluster} from "cluster";
 
-export const textStyle = {font: 'bold 12pt Segoe UI, sans-serif', stroke: 'black', margin: new go.Margin(5, 5, 0, 5)}
 
 export const COLORS = [
   ['#AC193D', '#BF1E4B'],
@@ -316,7 +315,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
   }
 
   onNodeActionClick(actionName: string) {
-    this.onNodeAction.emit({action: actionName, nodes: this.diagram.selection.toArray().map(n => n.data)});
+    this.onNodeAction.emit({action: actionName, nodes: this.diagram.selection.toArray().map(n => n.data.payload)});
   }
 
   loadNeighbor(node: ClusterNodeDto, pageIdx: number, pageSize: number, isLastUpdater: (isLast: boolean) => void) {
