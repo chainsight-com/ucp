@@ -19,6 +19,7 @@ import {AddressCasePageComponent} from "./pages/address-case/address-case-page/a
 import {AddressCaseAddPageComponent} from "./pages/address-case/address-case-add-page/address-case-add-page.component";
 import {AddressCaseDetailPageComponent} from "./pages/address-case/address-case-detail-page/address-case-detail-page.component";
 import {IncidentDetailPageComponent} from "./pages/incident/incident-detail-page/incident-detail-page.component";
+import {IncidentPageComponent} from "./pages/incident/incident-page/incident-page.component";
 
 
 const routes: Routes = [
@@ -38,6 +39,7 @@ const routes: Routes = [
       {path: 'address-scan-batch', component: AddressScanBatchPageComponent, },
       {path: 'address-scan-batch/create', component: AddressScanBatchAddPageComponent, },
 
+      {path: 'incident', component: IncidentPageComponent },
       {path: 'incident/:id', component: IncidentDetailPageComponent },
 
       {path: 'qr-scan', component: ScanPageComponent, },

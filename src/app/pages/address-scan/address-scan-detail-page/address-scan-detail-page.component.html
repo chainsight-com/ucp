@@ -215,6 +215,19 @@
                 <app-address-case-detail-page  *ngIf="addressCase" [addressCaseId]="addressCase?.id" [showComments]="true" [showScans]="false" ></app-address-case-detail-page>
               </nz-spin>
             </nz-tab>
+            <nz-tab [nzTitle]="'Incident'">
+              <ng-template nz-tab>
+                <button (click)="addIncident()" nz-button nzType="primary">
+                  <i nz-icon
+                     nzType="plus"
+                     nzTheme="outline">
+                  </i>
+                  Open Incident from Scan
+                </button>
+                <br/>
+                <app-incident-table #incidentTable [projectId]="addressScan?.project?.id" [currencyId]="addressScan?.currency?.id" [address]="addressScan?.address" (detailClick)="handleDetailClick($event)"></app-incident-table>
+              </ng-template>
+            </nz-tab>
           </nz-tabset>
         </div>
       </div>
@@ -225,7 +238,12 @@
   <!--Cluster Detail Drawer-->
 
   <nz-drawer [nzVisible]="showClusterDrawer" [nzWidth]="720" [nzClosable]="false" (nzOnClose)="closeClusterDrawer()">
-    <app-address-info [projectId]="addressScan?.project.id" [currencyId]="addressScan.currency.id" [address]="selectedClusterNode?.clusterId" [tags]="selectedClusterNode?.tags"></app-address-info>
+    <app-address-info [projectId]="addressScan?.project?.id" [currencyId]="addressScan?.currency?.id" [address]="selectedClusterNode?.clusterId" [tags]="selectedClusterNode?.tags"></app-address-info>
+  </nz-drawer>
+
+  <!--Add Incident Drawer-->
+  <nz-drawer [nzVisible]="showIncidentFormDrawer" [nzWidth]="720" [nzClosable]="false" (nzOnClose)="closeIncidentFormDrawer()">
+    <app-incident-form [projectId]="addressScan?.project?.id" (onSubmitted)="onIncidentFormSubmit($event)"></app-incident-form>
   </nz-drawer>
 
 </nz-content>

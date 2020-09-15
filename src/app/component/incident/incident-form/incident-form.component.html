@@ -1,0 +1,20 @@
+<form nz-form [formGroup]="form">
+  <nz-form-item>
+    <nz-form-label nzRequired nzFor="title">Title</nz-form-label>
+    <nz-form-control>
+      <nz-input-group>
+        <input nz-input formControlName="title" id="title" />
+      </nz-input-group>
+      <nz-form-explain *ngIf="form.get('title')?.dirty && form.get('title')?.errors">
+        The input is not a valid title!
+      </nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control
+      style="text-align: right;">
+      <button nz-button nzType="default" (click)="clear()" [disabled]="isSubmitting">Reset</button>
+      <button nz-button nzType="primary" [nzLoading]="isSubmitting" (click)="submit()">Open</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

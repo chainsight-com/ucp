@@ -6,7 +6,13 @@ import {
   AddressCaseApiService,
   AddressCaseDto,
   AddressScanApiService,
-  AddressScanDto, ClusterNodeDto, FlowGraphDto, PageOfTaintRecordDto, PageOfWitnessDto
+  AddressScanDto,
+  ClusterNodeDto,
+  FlowGraphDto,
+  IncidentAddressScanApiService,
+  IncidentDto,
+  PageOfTaintRecordDto,
+  PageOfWitnessDto
 } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
@@ -18,6 +24,8 @@ import {RuleCategory} from "../../../models/type/rule-category.enum";
 import BigNumber from "bignumber.js";
 import {RiskLevel} from "../../../models/type/risk-level.enum";
 import {CcPipe} from "../../../pipes/cc.pipe";
+import {IncidentAddressScanCreation} from "@profyu/unblock-ng-sdk/model/incident-address-scan-creation";
+import {IncidentTableComponent} from "../../../component/incident/incident-table/incident-table.component";
 
 @Component({
   selector: 'app-address-scan-detail-page',
@@ -26,6 +34,8 @@ import {CcPipe} from "../../../pipes/cc.pipe";
 })
 export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
+  @ViewChild("incidentTable", {static: false})
+  private incidentTable: IncidentTableComponent;
 
   public isLoadingPipeline = false;
   public addressScan: AddressScanDto = {};
@@ -42,6 +52,9 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   ];
   public showClusterDrawer: boolean = false;
   public selectedClusterNode: ClusterNodeDto;
+
+  public showIncidentFormDrawer: boolean = false;
+
 
   public get selectedClusterTags(): string {
     return this.selectedClusterNode.tags.map(t => t.tag).join(", ")
@@ -99,7 +112,8 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
               private addressScanApiService: AddressScanApiService,
-              private addressCaseApiService: AddressCaseApiService) {
+              private addressCaseApiService: AddressCaseApiService,
+              private incidentAddressScanApiService: IncidentAddressScanApiService) {
   }
 
 
@@ -555,11 +569,42 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     this.showClusterDrawer = false;
   }
 
-  handleClusterGraphAction(e: { action: string; node: ClusterNodeDto }) {
-    if(e.action === 'detail'){
-      this.selectedClusterNode = e.node;
-      this.showClusterDrawer = true;
+  handleClusterGraphAction(e: { action: string; nodes: ClusterNodeDto[] }) {
+    if (e.action === 'detail') {
+      if (e.nodes.length === 1) {
+        this.selectedClusterNode = e.nodes[0];
+        this.showClusterDrawer = true;
+      }
     }
 
+
+  }
+
+  addIncident() {
+    this.showIncidentFormDrawer = true;
+  }
+
+  closeIncidentFormDrawer() {
+    this.showIncidentFormDrawer = false;
+  }
+
+  onIncidentFormSubmit(incident: IncidentDto) {
+    const body: IncidentAddressScanCreation = {
+      addressScanId: this.addressScan.id,
+      incidentId: incident.id,
+    }
+    this.showIncidentFormDrawer = false;
+    this.incidentAddressScanApiService.createIncidentAddressScanUsingPOST(body)
+      .pipe(
+        take(1)
+      ).subscribe(resp => {
+      this.incidentTable.reload(true, false);
+
+    }, console.error)
+
+  }
+
+  handleDetailClick(row: IncidentDto) {
+    this.router.navigate(['incident', row.id]);
   }
 }

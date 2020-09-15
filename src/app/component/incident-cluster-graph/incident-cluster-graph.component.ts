@@ -4,7 +4,7 @@ import {
   AddressScanDto,
   ClusterEdgeDto,
   ClusterNodeDto, IncidentApiService, IncidentClusterDto, IncidentClusterEdgeDto,
-  IncidentClusterNodeDto, IncidentDto
+  IncidentClusterNodeDto, IncidentDto, IncidentHolderEdge, IncidentHolderNode
 } from "@profyu/unblock-ng-sdk";
 import * as go from "gojs";
 import {take} from "rxjs/operators";
@@ -19,7 +19,8 @@ export const COLORS = [
   ['#008299', '#00A0B1'],
   ['#D24726', '#DC572E'],
   ['#008A00', '#00A600'],
-  ['#094AB2', '#0A5BC4']
+  ['#094AB2', '#0A5BC4'],
+  ['#575757', '#6c6c6c']
 ];
 
 
@@ -74,6 +75,7 @@ export class IncidentClusterGraphComponent implements OnInit {
     data.payload.incidentCluster = incidentCluster;
     this.diagram.model.setDataProperty(data, "headerText", incidentCluster.title);
     this.diagram.model.setDataProperty(data, "bodyText", incidentCluster.subtitle);
+    this.diagram.model.setDataProperty(data, "headerFill", incidentCluster.fillColor);
 
 
   }
@@ -96,14 +98,107 @@ export class IncidentClusterGraphComponent implements OnInit {
         take(1)
       ).subscribe((graph) => {
       this.render(graph.nodes, graph.edges.content);
+
+      this.incidentApiService.listIncidentHolderUsingGET(this.incidentId)
+        .pipe(
+          take(1)
+        ).subscribe(graph => {
+        this.renderHolder(graph.nodes, graph.edges);
+      });
+
       this.isLoading = false;
     }, console.error, () => {
       this.isLoading = false;
     });
+
   }
 
   render(nodes: IncidentClusterNodeDto[], edges: IncidentClusterEdgeDto[]) {
+    const $ = go.GraphObject.make;
+    const maxTextLength = 12;
+    if (!this.diagram) {
+      this.initDiagram();
+    }
+    const model = this.diagram.model as GraphLinksModel;
+    const filteredNodes = nodes
+      .filter(n => !model.findNodeDataForKey(n.clusterId));
 
+    model.addNodeDataCollection(filteredNodes
+      .map((node) => {
+        return {
+          key: node.clusterId,
+          headerText: node.incidentCluster.title,
+          headerFill: node.incidentCluster.fillColor,
+          bodyText: node.incidentCluster.subtitle,
+          footerFill: COLORS[1][0],
+          footerText: this.nodeFooterTextOf(node, maxTextLength),
+          toolTipText: null,
+          tags: node.tags.map(t => t.tag),
+          payload: node,
+          neighborPage: {
+            pageIdx: 0,
+            pageSize: 10,
+            isLast: false,
+          }
+        }
+          ;
+      }));
+
+    model.addLinkDataCollection(edges.map(edge => {
+      const fromNode: IncidentClusterNodeDto = model.findNodeDataForKey(edge.fromClusterId).payload;
+      return {
+        from: edge.fromClusterId,
+        to: edge.toClusterId,
+        payload: edge,
+        width: 4,
+        text: `${new CcPipe().transform(edge.amount, fromNode.currency.unitRate).toFixed(3)} ${fromNode.currency.name.toUpperCase()}`,
+      };
+    }));
+
+    // add tag nodes/links
+    const nodesWithTags = filteredNodes
+      .filter(n => n.tags && n.tags.length > 0);
+    model.addNodeDataCollection(nodesWithTags.map(node => {
+      return {
+        key: "comment-" + node.clusterId,
+        text: node.tags.map(t => t.tag).join(", "),
+        category: "Comment"
+      }
+    }));
+    model.addLinkDataCollection(nodesWithTags.map((node => {
+      return {
+        from: "comment-" + node.clusterId,
+        to: node.clusterId,
+        category: "Comment"
+      };
+    })));
+
+  }
+
+  renderHolder(nodes: IncidentHolderNode[], edges: IncidentHolderEdge[]) {
+    const model = this.diagram.model as GraphLinksModel;
+    model.addNodeDataCollection(nodes.map(node => {
+      return {
+        key: "holder-" + node.holder.id,
+        legalName: node.holder.legalName,
+        level: node.holder.level,
+        nationality: node.holder.nationality,
+        avatarUrl: "/assets/img/man.png",
+        payload: node,
+        category: "Holder"
+      }
+    }));
+    model.addLinkDataCollection(edges.map((edge => {
+      return {
+        from: "holder-" + edge.holderId,
+        to: edge.clusterId,
+        category: "Holder"
+      };
+    })));
+  }
+
+
+  initDiagram() {
     go.Shape.defineFigureGenerator('RoundedTopRectangle', function (shape: go.Shape, w: number, h: number) {
       // this figure takes one parameter, the size of the corner
       let p1 = 5;  // default corner size
@@ -149,74 +244,14 @@ export class IncidentClusterGraphComponent implements OnInit {
       geo.spot2 = new go.Spot(1, 1, -0.3 * p1, -0.3 * p1);
       return geo;
     });
-
-    const $ = go.GraphObject.make;
-    const maxTextLength = 12;
-    if (!this.diagram) {
-      this.initDiagram();
-    }
-    const model = this.diagram.model as GraphLinksModel;
-    const filteredNodes = nodes
-      .filter(n => !model.findNodeDataForKey(n.clusterId));
-
-    model.addNodeDataCollection(filteredNodes
-      .map((node) => {
-        return {
-          key: node.clusterId,
-          headerText: node.incidentCluster.title,
-          bodyText: node.incidentCluster.subtitle,
-          footerFill: COLORS[1][0],
-          footerText: this.nodeFooterTextOf(node, maxTextLength),
-          toolTipText: null,
-          tags: node.tags.map(t => t.tag),
-          payload: node,
-          neighborPage: {
-            pageIdx: 0,
-            pageSize: 10,
-            isLast: false,
-          }
-        }
-          ;
-      }));
-
-    model.addLinkDataCollection(edges.map(edge => {
-      const fromNode: IncidentClusterNodeDto = model.findNodeDataForKey(edge.fromClusterId).payload;
-      return {
-        from: edge.fromClusterId,
-        to: edge.toClusterId,
-        payload: edge,
-        width: 4,
-        text: `${new CcPipe().transform(edge.amount, fromNode.currency.unitRate)} ${fromNode.currency.name.toUpperCase()}`,
-      };
-    }));
-
-    // add tag nodes/links
-    const nodesWithTags = filteredNodes
-      .filter(n => n.tags && n.tags.length > 0);
-    model.addNodeDataCollection(nodesWithTags.map(node => {
-      return {
-        key: "comment-" + node.clusterId,
-        text: node.tags.map(t => t.tag).join(", "),
-        category: "Comment"
-      }
-    }));
-    model.addLinkDataCollection(nodesWithTags.map((node => {
-      return {
-        from: "comment-" + node.clusterId,
-        to: node.clusterId,
-        category: "Comment"
-      };
-    })));
-  }
-
-
-  initDiagram() {
     const $ = go.GraphObject.make;
     this.diagram = $(go.Diagram, this.diagramRef.nativeElement, // the ID of the DIV HTML element
       {
         initialAutoScale: go.Diagram.UniformToFill,
         'animationManager.isEnabled': false,
-        layout: $(go.LayeredDigraphLayout),
+        layout: $(go.LayeredDigraphLayout, {
+          layerSpacing: 100
+        }),
         ObjectDoubleClicked: (e) => {
           const subject = e.subject as GraphObject;
           if (subject.part instanceof go.Node) {
@@ -290,10 +325,10 @@ export class IncidentClusterGraphComponent implements OnInit {
       {fromSpot: go.Spot.RightSide, toSpot: go.Spot.LeftSide},
       $(go.Panel, "Auto",
         $(go.Shape, "RoundedTopRectangle",
-          {fill: "white"},
+          {},
           new go.Binding("fill", "headerFill")),
         $(go.TextBlock,
-          {margin: new go.Margin(2, 2, 0, 2), textAlign: "center"},
+          {stroke: "white" ,margin: new go.Margin(2, 2, 0, 2), textAlign: "center"},
           new go.Binding("text", "headerText"))
       ),
       $(go.Panel, "Auto",
@@ -363,6 +398,73 @@ export class IncidentClusterGraphComponent implements OnInit {
           {stroke: "brown", strokeWidth: 1, fill: "lightyellow"})
       ));
 
+    // define holder template
+    function textStyle() {
+      return {font: "9pt  Segoe UI,sans-serif", stroke: "white"};
+    }
+
+    this.diagram.nodeTemplateMap.add("Holder",
+      $(go.Node, "Auto",
+        {},
+        {},
+        new go.Binding("text", "name"),
+        // define the node's outer shape
+        $(go.Shape, "Rectangle",
+          {
+            name: "SHAPE", fill: COLORS[4][0], stroke: COLORS[4][1],
+            // set the port properties:
+            portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"
+          }),
+        $(go.Panel, "Horizontal",
+          $(go.Picture,
+            {
+              name: "Picture",
+              desiredSize: new go.Size(40, 40),
+              margin: new go.Margin(6, 8, 6, 10),
+            },
+            new go.Binding("source", "avatarUrl")),
+          // define the panel where the text will appear
+          $(go.Panel, "Table",
+            {
+              maxSize: new go.Size(150, 999),
+              margin: new go.Margin(6, 10, 0, 3),
+              defaultAlignment: go.Spot.Left
+            },
+            $(go.RowColumnDefinition, {column: 2, width: 4}),
+            $(go.TextBlock, textStyle(),  // the name
+              {
+                name: "NAMETB",
+                row: 0, column: 0, columnSpan: 5,
+                font: "12pt Segoe UI,sans-serif",
+                editable: true, isMultiline: false,
+                minSize: new go.Size(10, 16)
+              },
+              new go.Binding("text", "legalName").makeTwoWay()),
+            $(go.TextBlock, "Risk: ", textStyle(), {row: 1, column: 0}),
+            $(go.TextBlock, textStyle(),
+              {
+                row: 1, column: 1, columnSpan: 4,
+                editable: true, isMultiline: false,
+                minSize: new go.Size(10, 14),
+                margin: new go.Margin(0, 0, 0, 3)
+              },
+              new go.Binding("text", "level").makeTwoWay()),
+            $(go.TextBlock, "Nationality: ", textStyle(), {row: 2, column: 0}),
+            $(go.TextBlock, textStyle(),
+              {
+                row: 2, column: 1, columnSpan: 4,
+                editable: true, isMultiline: false,
+                minSize: new go.Size(10, 14),
+                margin: new go.Margin(0, 0, 0, 3)
+              },
+              new go.Binding("text", "nationality").makeTwoWay()),
+          )  // end Table Panel
+        ) // end Horizontal Panel
+      ));
+    this.diagram.linkTemplateMap.add("Holder",
+      $(go.Link, go.Link.Orthogonal,
+        {corner: 5},
+        $(go.Shape, {strokeWidth: 4, stroke: "#00a4a4"})));
 
     const data = {
       class: 'go.GraphLinksModel',

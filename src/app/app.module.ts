@@ -49,6 +49,9 @@ import { IncidentDetailPageComponent } from './pages/incident/incident-detail-pa
 import { AddressScanTableComponent } from './component/address-scan/address-scan-table/address-scan-table.component';
 import { IncidentClusterGraphComponent } from './component/incident-cluster-graph/incident-cluster-graph.component';
 import { AddressScanFormComponent } from './component/address-scan/address-scan-form/address-scan-form.component';
+import { IncidentTableComponent } from './component/incident/incident-table/incident-table.component';
+import { IncidentFormComponent } from './component/incident/incident-form/incident-form.component';
+import { IncidentPageComponent } from './pages/incident/incident-page/incident-page.component';
 
 const menus: any[] = [
 
@@ -105,6 +108,18 @@ const menus: any[] = [
     url: null,
     level: 1,
     icon: 'area-chart',
+    children: []
+  },
+  {
+    id: 'incident-page',
+    name: 'Incident Management',
+    subtitle: 'Incident management',
+    context: null,
+    path: '/incident',
+    url: null,
+    icon: 'area-chart',
+    disabled: false,
+    level: 1,
     children: []
   },
   // {
@@ -297,6 +312,9 @@ registerLocaleData(en);
     AddressScanTableComponent,
     IncidentClusterGraphComponent,
     AddressScanFormComponent,
+    IncidentTableComponent,
+    IncidentFormComponent,
+    IncidentPageComponent,
   ],
   imports: [
     BrowserModule,

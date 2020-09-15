@@ -1,0 +1,27 @@
+<div class="func-area">
+  <div class="pfy-btn-right">
+    <button (click)="addIncident()" nz-button nzType="primary">
+      <i nz-icon
+         nzType="plus"
+         nzTheme="outline">
+      </i>
+      Open Incident
+    </button>
+    <button (click)="incidentTable.reload(true, false)" nzType="default" nz-button>
+      <i nz-icon
+         nzType="reload"
+         nzTheme="outline">
+      </i>Reload
+    </button>
+  </div>
+</div>
+<div class="pfy-page-content">
+  <app-incident-table #incidentTable
+                          [projectId]="project?.id"
+                          (detailClick)="handleDetailClick($event)"></app-incident-table>
+</div>
+
+<!--Add Incident Drawer-->
+<nz-drawer [nzVisible]="showIncidentFormDrawer" [nzWidth]="720" [nzClosable]="false" (nzOnClose)="closeIncidentFormDrawer()">
+  <app-incident-form [projectId]="project?.id" (onSubmitted)="onIncidentFormSubmit($event)"></app-incident-form>
+</nz-drawer>

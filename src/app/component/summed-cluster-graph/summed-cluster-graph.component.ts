@@ -142,7 +142,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
         to: edge.toClusterId,
         payload: edge,
         width: 4,
-        text: `${new CcPipe().transform(edge.amount, this.addressScan.currency.unitRate)} ${this.addressScan.currency.name.toUpperCase()}`,
+        text: `${new CcPipe().transform(edge.amount, this.addressScan.currency.unitRate).toFixed(3)}\n${this.addressScan.currency.name.toUpperCase()}`,
       };
     }));
 
@@ -192,7 +192,9 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
       {
         initialAutoScale: go.Diagram.UniformToFill,
         'animationManager.isEnabled': false,
-        layout: $(go.LayeredDigraphLayout),
+        layout: $(go.LayeredDigraphLayout, {
+          layerSpacing: 60
+        }),
         ObjectDoubleClicked: (e) => {
           const subject = e.subject as GraphObject;
           if (subject.part instanceof go.Node) {
@@ -284,7 +286,19 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
         $("Shape",
           {strokeWidth: 1.5}),
         $("Shape",
-          {toArrow: "Standard", stroke: null})
+          {toArrow: "Standard", stroke: null}),
+        $(go.Panel, "Auto",
+          $(go.Shape,  // the label background, which becomes transparent around the edges
+            {
+              fill: $(go.Brush, "Radial",
+                {0: "rgb(245, 245, 245)", 0.7: "rgb(245, 245, 245)", 1: "rgba(245, 245, 245, 0)"}),
+              stroke: null
+            }),
+          $(go.TextBlock, "transition",  // the label text
+            {},
+            // editing the text automatically updates the model data
+            new go.Binding("text", "text"))
+        )
       );
 
     // define comment template

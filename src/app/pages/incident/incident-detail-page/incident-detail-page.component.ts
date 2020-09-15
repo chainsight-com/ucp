@@ -26,6 +26,20 @@ import {IncidentClusterGraphComponent} from "../../../component/incident-cluster
 import {AddressScanTableComponent} from "../../../component/address-scan/address-scan-table/address-scan-table.component";
 import {IncidentClusterUpdates} from "@profyu/unblock-ng-sdk/model/incident-cluster-updates";
 
+
+export const COLORS = [
+  ['#AC193D', '#BF1E4B'],
+  ['#2672EC', '#2E8DEF'],
+  ['#8C0095', '#A700AE'],
+  ['#5133AB', '#643EBF'],
+  ['#008299', '#00A0B1'],
+  ['#D24726', '#DC572E'],
+  ['#008A00', '#00A600'],
+  ['#094AB2', '#0a5bc4'],
+  ['#575757', '#6c6c6c']
+];
+
+
 @Component({
   selector: 'app-incident-detail-page',
   templateUrl: './incident-detail-page.component.html',
@@ -45,6 +59,9 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   @ViewChild("addressScanTable", {static: false})
   private addressScanTable: AddressScanTableComponent;
+
+  private fillColorOptions: string[] = COLORS.map(c => c[0]);
+  private strokeColorOptions: string[] = COLORS.map(c => c[1]);
 
   public isLoadingIncident = false;
   public incident: IncidentDto = {};
@@ -262,6 +279,8 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
             isAddress: n.addresses.length == 1,
             title: this.currentAddressScan.currency.name.toUpperCase(),
             subtitle: n.clusterId,
+            fillColor: COLORS[8][0],
+            strokeColor: COLORS[8][1],
           };
         })
       };
