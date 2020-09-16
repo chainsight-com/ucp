@@ -88,7 +88,7 @@
   [nzWidth]="600"
   [nzClosable]="false"
   (nzOnClose)="closeAddScanDrawer()">
-  <app-address-scan-form [projectId]="incident?.projectId"
+  <app-address-scan-form #addressScanForm [projectId]="incident?.projectId"
                          [currencyId]="selectedIncidentClusterNode?.currency?.id"
                          [address]="selectedIncidentClusterNode?.clusterId"
                          (onSubmitted)="onScanSubmitted($event)"></app-address-scan-form>

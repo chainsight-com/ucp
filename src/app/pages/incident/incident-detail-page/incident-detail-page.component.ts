@@ -25,6 +25,7 @@ import {NzDrawerRef, NzMessageService} from "ng-zorro-antd";
 import {IncidentClusterGraphComponent} from "../../../component/incident-cluster-graph/incident-cluster-graph.component";
 import {AddressScanTableComponent} from "../../../component/address-scan/address-scan-table/address-scan-table.component";
 import {IncidentClusterUpdates} from "@profyu/unblock-ng-sdk/model/incident-cluster-updates";
+import {AddressScanFormComponent} from "../../../component/address-scan/address-scan-form/address-scan-form.component";
 
 
 export const COLORS = [
@@ -59,6 +60,9 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   @ViewChild("addressScanTable", {static: false})
   private addressScanTable: AddressScanTableComponent;
+
+  @ViewChild("addressScanForm", {static: false})
+  private addressScanForm: AddressScanFormComponent;
 
   private fillColorOptions: string[] = COLORS.map(c => c[0]);
   private strokeColorOptions: string[] = COLORS.map(c => c[1]);
@@ -303,7 +307,8 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
   }
 
   addScan() {
-
+    this.selectedIncidentClusterNode = null;
+    this.showAddScanDrawer = true;
   }
 
   onIncidentGraphAction(e: { action: string; nodes: IncidentClusterNodeDto[] }) {
