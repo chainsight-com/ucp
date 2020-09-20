@@ -130,7 +130,7 @@ export class IncidentClusterGraphComponent implements OnInit {
           headerText: node.incidentCluster.title,
           headerFill: node.incidentCluster.fillColor,
           bodyText: node.incidentCluster.subtitle,
-          footerFill: COLORS[1][0],
+          footerFill: node.incidentCluster.isAddress ? COLORS[1][0] : COLORS[6][0],
           footerText: this.nodeFooterTextOf(node, maxTextLength),
           toolTipText: null,
           tags: node.tags.map(t => t.tag),

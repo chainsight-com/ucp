@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild} from '@angular/core';
 import {
+  Address,
   AddressCaseApiService,
   AddressCaseCommentApiService,
   AddressCaseCommentCreation,
@@ -104,10 +105,12 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   public showClusterDrawer: boolean = false;
   public selectedClusterNode: ClusterNodeDto;
+  public selectedClusterAddresses: Address[] = [];
 
 
   public showAddScanDrawer: boolean = false;
   public selectedIncidentClusterNode: IncidentClusterNodeDto;
+  public selectedIncidentClusterAddresses: Address[] = [];
   public incidentGraphActions = [
     {
       name: 'scan',
@@ -272,6 +275,12 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
       if (e.nodes.length > 0) {
         this.showClusterDrawer = true;
         this.selectedClusterNode = e.nodes[0];
+        this.selectedClusterAddresses = e.nodes[0].addresses.map(a => {
+          return {
+            currencyId: this.selectedClusterNode.currencyId,
+            address: a,
+          };
+        });
       }
     } else if (e.action === 'add') {
       const payload: IncidentClusterBulkCreation = {
@@ -280,7 +289,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
         data: e.nodes.map(n => {
           return {
             clusterId: n.clusterId,
-            isAddress: n.addresses.length == 1,
+            isAddress: n.addresses.length === 1,
             title: this.currentAddressScan.currency.name.toUpperCase(),
             subtitle: n.clusterId,
             fillColor: COLORS[8][0],
@@ -322,6 +331,12 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
       if (e.nodes.length > 0) {
         this.selectedIncidentClusterNode = e.nodes[0];
         this.showIncidentClusterDrawer = true;
+        this.selectedIncidentClusterAddresses = e.nodes[0].addresses.map(a => {
+          return {
+            currencyId: e.nodes[0].currency.id,
+            address: a,
+          };
+        });
       }
     } else if (e.action === 'attribute') {
       if (e.nodes.length > 0) {
@@ -378,7 +393,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
 
     this.isSubmittingEditIncidentCluster = true;
-    this.incidentClusterApiService.updateIncidentClusterUsingPUT(this.selectedIncidentClusterNode.incidentCluster.id ,body)
+    this.incidentClusterApiService.updateIncidentClusterUsingPUT(this.selectedIncidentClusterNode.incidentCluster.id, body)
       .pipe(
         take(1),
         finalize(() => {

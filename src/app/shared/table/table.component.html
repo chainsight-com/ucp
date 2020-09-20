@@ -63,7 +63,7 @@
         </ng-container>
       </ng-template>
       <ng-template #tagBlock>
-        <ng-container *ngIf="(!!col.type) && col.type ==='tag'; else formatterBlock">
+        <ng-container *ngIf="(!!col.type) && col.type ==='tag' && col.formatter(data); else formatterBlock">
           <td>
             <nz-tag nzColor="{{col.formatter(data)['color']}}">{{col.formatter(data)['title']}}</nz-tag>
           </td>

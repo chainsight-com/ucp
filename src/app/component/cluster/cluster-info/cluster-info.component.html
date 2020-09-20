@@ -1,0 +1,11 @@
+<nz-descriptions [nzColumn]="2" nzTitle="Cluster Information">
+  <nz-descriptions-item nzTitle="Cluster" [nzSpan]="2">{{clusterId}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Tags" [nzSpan]="2">
+    <app-scored-tag [tags]="tags"></app-scored-tag>
+  </nz-descriptions-item>
+</nz-descriptions>
+<nz-divider></nz-divider>
+<h4 nz-title>Addresses</h4>
+<br>
+<app-address-table [projectId]="projectId" [addresses]="addresses"></app-address-table>
+

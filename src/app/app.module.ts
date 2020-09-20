@@ -52,6 +52,8 @@ import { AddressScanFormComponent } from './component/address-scan/address-scan-
 import { IncidentTableComponent } from './component/incident/incident-table/incident-table.component';
 import { IncidentFormComponent } from './component/incident/incident-form/incident-form.component';
 import { IncidentPageComponent } from './pages/incident/incident-page/incident-page.component';
+import { ClusterInfoComponent } from './component/cluster/cluster-info/cluster-info.component';
+import { AddressTableComponent } from './component/cluster/address-table/address-table.component';
 
 const menus: any[] = [
 
@@ -315,6 +317,8 @@ registerLocaleData(en);
     IncidentTableComponent,
     IncidentFormComponent,
     IncidentPageComponent,
+    ClusterInfoComponent,
+    AddressTableComponent,
   ],
   imports: [
     BrowserModule,

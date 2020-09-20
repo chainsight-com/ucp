@@ -1,0 +1,8 @@
+<pfy-table
+  [tblColumns]="columns"
+  [tblData]="content"
+  [total]="content?.length"
+  [loading]="isLoading"
+  (actionClick)="handleAction($event)"
+  [pageable]="false"
+></pfy-table>

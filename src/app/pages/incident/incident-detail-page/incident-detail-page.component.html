@@ -71,15 +71,17 @@
   [nzClosable]="false"
   (nzOnClose)="closeAddressScanDrawer()">
   <nz-spin [nzSpinning]="isLoadingAddressScanGraph">
-    {{showClusterDrawer}}
     <app-summed-cluster-graph
       [addressScanId]="currentAddressScan?.id" [nodeActions]="addressScanGraphActions"
       (onNodeAction)="onAddressScanGraphAction($event)">
     </app-summed-cluster-graph>
   </nz-spin>
-  <nz-drawer [nzVisible]="showClusterDrawer" [nzWidth]="720" [nzClosable]="false" (nzOnClose)="closeClusterDrawer()">
-    <app-address-info [projectId]="incident?.projectId" [currencyId]="selectedClusterNode?.currencyId"
+  <nz-drawer [nzVisible]="showClusterDrawer" [nzWidth]="1000" [nzClosable]="false" (nzOnClose)="closeClusterDrawer()">
+    <app-address-info *ngIf="selectedClusterNode?.addresses?.length === 1" [projectId]="incident?.projectId" [currencyId]="selectedClusterNode?.currencyId"
                       [address]="selectedClusterNode?.clusterId" [tags]="selectedClusterNode?.tags"></app-address-info>
+    <app-cluster-info *ngIf="selectedClusterNode?.addresses?.length > 1" [projectId]="incident?.projectId" [clusterId]="selectedClusterNode?.clusterId"
+                      [addresses]="selectedClusterAddresses"
+                      [tags]="selectedClusterNode?.tags"></app-cluster-info>
   </nz-drawer>
 </nz-drawer>
 
@@ -94,11 +96,15 @@
                          (onSubmitted)="onScanSubmitted($event)"></app-address-scan-form>
 </nz-drawer>
 
-<nz-drawer [nzVisible]="showIncidentClusterDrawer" [nzWidth]="720" [nzClosable]="false"
+<nz-drawer [nzVisible]="showIncidentClusterDrawer" [nzWidth]="1000" [nzClosable]="false"
            (nzOnClose)="closeIncidentClusterDrawer()">
-  <app-address-info [projectId]="incident?.projectId" [currencyId]="selectedIncidentClusterNode?.currency?.id"
+  <app-address-info *ngIf="selectedIncidentClusterNode?.incidentCluster?.isAddress" [projectId]="incident?.projectId" [currencyId]="selectedIncidentClusterNode?.currency?.id"
                     [address]="selectedIncidentClusterNode?.clusterId"
                     [tags]="selectedIncidentClusterNode?.tags"></app-address-info>
+
+  <app-cluster-info *ngIf="!(selectedIncidentClusterNode?.incidentCluster?.isAddress)" [projectId]="incident?.projectId" [clusterId]="selectedIncidentClusterNode?.clusterId"
+                    [addresses]="selectedIncidentClusterAddresses"
+                    [tags]="selectedIncidentClusterNode?.tags"></app-cluster-info>
 </nz-drawer>
 
 
