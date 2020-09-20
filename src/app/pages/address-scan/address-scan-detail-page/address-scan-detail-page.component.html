@@ -237,8 +237,11 @@
 
   <!--Cluster Detail Drawer-->
 
-  <nz-drawer [nzVisible]="showClusterDrawer" [nzWidth]="720" [nzClosable]="false" (nzOnClose)="closeClusterDrawer()">
-    <app-address-info [projectId]="addressScan?.project?.id" [currencyId]="addressScan?.currency?.id" [address]="selectedClusterNode?.clusterId" [tags]="selectedClusterNode?.tags"></app-address-info>
+  <nz-drawer [nzVisible]="showClusterDrawer" [nzWidth]="1000" [nzClosable]="false" (nzOnClose)="closeClusterDrawer()">
+    <app-address-info *ngIf="selectedClusterNode?.addresses?.length === 1" [projectId]="addressScan?.project?.id" [currencyId]="addressScan?.currency?.id" [address]="selectedClusterNode?.clusterId" [tags]="selectedClusterNode?.tags"></app-address-info>
+    <app-cluster-info *ngIf="selectedClusterNode?.addresses?.length > 1" [projectId]="addressScan?.project?.id" [clusterId]="selectedClusterNode?.clusterId"
+                      [addresses]="selectedClusterAddresses"
+                      [tags]="selectedClusterNode?.tags"></app-cluster-info>
   </nz-drawer>
 
   <!--Add Incident Drawer-->

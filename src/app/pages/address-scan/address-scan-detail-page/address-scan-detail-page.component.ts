@@ -3,6 +3,7 @@ import {Router, ActivatedRoute} from '@angular/router';
 import {Subject, pipe} from 'rxjs';
 import {takeUntil, take, mergeMap, finalize} from 'rxjs/operators';
 import {
+  Address,
   AddressCaseApiService,
   AddressCaseDto,
   AddressScanApiService,
@@ -26,6 +27,7 @@ import {RiskLevel} from "../../../models/type/risk-level.enum";
 import {CcPipe} from "../../../pipes/cc.pipe";
 import {IncidentAddressScanCreation} from "@profyu/unblock-ng-sdk/model/incident-address-scan-creation";
 import {IncidentTableComponent} from "../../../component/incident/incident-table/incident-table.component";
+
 
 @Component({
   selector: 'app-address-scan-detail-page',
@@ -52,6 +54,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   ];
   public showClusterDrawer: boolean = false;
   public selectedClusterNode: ClusterNodeDto;
+  public selectedClusterAddresses: Address[] = [];
 
   public showIncidentFormDrawer: boolean = false;
 
@@ -574,6 +577,12 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       if (e.nodes.length === 1) {
         this.selectedClusterNode = e.nodes[0];
         this.showClusterDrawer = true;
+        this.selectedClusterAddresses = e.nodes[0].addresses.map(a => {
+          return {
+            currencyId: this.selectedClusterNode.currencyId,
+            address: a,
+          };
+        });
       }
     }
 
