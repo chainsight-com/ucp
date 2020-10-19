@@ -124,41 +124,6 @@
                 </tbody>
               </nz-table>
             </nz-tab>
-            <nz-tab [nzTitle]="'Taint'">
-              <h2>Taint Table</h2>
-              <nz-table #basicTable [nzLoading]="isTaintRecordLoading" [nzData]="taintRecordPage.content"
-                        nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="taintRecordPageIdx"
-                        [(nzPageSize)]="taintRecordPageSize" [nzTotal]="taintRecordPage.totalElements"
-                        (nzPageIndexChange)="reloadAddressTaintJobResultPage(false)"
-                        (nzPageSizeChange)="reloadAddressTaintJobResultPage(true)">
-                <thead>
-                <tr>
-                  <th>
-                    Address
-                  </th>
-                  <th>Total Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                <tr *ngFor="let data of basicTable.data">
-                  <td>
-                    <nz-badge *ngIf="data.direction==='F'" nzStatus="processing" style="margin-right: 5px;">
-                    </nz-badge>
-                    <i class="direction-icon" *ngIf="data.direction==='F'" nz-icon nzType="swap-right"
-                       nzTheme="outline"></i>
-                    {{ data.address }}
-                    <i class="direction-icon" *ngIf="data.direction==='B'" nz-icon nzType="swap-right"
-                       nzTheme="outline"></i>
-                    <nz-badge *ngIf="data.direction==='B'" nzStatus="processing" style="margin-left: 5px;"></nz-badge>
-                  </td>
-
-                  <td>{{ data.totalAmount | cc: addressScan.currency.unitRate}} {{addressScan.currency.name.toUpperCase()}}</td>
-
-                </tr>
-                </tbody>
-              </nz-table>
-            </nz-tab>
             <nz-tab [nzTitle]="'Flow'" (nzSelect)="flowTabSelected()">
               <nz-spin [nzSpinning]="isLoadingDiagram" nzTip="Loading...">
                 <div nz-row>
