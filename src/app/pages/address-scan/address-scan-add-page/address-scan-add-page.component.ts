@@ -19,9 +19,9 @@ import {UserService} from "../../../services/user.service";
 })
 export class AddressScanAddPageComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
-  private project: ProjectDto;
-  private currencyId: string;
-  private address: string;
+  public project: ProjectDto;
+  public currencyId: string;
+  public address: string;
 
   constructor(private router: Router,
               private qrScannerService: QrScannerService,

@@ -65,8 +65,8 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
   @ViewChild("addressScanForm", {static: false})
   private addressScanForm: AddressScanFormComponent;
 
-  private fillColorOptions: string[] = COLORS.map(c => c[0]);
-  private strokeColorOptions: string[] = COLORS.map(c => c[1]);
+  public fillColorOptions: string[] = COLORS.map(c => c[0]);
+  public strokeColorOptions: string[] = COLORS.map(c => c[1]);
 
   public isLoadingIncident = false;
   public incident: IncidentDto = {};
