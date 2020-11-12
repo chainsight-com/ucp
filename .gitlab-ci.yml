@@ -7,6 +7,10 @@ stages:
 image: docker:git
 variables:
   IMAGE_NAME: unblock-ui
+cache:
+  key: shared
+  paths:
+    - node_modules
 build-dev:
   stage: build
   image: node:10.16.0-stretch
