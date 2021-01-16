@@ -56,6 +56,7 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
       backwardEnabled: [true],
       backwardMaxLevel: [3, [Validators.required]],
       dateRange: [[]],
+      enableAddressCluster: [false, [Validators.required]]
     });
 
     this.reload();
@@ -108,6 +109,7 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
       endingTime: formValue.dateRange[1],
       timeoutSecs: 3600,
       batchMode: false,
+      enableAddressCluster: formValue.enableAddressCluster,
     };
 
 

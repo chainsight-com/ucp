@@ -4,9 +4,16 @@ stages:
   - test
   - deploy
   - rollout
-image: docker:git
+image: docker:19.03.13
 variables:
   IMAGE_NAME: unblock-ui
+  CHART_NAME: unblock-ui
+  CHART_DIR: ./chart/unblock-ui
+  RELEASE_NAME: unblock-ui
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+services:
+  - docker:19.03.13-dind
 cache:
   key: shared
   paths:
@@ -53,95 +60,38 @@ build-prod:
   artifacts:
     paths:
     - dist/
-deploy-devel:
+deploy:
   stage: deploy
-  image: profyu/gcloud-sdk:218.0.0
+  image: profyu/gcloud-sdk:285.0.1
   only:
     refs:
-    - /^\d+\.\d+\.\d+-beta$/
+      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-ui
   dependencies:
-  - build-dev
+    - build
   before_script:
-  - export PATH=/google-cloud-sdk/bin/:$PATH
-  - gcloud auth activate-service-account --key-file $PROFYU_GCLOUD_SERVICE_KEY
-  - gcloud auth configure-docker
+    - export PATH=/google-cloud-sdk/bin/:$PATH
+    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
+    - gcloud auth configure-docker
   script:
-  - docker build . -t $GCR_HOST/$PROFYU_GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-  - docker push $GCR_HOST/$PROFYU_GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-deploy-staging:
-  stage: deploy
-  image: profyu/gcloud-sdk:218.0.0
-  only:
-    refs:
-    - /^\d+\.\d+\.\d+-ga$/
-  dependencies:
-  - build-staging
-  before_script:
-  - export PATH=/google-cloud-sdk/bin/:$PATH
-  - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-  - gcloud auth configure-docker
-  script:
-  - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-  - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-deploy-prod:
-  stage: deploy
-  image: google/cloud-sdk:252.0.0
-  only:
-    refs:
-    - /^\d+\.\d+\.\d+$/
-  dependencies:
-  - build-prod
-  before_script:
-  - export PATH=/google-cloud-sdk/bin/:$PATH
-  - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-  - gcloud auth configure-docker
-  script:
-  - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-  - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-rollout-devel:
+    - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+    - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+    - helm package $CHART_DIR --app-version $CI_COMMIT_TAG --version $CI_COMMIT_TAG
+    - curl --data-binary @$CHART_NAME-$CI_COMMIT_TAG.tgz $CHARTMUSEUM_URL/api/charts
+rollout-dev:
   stage: rollout
-  image: profyu/kubectl:1.13.0
+  image: profyu/gcloud-sdk:285.0.1
   variables:
-    KUBE_DEPLOY_NS: unblock-devel
-    KUBE_DEPLOY_APP: unblock-ui-devel
-    KUBE_DEPLOY_CONTAINER: unblock-ui
+    KUBE_DEPLOY_NS: unblock-dev
+    INGRESS_HOST: ucp2.dev.unblock-analysis.com
+    INGRESS_TLS_NAME: unblock-ui-tls
+    INGRESS_PATH: /
   only:
     refs:
-    - /^\d+\.\d+\.\d+-beta$/
-  script:
-  - kubectl --server=$DEV_KUBE_URL --token=$DEV_KUBE_TOKEN --insecure-skip-tls-verify=true -n $KUBE_DEPLOY_NS set image deployment.v1.apps/$KUBE_DEPLOY_APP $KUBE_DEPLOY_CONTAINER=$GCR_HOST/$PROFYU_GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG --record
-rollout-staging:
-  stage: rollout
-  image: profyu/gcloud-sdk:218.0.0
-  variables:
-    KUBE_DEPLOY_NS: unblock-staging
-    KUBE_DEPLOY_APP: unblock-ui-staging
-    KUBE_DEPLOY_CONTAINER: unblock-ui
-  only:
-    refs:
-    - /^\d+\.\d+\.\d+-ga$/
+      - /^\d+\.\d+\.\d+-beta$/@ucp/unblock-ui
   before_script:
-  - export PATH=/google-cloud-sdk/bin/:$PATH
-  - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-  - gcloud container clusters get-credentials $GCLOUD_KUBE_CLUSTER_NAME -z $GCLOUD_KUBE_ZONE --project $GCLOUD_PROJECT_ID
+    - export PATH=/google-cloud-sdk/bin/:$PATH
+    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
+    - gcloud container clusters get-credentials $GCLOUD_KUBE_CLUSTER_NAME -z $GCLOUD_KUBE_ZONE --project $GCLOUD_PROJECT_ID
   script:
-  - kubectl -n $KUBE_DEPLOY_NS set image deployment.v1.apps/$KUBE_DEPLOY_APP $KUBE_DEPLOY_CONTAINER=$GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG --record
-rollout-prod:
-  stage: rollout
-  image: profyu/gcloud-sdk:218.0.0
-  variables:
-    KUBE_DEPLOY_NS: unblock-prod
-    KUBE_DEPLOY_APP: unblock-ui-prod
-    KUBE_DEPLOY_CONTAINER: unblock-ui
-  only:
-    refs:
-    - /^\d+\.\d+\.\d+$/
-  before_script:
-  - export PATH=/google-cloud-sdk/bin/:$PATH
-  - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-  - gcloud container clusters get-credentials $GCLOUD_KUBE_CLUSTER_NAME -z $GCLOUD_KUBE_ZONE --project $GCLOUD_PROJECT_ID
-  script:
-  - kubectl -n $KUBE_DEPLOY_NS set image deployment.v1.apps/$KUBE_DEPLOY_APP $KUBE_DEPLOY_CONTAINER=$GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG --record
-
-
-
+    - helm repo add chartmuseum $CHARTMUSEUM_URL
+    - helm upgrade --install -n $KUBE_DEPLOY_NS --version $CI_COMMIT_TAG --set ingress.hosts[0].host=$INGRESS_HOST --set ingress.hosts[0].paths[0]="$INGRESS_PATH" --set ingress.tls[0].hosts[0]=$INGRESS_HOST --set ingress.tls[0].secretName=$INGRESS_TLS_NAME $RELEASE_NAME chartmuseum/$CHART_NAME

@@ -8,6 +8,12 @@
     </nz-breadcrumb>
   </div>
 </div>
+<div nz-row>
+  <div nz-col>
+    <nz-alert *ngIf="addressScan?.status === 'FAILED'" nzType="error" nzMessage="Error" nzDescription="Failed to load logs: Unsuccessful HTTP response" nzShowIcon> </nz-alert>
+  </div>
+</div>
+
 
 
 <div style="padding: 12px;">
@@ -15,7 +21,7 @@
     <nz-col [nzSpan]="4">
       <nz-card>
         <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[5] : '...'" [nzTitle]="'Critical'"
-                      [nzValueStyle]="{ color: '#EB2F96' }">
+          [nzValueStyle]="{ color: '#EB2F96' }">
         </nz-statistic>
 
       </nz-card>
@@ -23,7 +29,7 @@
     <nz-col [nzSpan]="4">
       <nz-card>
         <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[4] : '...'" [nzTitle]="'High'"
-                      [nzValueStyle]="{ color: '#f5222d' }">
+          [nzValueStyle]="{ color: '#f5222d' }">
         </nz-statistic>
 
       </nz-card>
@@ -32,7 +38,7 @@
     <nz-col [nzSpan]="4">
       <nz-card>
         <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[3] : '...'" [nzTitle]="'Medium'"
-                      [nzValueStyle]="{ color: '#fa8c16' }">
+          [nzValueStyle]="{ color: '#fa8c16' }">
         </nz-statistic>
 
       </nz-card>
@@ -41,7 +47,7 @@
     <nz-col [nzSpan]="4">
       <nz-card>
         <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[2] : '...'" [nzTitle]="'Low'"
-                      [nzValueStyle]="{ color: '#2f54eb' }">
+          [nzValueStyle]="{ color: '#2f54eb' }">
         </nz-statistic>
         <ng-template #prefixTplOne><i nz-icon type="arrow-up"></i></ng-template>
       </nz-card>
@@ -49,7 +55,7 @@
     <nz-col [nzSpan]="4">
       <nz-card>
         <nz-statistic [nzValue]="!!witnessSummary ? witnessSummary[1] : '...'" [nzTitle]="'Normal'"
-                      [nzValueStyle]="{ color: '#52c41a' }">
+          [nzValueStyle]="{ color: '#52c41a' }">
         </nz-statistic>
 
       </nz-card>
@@ -80,47 +86,47 @@
                 </div>
               </div>
               <nz-table #issueTable [nzLoading]="isWitnessLoading" [nzData]="witnessResultPage.content"
-                        nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="witnessPageIdx"
-                        [(nzPageSize)]="witnessPageSize" [nzTotal]="witnessResultPage.totalElements"
-                        (nzPageIndexChange)="reloadWitnessPage(false, category)"
-                        (nzPageSizeChange)="reloadWitnessPage(true, category)">
+                nzShowSizeChanger [nzFrontPagination]="false" [(nzPageIndex)]="witnessPageIdx"
+                [(nzPageSize)]="witnessPageSize" [nzTotal]="witnessResultPage.totalElements"
+                (nzPageIndexChange)="reloadWitnessPage(false, category)"
+                (nzPageSizeChange)="reloadWitnessPage(true, category)">
                 <thead>
-                <tr>
-                  <th>
-                    Rule ID
-                  </th>
-                  <th>
-                    Category
-                  </th>
-                  <th style="width: 100px;">Risk Level</th>
+                  <tr>
+                    <th>
+                      Rule ID
+                    </th>
+                    <th>
+                      Category
+                    </th>
+                    <th style="width: 100px;">Risk Level</th>
 
-                  <th>Description</th>
-                </tr>
+                    <th>Description</th>
+                  </tr>
                 </thead>
                 <tbody>
 
-                <tr *ngFor="let data of issueTable.data">
-                  <td>
-                    <a href="#">{{ data.ruleId }}</a>
-                  </td>
-                  <td>
-                    {{ data.category }}
-                  </td>
-                  <td>
-                    <nz-badge *ngIf="data.riskLevel === 5" nzColor="pink" nzText="Critical"></nz-badge>
-                    <nz-badge *ngIf="data.riskLevel === 4" nzColor="red" nzText="High"></nz-badge>
-                    <nz-badge *ngIf="data.riskLevel === 3" nzColor="orange" nzText="Medium"></nz-badge>
-                    <nz-badge *ngIf="data.riskLevel === 2" nzColor="geekblue" nzText="Low"></nz-badge>
-                    <nz-badge *ngIf="data.riskLevel === 1" nzColor="green" nzText="Normal"></nz-badge>
-                  </td>
+                  <tr *ngFor="let data of issueTable.data">
+                    <td>
+                      <a href="#">{{ data.ruleId }}</a>
+                    </td>
+                    <td>
+                      {{ data.category }}
+                    </td>
+                    <td>
+                      <nz-badge *ngIf="data.riskLevel === 5" nzColor="pink" nzText="Critical"></nz-badge>
+                      <nz-badge *ngIf="data.riskLevel === 4" nzColor="red" nzText="High"></nz-badge>
+                      <nz-badge *ngIf="data.riskLevel === 3" nzColor="orange" nzText="Medium"></nz-badge>
+                      <nz-badge *ngIf="data.riskLevel === 2" nzColor="geekblue" nzText="Low"></nz-badge>
+                      <nz-badge *ngIf="data.riskLevel === 1" nzColor="green" nzText="Normal"></nz-badge>
+                    </td>
 
-                  <td>
-                    <markdown class="markdown-body" ngPreserveWhitespaces>{{data.description}}</markdown>
-                    <!-- <code></code> -->
-                  </td>
+                    <td>
+                      <markdown class="markdown-body" ngPreserveWhitespaces>{{data.description}}</markdown>
+                      <!-- <code></code> -->
+                    </td>
 
 
-                </tr>
+                  </tr>
                 </tbody>
               </nz-table>
             </nz-tab>
@@ -134,8 +140,7 @@
                 <div nz-row>
                   <div nz-col nzSpan="22" nzOffset="1" style="text-align: right;">
                     <button (click)="loadMoreEdges()" nz-button nzType="primary" nzShape="round"><i nz-icon
-                                                                                                    nzType="reload"
-                                                                                                    nzTheme="outline"></i>Load
+                        nzType="reload" nzTheme="outline"></i>Load
                       More
                     </button>
                   </div>
@@ -159,15 +164,14 @@
             <nz-tab [nzTitle]="'Cluster'">
               <ng-template nz-tab>
 
-                <app-summed-cluster-graph *ngIf="addressScan"
-                                          [addressScanId]="addressScan?.id"
-                                          [nodeActions]="clusterGraphActions" (onNodeAction)="handleClusterGraphAction($event)"></app-summed-cluster-graph>
+                <app-summed-cluster-graph *ngIf="addressScan" [addressScanId]="addressScan?.id"
+                  [nodeActions]="clusterGraphActions" (onNodeAction)="handleClusterGraphAction($event)">
+                </app-summed-cluster-graph>
               </ng-template>
             </nz-tab>
             <nz-tab [nzTitle]="'Case'">
               <nz-spin [nzSpinning]="isAddressCaseLoading" nzTip="Loading...">
-                <nz-empty *ngIf="!addressCase" [nzNotFoundContent]="contentTpl"
-                          [nzNotFoundFooter]="footerTpl">
+                <nz-empty *ngIf="!addressCase" [nzNotFoundContent]="contentTpl" [nzNotFoundFooter]="footerTpl">
                   <ng-template #contentTpl>
                     <span>Address </span>
                     <span nz-text><code>{{addressScan?.address}}</code></span>
@@ -177,20 +181,21 @@
                     <button nz-button nzType="primary" (click)="openCase()">Open Now</button>
                   </ng-template>
                 </nz-empty>
-                <app-address-case-detail-page  *ngIf="addressCase" [addressCaseId]="addressCase?.id" [showComments]="true" [showScans]="false" ></app-address-case-detail-page>
+                <app-address-case-detail-page *ngIf="addressCase" [addressCaseId]="addressCase?.id"
+                  [showComments]="true" [showScans]="false"></app-address-case-detail-page>
               </nz-spin>
             </nz-tab>
             <nz-tab [nzTitle]="'Incident'">
               <ng-template nz-tab>
                 <button (click)="addIncident()" nz-button nzType="primary">
-                  <i nz-icon
-                     nzType="plus"
-                     nzTheme="outline">
+                  <i nz-icon nzType="plus" nzTheme="outline">
                   </i>
                   Open Incident from Scan
                 </button>
-                <br/>
-                <app-incident-table #incidentTable [projectId]="addressScan?.project?.id" [currencyId]="addressScan?.currency?.id" [address]="addressScan?.address" (detailClick)="handleDetailClick($event)"></app-incident-table>
+                <br />
+                <app-incident-table #incidentTable [projectId]="addressScan?.project?.id"
+                  [currencyId]="addressScan?.currency?.id" [address]="addressScan?.address"
+                  (detailClick)="handleDetailClick($event)"></app-incident-table>
               </ng-template>
             </nz-tab>
           </nz-tabset>
@@ -203,15 +208,19 @@
   <!--Cluster Detail Drawer-->
 
   <nz-drawer [nzVisible]="showClusterDrawer" [nzWidth]="1000" [nzClosable]="false" (nzOnClose)="closeClusterDrawer()">
-    <app-address-info *ngIf="selectedClusterNode?.addresses?.length === 1" [projectId]="addressScan?.project?.id" [currencyId]="addressScan?.currency?.id" [address]="selectedClusterNode?.clusterId" [tags]="selectedClusterNode?.tags"></app-address-info>
-    <app-cluster-info *ngIf="selectedClusterNode?.addresses?.length > 1" [projectId]="addressScan?.project?.id" [clusterId]="selectedClusterNode?.clusterId"
-                      [addresses]="selectedClusterAddresses"
-                      [tags]="selectedClusterNode?.tags"></app-cluster-info>
+    <app-address-info *ngIf="selectedClusterNode?.addresses?.length === 1" [projectId]="addressScan?.project?.id"
+      [currencyId]="addressScan?.currency?.id" [address]="selectedClusterNode?.clusterId"
+      [tags]="selectedClusterNode?.tags"></app-address-info>
+    <app-cluster-info *ngIf="selectedClusterNode?.addresses?.length > 1" [projectId]="addressScan?.project?.id"
+      [clusterId]="selectedClusterNode?.clusterId" [addresses]="selectedClusterAddresses"
+      [tags]="selectedClusterNode?.tags"></app-cluster-info>
   </nz-drawer>
 
   <!--Add Incident Drawer-->
-  <nz-drawer [nzVisible]="showIncidentFormDrawer" [nzWidth]="720" [nzClosable]="false" (nzOnClose)="closeIncidentFormDrawer()">
-    <app-incident-form [projectId]="addressScan?.project?.id" (onSubmitted)="onIncidentFormSubmit($event)"></app-incident-form>
+  <nz-drawer [nzVisible]="showIncidentFormDrawer" [nzWidth]="720" [nzClosable]="false"
+    (nzOnClose)="closeIncidentFormDrawer()">
+    <app-incident-form [projectId]="addressScan?.project?.id" (onSubmitted)="onIncidentFormSubmit($event)">
+    </app-incident-form>
   </nz-drawer>
 
 </nz-content>
