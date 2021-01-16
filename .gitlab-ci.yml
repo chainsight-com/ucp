@@ -23,7 +23,7 @@ build-dev:
   image: node:10.16.0-stretch
   only:
     refs:
-      - /^\d+\.\d+\.\d+-beta$/@unblock/unblock-ui
+      - /^\d+\.\d+\.\d+-beta$/@ucp/unblock-ui
   before_script:
     - cp $NPM_RC ~/.npmrc
   script:
@@ -37,7 +37,7 @@ build-staging:
   image: node:10.16.0-stretch
   only:
     refs:
-      - /^\d+\.\d+\.\d+-ga$/@unblock/unblock-ui
+      - /^\d+\.\d+\.\d+-ga$/@ucp/unblock-ui
   before_script:
     - cp $NPM_RC ~/.npmrc
   script:
@@ -51,7 +51,7 @@ build-prod:
   image: node:10.16.0-stretch
   only:
     refs:
-      - /^\d+\.\d+\.\d+$/@unblock/unblock-ui
+      - /^\d+\.\d+\.\d+$/@ucp/unblock-ui
   before_script:
     - cp $NPM_RC ~/.npmrc
   script:
