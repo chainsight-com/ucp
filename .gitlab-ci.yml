@@ -60,14 +60,48 @@ build-prod:
   artifacts:
     paths:
     - dist/
-deploy:
+deploy-dev:
   stage: deploy
   image: profyu/gcloud-sdk:285.0.1
   only:
     refs:
-      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+-beta$/@ucp/unblock-ui
   dependencies:
-    - build
+    - build-dev
+  before_script:
+    - export PATH=/google-cloud-sdk/bin/:$PATH
+    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
+    - gcloud auth configure-docker
+  script:
+    - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+    - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+    - helm package $CHART_DIR --app-version $CI_COMMIT_TAG --version $CI_COMMIT_TAG
+    - curl --data-binary @$CHART_NAME-$CI_COMMIT_TAG.tgz $CHARTMUSEUM_URL/api/charts
+deploy-staging:
+  stage: deploy
+  image: profyu/gcloud-sdk:285.0.1
+  only:
+    refs:
+      - /^\d+\.\d+\.\d+-ga$/@ucp/unblock-ui
+  dependencies:
+    - build-staging
+  before_script:
+    - export PATH=/google-cloud-sdk/bin/:$PATH
+    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
+    - gcloud auth configure-docker
+  script:
+    - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+    - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+    - helm package $CHART_DIR --app-version $CI_COMMIT_TAG --version $CI_COMMIT_TAG
+    - curl --data-binary @$CHART_NAME-$CI_COMMIT_TAG.tgz $CHARTMUSEUM_URL/api/charts
+deploy-prod:
+  stage: deploy
+  image: profyu/gcloud-sdk:285.0.1
+  only:
+    refs:
+      - /^\d+\.\d+\.\d+$/@ucp/unblock-ui
+  dependencies:
+    - build-prod
   before_script:
     - export PATH=/google-cloud-sdk/bin/:$PATH
     - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
