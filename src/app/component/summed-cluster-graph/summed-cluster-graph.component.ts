@@ -126,7 +126,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
           text: node.clusterId.length > maxTextLength ? node.clusterId.substr(0, 4) + '...' + node.clusterId.substr(node.clusterId.length - 4, 4) : node.clusterId,
           textColor: '#ffffff',
           toolTipText: null,
-          tags: node.tags.map(t => t.tag),
+          labels: node.labels.map(l => l.label),
           payload: node,
           neighborPage: {
             pageIdx: 0,
@@ -148,11 +148,11 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
 
     // add comment nodes/links
     const nodesWithTags = filteredNodes
-      .filter(n => n.tags && n.tags.length > 0);
+      .filter(n => n.labels && n.labels.length > 0);
     model.addNodeDataCollection(nodesWithTags.map(node => {
       return {
         key: "comment-" + node.clusterId,
-        text: node.tags.map(t => t.tag).join(", "),
+        text: node.labels.map(l => l.label).join(", "),
         category: "Comment"
       }
     }));

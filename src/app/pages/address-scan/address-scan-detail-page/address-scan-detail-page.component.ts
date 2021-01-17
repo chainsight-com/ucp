@@ -12,7 +12,6 @@ import {
   FlowGraphDto,
   IncidentAddressScanApiService,
   IncidentDto,
-  PageOfTaintRecordDto,
   PageOfWitnessDto
 } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
@@ -60,7 +59,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
 
   public get selectedClusterTags(): string {
-    return this.selectedClusterNode.tags.map(t => t.tag).join(", ")
+    return this.selectedClusterNode.labels.map(t => t.label).join(", ")
   }
 
   // address case
@@ -73,15 +72,6 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   public witnessPageSize = 500;
   public witnessResultPage: PageOfWitnessDto = {
     last: false,
-    content: [],
-  };
-
-  // taint
-  public isTaintRecordLoading = false;
-  public taintRecordPageIdx = 0;
-  public taintRecordPageSize = 30;
-  public taintRecordPage: PageOfTaintRecordDto = {
-    last: true,
     content: [],
   };
 
@@ -110,6 +100,14 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
 
   private unsubscribe$ = new Subject<void>();
+
+  public riskLevels = {
+    "5": {name: "Critical", colorAlias: "pink"},
+    "4": {name: "High", colorAlias: "red"},
+    "3": {name: "Medium", colorAlias: "orange"},
+    "2": {name: "Low", colorAlias: "geekblue"},
+    "1": {name: "Normal", colorAlias: "green"},
+  }
 
 
   constructor(private router: Router,
@@ -163,27 +161,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       this.witnessSummary[1] = Number(sc.riskNormalCount);
 
       this.reloadWitnessPage(true);
-      this.reloadAddressTaintJobResultPage(true);
       this.reloadAddressCase()
     }, console.error, () => {
       this.isLoadingPipeline = false;
     });
-  }
-
-  reloadAddressTaintJobResultPage(reset: boolean) {
-    if (reset) {
-      this.taintRecordPageIdx = 0;
-    }
-    this.isTaintRecordLoading = false;
-    this.addressScanApiService.paginateAddressScanTaintTableUsingGET(this.addressScan.id, this.taintRecordPageIdx, this.taintRecordPageSize)
-      .pipe(
-        take(1),
-      ).subscribe(page => {
-      this.taintRecordPage = page;
-    }, console.error, () => {
-      this.isTaintRecordLoading = false;
-    });
-
   }
 
   reloadWitnessPage(resetPage: boolean, category?: RuleCategory) {
@@ -236,7 +217,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     }, console.error);
   }
 
-  initDiagram(tag?: string) {
+  initDiagram(label?: string) {
     setTimeout(() => {
       this.isLoadingDiagram = true;
     });
@@ -362,13 +343,13 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
                 font: 'bold 10pt Segoe UI, sans-serif'
               },
               new go.Binding('text', '', (n) => {
-                if (n.isHighlighted && n.data.tags.length) {
-                  return n.data.tags.join('\n');
+                if (n.isHighlighted && n.data.labels.length) {
+                  return n.data.labels.map(lbl => `${lbl.label} (${this.riskLevels[lbl.riskLevel]})`).join('\n');
                 }
                 return null;
               }).ofObject(),
               new go.Binding('visible', '', (n) => {
-                return n.data.tags.length && n.isHighlighted;
+                return n.data.labels.length && n.isHighlighted;
               }).ofObject()
             )
           ),
@@ -467,7 +448,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
             text: node.address,
             textColor: node.address === this.addressScan.address ? '#0040FF' : 'black',
             toolTipText: null,
-            tags: [],
+            labels: node.labels,
 
           };
           return n;

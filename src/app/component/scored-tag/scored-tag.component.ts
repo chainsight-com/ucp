@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TagWithScore} from "@profyu/unblock-ng-sdk";
+import {LabelWithRisk} from "@profyu/unblock-ng-sdk";
 
 @Component({
   selector: 'app-scored-tag',
@@ -9,7 +9,7 @@ import {TagWithScore} from "@profyu/unblock-ng-sdk";
 export class ScoredTagComponent implements OnInit {
 
   @Input()
-  public tags: TagWithScore[];
+  public labels: LabelWithRisk[];
 
   constructor() { }
 

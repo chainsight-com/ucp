@@ -133,7 +133,7 @@ export class IncidentClusterGraphComponent implements OnInit {
           footerFill: node.incidentCluster.isAddress ? COLORS[1][0] : COLORS[6][0],
           footerText: this.nodeFooterTextOf(node, maxTextLength),
           toolTipText: null,
-          tags: node.tags.map(t => t.tag),
+          tags: node.tags.map(t => t.label),
           payload: node,
           neighborPage: {
             pageIdx: 0,
@@ -161,7 +161,7 @@ export class IncidentClusterGraphComponent implements OnInit {
     model.addNodeDataCollection(nodesWithTags.map(node => {
       return {
         key: "comment-" + node.clusterId,
-        text: node.tags.map(t => t.tag).join(", "),
+        text: node.tags.map(t => t.label).join(", "),
         category: "Comment"
       }
     }));

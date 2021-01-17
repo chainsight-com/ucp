@@ -113,11 +113,7 @@
                       {{ data.category }}
                     </td>
                     <td>
-                      <nz-badge *ngIf="data.riskLevel === 5" nzColor="pink" nzText="Critical"></nz-badge>
-                      <nz-badge *ngIf="data.riskLevel === 4" nzColor="red" nzText="High"></nz-badge>
-                      <nz-badge *ngIf="data.riskLevel === 3" nzColor="orange" nzText="Medium"></nz-badge>
-                      <nz-badge *ngIf="data.riskLevel === 2" nzColor="geekblue" nzText="Low"></nz-badge>
-                      <nz-badge *ngIf="data.riskLevel === 1" nzColor="green" nzText="Normal"></nz-badge>
+                      <nz-badge [nzColor]="riskLevels[data.riskLevel].colorAlias" [nzText]="riskLevels[data.riskLevel].name"></nz-badge>
                     </td>
 
                     <td>
@@ -210,10 +206,10 @@
   <nz-drawer [nzVisible]="showClusterDrawer" [nzWidth]="1000" [nzClosable]="false" (nzOnClose)="closeClusterDrawer()">
     <app-address-info *ngIf="selectedClusterNode?.addresses?.length === 1" [projectId]="addressScan?.project?.id"
       [currencyId]="addressScan?.currency?.id" [address]="selectedClusterNode?.clusterId"
-      [tags]="selectedClusterNode?.tags"></app-address-info>
+      [tags]="selectedClusterNode?.labels"></app-address-info>
     <app-cluster-info *ngIf="selectedClusterNode?.addresses?.length > 1" [projectId]="addressScan?.project?.id"
       [clusterId]="selectedClusterNode?.clusterId" [addresses]="selectedClusterAddresses"
-      [tags]="selectedClusterNode?.tags"></app-cluster-info>
+      [tags]="selectedClusterNode?.labels"></app-cluster-info>
   </nz-drawer>
 
   <!--Add Incident Drawer-->
