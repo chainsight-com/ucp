@@ -81,6 +81,7 @@
                     <label nz-radio-button [nzValue]="null">All</label>
                     <label nz-radio-button [nzValue]="'SEND'">Send</label>
                     <label nz-radio-button [nzValue]="'RECEIVE'">Receive</label>
+                    <label nz-radio-button [nzValue]="'PREDICT'">Predict</label>
                     <label nz-radio-button [nzValue]="'OTHER'">Other</label>
                   </nz-radio-group>
                 </div>
@@ -192,6 +193,17 @@
                 <app-incident-table #incidentTable [projectId]="addressScan?.project?.id"
                   [currencyId]="addressScan?.currency?.id" [address]="addressScan?.address"
                   (detailClick)="handleDetailClick($event)"></app-incident-table>
+              </ng-template>
+            </nz-tab>
+            <nz-tab [nzTitle]="'Label'" (nzSelect)="chartTabSelected()">
+              <ng-template nz-tab>
+                <div nz-row>
+                  <div nz-col nzSpan="24">
+                    <nz-spin [nzSpinning]="isLoadingLabelSunburst" nzTip="Loading...">
+                      <div class="label-sunburst" #labelSunburstDiv></div>
+                    </nz-spin>
+                  </div>
+                </div>
               </ng-template>
             </nz-tab>
           </nz-tabset>

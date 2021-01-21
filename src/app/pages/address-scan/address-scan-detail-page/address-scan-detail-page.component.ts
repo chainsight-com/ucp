@@ -26,7 +26,11 @@ import {RiskLevel} from "../../../models/type/risk-level.enum";
 import {CcPipe} from "../../../pipes/cc.pipe";
 import {IncidentAddressScanCreation} from "@profyu/unblock-ng-sdk/model/incident-address-scan-creation";
 import {IncidentTableComponent} from "../../../component/incident/incident-table/incident-table.component";
+import * as Highcharts from 'highcharts';
 
+let Sunburst = require('highcharts/modules/sunburst');
+
+Sunburst(Highcharts);
 
 @Component({
   selector: 'app-address-scan-detail-page',
@@ -109,6 +113,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     "1": {name: "Normal", colorAlias: "green"},
   }
 
+  @ViewChild('labelSunburstDiv', {static: false})
+  private labelSunburstRef: ElementRef;
+  private labelSunburstChart: Highcharts.Chart;
+  public isLoadingLabelSunburst = false;
 
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
@@ -136,6 +144,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
           this.reload(params.id);
         }
       });
+
   }
 
   ngOnDestroy(): void {
@@ -597,4 +606,88 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   handleDetailClick(row: IncidentDto) {
     this.router.navigate(['incident', row.id]);
   }
+
+  chartTabSelected() {
+    if (!this.labelSunburstChart) {
+      setTimeout(() => {
+        this.isLoadingLabelSunburst = true;
+        this.addressScanApiService.getAddressScanLabelSunburstUsingGET(this.addressScan.id)
+          .pipe(
+            take(1),
+            finalize(() => { this.isLoadingLabelSunburst = false; })
+          ).subscribe(resp => {
+          const data = resp.data.map(d => {
+            return {
+              id: d.id,
+              name: d.name,
+              parent: d.parentId,
+              value: d.value
+            };
+          });
+
+          const options: any = {
+            chart: {
+              height: '400px'
+            },
+            title: {
+              text: 'Labels'
+            },
+            subtitle: {
+              text: ''
+            },
+            series: [{
+              type: "sunburst",
+              data: data,
+              allowDrillToNode: true,
+              cursor: 'pointer',
+              dataLabels: {
+                format: '{point.name}',
+                filter: {
+                  property: 'innerArcLength',
+                  operator: '>',
+                  value: 16
+                },
+                rotationMode: 'circular'
+              },
+              levels: [{
+                level: 1,
+                levelIsConstant: false,
+                dataLabels: {
+                  filter: {
+                    property: 'outerArcLength',
+                    operator: '>',
+                    value: 64
+                  }
+                }
+              }, {
+                level: 2,
+                colorByPoint: true
+              },
+                {
+                  level: 3,
+                  colorVariation: {
+                    key: 'brightness',
+                    to: -0.5
+                  }
+                }, {
+                  level: 4,
+                  colorVariation: {
+                    key: 'brightness',
+                    to: 0.5
+                  }
+                }]
+            }],
+            tooltip: {
+              headerFormat: "",
+              pointFormat: '<b>{point.name}</b>: <b>{point.value}</b>'
+            }
+          };
+          this.labelSunburstChart = Highcharts.chart(this.labelSunburstRef.nativeElement, options);
+
+        }, console.error);
+      }, 500);
+    }
+  }
+
+
 }
