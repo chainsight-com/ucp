@@ -1,3 +1,33 @@
+.build:
+  image: node:10.16.0-stretch
+  before_script:
+    - cp $NPM_RC ~/.npmrc
+  script:
+    - npm install
+    - npm run build:$ENV
+  artifacts:
+    paths:
+      - dist/
+.deploy:
+  image: profyu/gcloud-sdk:285.0.1
+  before_script:
+    - export PATH=/google-cloud-sdk/bin/:$PATH
+    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
+    - gcloud auth configure-docker
+  script:
+    - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+    - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+    - helm package $CHART_DIR --app-version $CI_COMMIT_TAG --version $CI_COMMIT_TAG
+    - curl --data-binary @$CHART_NAME-$CI_COMMIT_TAG.tgz $CHARTMUSEUM_URL/api/charts
+.rollout:
+  image: profyu/gcloud-sdk:285.0.1
+  before_script:
+    - export PATH=/google-cloud-sdk/bin/:$PATH
+    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
+    - gcloud container clusters get-credentials $GCLOUD_KUBE_CLUSTER_NAME -z $GCLOUD_KUBE_ZONE --project $GCLOUD_PROJECT_ID
+  script:
+    - helm repo add chartmuseum $CHARTMUSEUM_URL
+    - helm upgrade --install -n $KUBE_DEPLOY_NS --version $CI_COMMIT_TAG --set ingress.hosts[0].host=$INGRESS_HOST --set ingress.hosts[0].paths[0]="$INGRESS_PATH" --set ingress.tls[0].hosts[0]=$INGRESS_HOST --set ingress.tls[0].secretName=$INGRESS_TLS_NAME $RELEASE_NAME chartmuseum/$CHART_NAME
 stages:
   - validate
   - build
@@ -10,6 +40,8 @@ variables:
   CHART_NAME: unblock-ui
   CHART_DIR: ./chart/unblock-ui
   RELEASE_NAME: unblock-ui
+  INGRESS_TLS_NAME: unblock-ui-tls
+  INGRESS_PATH: /
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
 services:
@@ -19,149 +51,77 @@ cache:
   paths:
     - node_modules
 build-dev:
+  extends: .build
   stage: build
-  image: node:10.16.0-stretch
+  variables:
+    ENV: dev
   only:
     refs:
       - /^\d+\.\d+\.\d+-beta$/@ucp/unblock-ui
-  before_script:
-    - cp $NPM_RC ~/.npmrc
-  script:
-  - npm install
-  - npm run build:dev
-  artifacts:
-    paths:
-    - dist/
 build-staging:
+  extends: .build
   stage: build
-  image: node:10.16.0-stretch
+  variables:
+    ENV: staging
   only:
     refs:
       - /^\d+\.\d+\.\d+-ga$/@ucp/unblock-ui
-  before_script:
-    - cp $NPM_RC ~/.npmrc
-  script:
-  - npm install
-  - npm run build:staging
-  artifacts:
-    paths:
-    - dist/
 build-prod:
+  extends: .build
   stage: build
-  image: node:10.16.0-stretch
+  variables:
+    ENV: prod
   only:
     refs:
       - /^\d+\.\d+\.\d+$/@ucp/unblock-ui
-  before_script:
-    - cp $NPM_RC ~/.npmrc
-  script:
-  - npm install
-  - npm run build:prod
-  artifacts:
-    paths:
-    - dist/
 deploy-dev:
+  extends: .deploy
   stage: deploy
-  image: profyu/gcloud-sdk:285.0.1
   only:
     refs:
       - /^\d+\.\d+\.\d+-beta$/@ucp/unblock-ui
   dependencies:
     - build-dev
-  before_script:
-    - export PATH=/google-cloud-sdk/bin/:$PATH
-    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-    - gcloud auth configure-docker
-  script:
-    - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-    - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-    - helm package $CHART_DIR --app-version $CI_COMMIT_TAG --version $CI_COMMIT_TAG
-    - curl --data-binary @$CHART_NAME-$CI_COMMIT_TAG.tgz $CHARTMUSEUM_URL/api/charts
 deploy-staging:
+  extends: .deploy
   stage: deploy
-  image: profyu/gcloud-sdk:285.0.1
   only:
     refs:
       - /^\d+\.\d+\.\d+-ga$/@ucp/unblock-ui
   dependencies:
     - build-staging
-  before_script:
-    - export PATH=/google-cloud-sdk/bin/:$PATH
-    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-    - gcloud auth configure-docker
-  script:
-    - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-    - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-    - helm package $CHART_DIR --app-version $CI_COMMIT_TAG --version $CI_COMMIT_TAG
-    - curl --data-binary @$CHART_NAME-$CI_COMMIT_TAG.tgz $CHARTMUSEUM_URL/api/charts
 deploy-prod:
+  extends: .deploy
   stage: deploy
-  image: profyu/gcloud-sdk:285.0.1
   only:
     refs:
       - /^\d+\.\d+\.\d+$/@ucp/unblock-ui
   dependencies:
     - build-prod
-  before_script:
-    - export PATH=/google-cloud-sdk/bin/:$PATH
-    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-    - gcloud auth configure-docker
-  script:
-    - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-    - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
-    - helm package $CHART_DIR --app-version $CI_COMMIT_TAG --version $CI_COMMIT_TAG
-    - curl --data-binary @$CHART_NAME-$CI_COMMIT_TAG.tgz $CHARTMUSEUM_URL/api/charts
 rollout-dev:
+  extends: .rollout
   stage: rollout
-  image: profyu/gcloud-sdk:285.0.1
   variables:
     KUBE_DEPLOY_NS: unblock-dev
-    INGRESS_HOST: ucp2.dev.unblock-analysis.com
-    INGRESS_TLS_NAME: unblock-ui-tls
-    INGRESS_PATH: /
+    INGRESS_HOST: ucp.dev.unblock-analysis.com
   only:
     refs:
       - /^\d+\.\d+\.\d+-beta$/@ucp/unblock-ui
-  before_script:
-    - export PATH=/google-cloud-sdk/bin/:$PATH
-    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-    - gcloud container clusters get-credentials $GCLOUD_KUBE_CLUSTER_NAME -z $GCLOUD_KUBE_ZONE --project $GCLOUD_PROJECT_ID
-  script:
-    - helm repo add chartmuseum $CHARTMUSEUM_URL
-    - helm upgrade --install -n $KUBE_DEPLOY_NS --version $CI_COMMIT_TAG --set ingress.hosts[0].host=$INGRESS_HOST --set ingress.hosts[0].paths[0]="$INGRESS_PATH" --set ingress.tls[0].hosts[0]=$INGRESS_HOST --set ingress.tls[0].secretName=$INGRESS_TLS_NAME $RELEASE_NAME chartmuseum/$CHART_NAME
 rollout-staging:
+  extends: .rollout
   stage: rollout
-  image: profyu/gcloud-sdk:285.0.1
   variables:
     KUBE_DEPLOY_NS: unblock-staging
-    INGRESS_HOST: ucp2.staging.unblock-analysis.com
-    INGRESS_TLS_NAME: unblock-ui-tls
-    INGRESS_PATH: /
+    INGRESS_HOST: ucp.staging.unblock-analysis.com
   only:
     refs:
       - /^\d+\.\d+\.\d+-ga$/@ucp/unblock-ui
-  before_script:
-    - export PATH=/google-cloud-sdk/bin/:$PATH
-    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-    - gcloud container clusters get-credentials $GCLOUD_KUBE_CLUSTER_NAME -z $GCLOUD_KUBE_ZONE --project $GCLOUD_PROJECT_ID
-  script:
-    - helm repo add chartmuseum $CHARTMUSEUM_URL
-    - helm upgrade --install -n $KUBE_DEPLOY_NS --version $CI_COMMIT_TAG --set ingress.hosts[0].host=$INGRESS_HOST --set ingress.hosts[0].paths[0]="$INGRESS_PATH" --set ingress.tls[0].hosts[0]=$INGRESS_HOST --set ingress.tls[0].secretName=$INGRESS_TLS_NAME $RELEASE_NAME chartmuseum/$CHART_NAME
 rollout-prod:
+  extends: .rollout
   stage: rollout
-  image: profyu/gcloud-sdk:285.0.1
   variables:
     KUBE_DEPLOY_NS: unblock-prod
-    INGRESS_HOST: ucp2.unblock-analysis.com
-    INGRESS_TLS_NAME: unblock-ui-tls
-    INGRESS_PATH: /
+    INGRESS_HOST: ucp.unblock-analysis.com
   only:
     refs:
       - /^\d+\.\d+\.\d+$/@ucp/unblock-ui
-  before_script:
-    - export PATH=/google-cloud-sdk/bin/:$PATH
-    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-    - gcloud container clusters get-credentials $GCLOUD_KUBE_CLUSTER_NAME -z $GCLOUD_KUBE_ZONE --project $GCLOUD_PROJECT_ID
-  script:
-    - helm repo add chartmuseum $CHARTMUSEUM_URL
-    - helm upgrade --install -n $KUBE_DEPLOY_NS --version $CI_COMMIT_TAG --set ingress.hosts[0].host=$INGRESS_HOST --set ingress.hosts[0].paths[0]="$INGRESS_PATH" --set ingress.tls[0].hosts[0]=$INGRESS_HOST --set ingress.tls[0].secretName=$INGRESS_TLS_NAME $RELEASE_NAME chartmuseum/$CHART_NAME
