@@ -62,6 +62,7 @@ export class AddressScanBatchAddPageComponent implements OnInit {
       backwardEnabled: [true],
       backwardMaxLevel: [3, [Validators.required]],
       dateRange: [[]],
+      enableAddressCluster: [false, [Validators.required]],
       label: [null]
     });
     this.userService.project$.pipe(
@@ -101,6 +102,7 @@ export class AddressScanBatchAddPageComponent implements OnInit {
       backwardMaxLevel: formValue.backwardMaxLevel,
       startingTime: formValue.dateRange[0],
       endingTime: formValue.dateRange[1],
+      enableAddressCluster: formValue.enableAddressCluster,
       timeoutSecs: 3600,
     };
 
