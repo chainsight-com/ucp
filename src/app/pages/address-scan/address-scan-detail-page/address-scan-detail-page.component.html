@@ -199,8 +199,25 @@
               <ng-template nz-tab>
                 <div nz-row>
                   <div nz-col nzSpan="24">
+                    <h3>Spend</h3>
+                  </div>
+                </div>
+                <div nz-row>
+                  <div nz-col nzSpan="24">
                     <nz-spin [nzSpinning]="isLoadingLabelSunburst" nzTip="Loading...">
-                      <div class="label-sunburst" #labelSunburstDiv></div>
+                      <div class="label-sunburst" #forwardLabelSunburstDiv></div>
+                    </nz-spin>
+                  </div>
+                </div>
+                <div nz-row>
+                  <div nz-col nzSpan="24">
+                    <h3>Receive</h3>
+                  </div>
+                </div>
+                <div nz-row>
+                  <div nz-col nzSpan="24">
+                    <nz-spin [nzSpinning]="isLoadingLabelSunburst" nzTip="Loading...">
+                      <div class="label-sunburst" #backwardLabelSunburstDiv></div>
                     </nz-spin>
                   </div>
                 </div>

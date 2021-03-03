@@ -113,9 +113,13 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     "1": {name: "Normal", colorAlias: "green"},
   }
 
-  @ViewChild('labelSunburstDiv', {static: false})
-  private labelSunburstRef: ElementRef;
-  private labelSunburstChart: Highcharts.Chart;
+  @ViewChild('forwardLabelSunburstDiv', {static: false})
+  private forwardLabelSunburstRef: ElementRef;
+  @ViewChild('backwardLabelSunburstDiv', {static: false})
+  private backwardLabelSunburstRef: ElementRef;
+
+  private forwardLabelSunburstChart: Highcharts.Chart;
+  private backwardLabelSunburstChart: Highcharts.Chart;
   public isLoadingLabelSunburst = false;
 
   constructor(private router: Router,
@@ -352,14 +356,14 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
                 font: 'bold 10pt Segoe UI, sans-serif'
               },
               new go.Binding('text', '', (n) => {
-                if (n.isHighlighted && n.data.labels.length) {
-                  return n.data.labels.map(lbl => `${lbl.label} (${this.riskLevels[lbl.riskLevel]})`).join('\n');
+                if (n.data.labels.length) {
+                  return n.data.labels.map(lbl => `${lbl.label} (${this.riskLevels[lbl.riskLevel].name})`).join('\n');
                 }
                 return null;
               }).ofObject(),
-              new go.Binding('visible', '', (n) => {
-                return n.data.labels.length && n.isHighlighted;
-              }).ofObject()
+              // new go.Binding('visible', '', (n) => {
+              //   return n.data.labels.length;
+              // }).ofObject()
             )
           ),
         );
@@ -608,7 +612,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   }
 
   chartTabSelected() {
-    if (!this.labelSunburstChart) {
+    if (!this.forwardLabelSunburstChart || !this.backwardLabelSunburstChart) {
       setTimeout(() => {
         this.isLoadingLabelSunburst = true;
         this.addressScanApiService.getAddressScanLabelSunburstUsingGET(this.addressScan.id)
@@ -616,7 +620,15 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
             take(1),
             finalize(() => { this.isLoadingLabelSunburst = false; })
           ).subscribe(resp => {
-          const data = resp.data.map(d => {
+          const forwardData = resp.forward.map(d => {
+            return {
+              id: d.id,
+              name: d.name,
+              parent: d.parentId,
+              value: d.value
+            };
+          });
+          const backwardData = resp.backward.map(d => {
             return {
               id: d.id,
               name: d.name,
@@ -625,7 +637,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
             };
           });
 
-          const options: any = {
+          const forwardOptions: any = {
             chart: {
               height: '400px'
             },
@@ -637,7 +649,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
             },
             series: [{
               type: "sunburst",
-              data: data,
+              data: forwardData,
               allowDrillToNode: true,
               cursor: 'pointer',
               dataLabels: {
@@ -682,7 +694,66 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
               pointFormat: '<b>{point.name}</b>: <b>{point.value}</b>'
             }
           };
-          this.labelSunburstChart = Highcharts.chart(this.labelSunburstRef.nativeElement, options);
+          this.forwardLabelSunburstChart = Highcharts.chart(this.forwardLabelSunburstRef.nativeElement, forwardOptions);
+
+          const backwardOptions: any = {
+            chart: {
+              height: '400px'
+            },
+            title: {
+              text: 'Labels'
+            },
+            subtitle: {
+              text: ''
+            },
+            series: [{
+              type: "sunburst",
+              data: backwardData,
+              allowDrillToNode: true,
+              cursor: 'pointer',
+              dataLabels: {
+                format: '{point.name}',
+                filter: {
+                  property: 'innerArcLength',
+                  operator: '>',
+                  value: 16
+                },
+                rotationMode: 'circular'
+              },
+              levels: [{
+                level: 1,
+                levelIsConstant: false,
+                dataLabels: {
+                  filter: {
+                    property: 'outerArcLength',
+                    operator: '>',
+                    value: 64
+                  }
+                }
+              }, {
+                level: 2,
+                colorByPoint: true
+              },
+                {
+                  level: 3,
+                  colorVariation: {
+                    key: 'brightness',
+                    to: -0.5
+                  }
+                }, {
+                  level: 4,
+                  colorVariation: {
+                    key: 'brightness',
+                    to: 0.5
+                  }
+                }]
+            }],
+            tooltip: {
+              headerFormat: "",
+              pointFormat: '<b>{point.name}</b>: <b>{point.value}</b>'
+            }
+          };
+          this.backwardLabelSunburstChart = Highcharts.chart(this.backwardLabelSunburstRef.nativeElement, backwardOptions);
 
         }, console.error);
       }, 500);
