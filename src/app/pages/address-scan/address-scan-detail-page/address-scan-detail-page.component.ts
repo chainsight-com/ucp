@@ -519,7 +519,8 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     return retVal;
 
   };
-
+  public showRuleDrawer: boolean = false;
+  public currRuleId: String = null;
 
   getAvgScoreEvColor(avgScoreEv: number) {
     if (avgScoreEv < 0.0005) {
@@ -618,7 +619,9 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
         this.addressScanApiService.getAddressScanLabelSunburstUsingGET(this.addressScan.id)
           .pipe(
             take(1),
-            finalize(() => { this.isLoadingLabelSunburst = false; })
+            finalize(() => {
+              this.isLoadingLabelSunburst = false;
+            })
           ).subscribe(resp => {
           const forwardData = resp.forward.map(d => {
             return {
@@ -760,5 +763,11 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  openRuleDrawer(ruleId: string){
+    this.showRuleDrawer = true;
+    this.currRuleId = ruleId;
+  }
+  closeRuleDrawer() {
+    this.showRuleDrawer = false;
+  }
 }

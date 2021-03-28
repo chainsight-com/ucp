@@ -1,0 +1,10 @@
+<nz-spin [nzSpinning]="isLoading" [nzDelay]="200">
+  <div *ngIf="rule">
+    <nz-descriptions [nzColumn]="2" [nzTitle]="rule.id + (rule.title ? ' 一 ' + rule.title : '')">
+      <nz-descriptions-item [nzSpan]="2" nzTitle="Description">{{rule.description}}</nz-descriptions-item>
+      <nz-descriptions-item nzTitle="Video" [nzSpan]="2">
+        <iframe [src]="videoUrl()" width="640" height="480"></iframe>
+      </nz-descriptions-item>
+    </nz-descriptions>
+  </div>
+</nz-spin>

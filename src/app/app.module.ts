@@ -54,6 +54,7 @@ import { IncidentFormComponent } from './component/incident/incident-form/incide
 import { IncidentPageComponent } from './pages/incident/incident-page/incident-page.component';
 import { ClusterInfoComponent } from './component/cluster/cluster-info/cluster-info.component';
 import { AddressTableComponent } from './component/cluster/address-table/address-table.component';
+import { RuleInfoComponent } from './component/rule-info/rule-info.component';
 
 const menus: any[] = [
 
@@ -319,6 +320,7 @@ registerLocaleData(en);
     IncidentPageComponent,
     ClusterInfoComponent,
     AddressTableComponent,
+    RuleInfoComponent,
   ],
   imports: [
     BrowserModule,
