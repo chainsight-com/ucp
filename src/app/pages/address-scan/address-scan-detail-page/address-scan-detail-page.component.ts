@@ -388,18 +388,18 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
             layerName: 'Background',
             fromEndSegmentLength: 150, toEndSegmentLength: 150,
             adjusting: go.Link.End,
-            click: (e, link: go.Link) => {
-
-              // highlight all Links and Nodes coming out of a given Node
-              const diagram = link.diagram;
-              diagram.startTransaction('highlight');
-              // remove any previous highlighting
-              diagram.clearHighlighteds();
-              link.isHighlighted = true;
-              link.fromNode.isHighlighted = true;
-              link.toNode.isHighlighted = true;
-              diagram.commitTransaction('highlight');
-            }
+            // click: (e, link: go.Link) => {
+            //
+            //   // highlight all Links and Nodes coming out of a given Node
+            //   const diagram = link.diagram;
+            //   diagram.startTransaction('highlight');
+            //   // remove any previous highlighting
+            //   diagram.clearHighlighteds();
+            //   link.isHighlighted = true;
+            //   link.fromNode.isHighlighted = true;
+            //   link.toNode.isHighlighted = true;
+            //   diagram.commitTransaction('highlight');
+            // }
           },
           $(go.Shape, {
               strokeWidth: 4,
@@ -482,6 +482,28 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       this.flowDiagram.model = go.Model.fromJson(data);
       const rootAddressNode = this.flowDiagram.findNodeForKey(this.addressScan.address);
       this.flowDiagram.select(rootAddressNode);
+
+      // highlight path form root to labled node
+      graph.nodes
+        .filter(node => node.labels && node.labels.length > 0)
+        .map(node => node.address)
+        .forEach(toNodeKey => {
+          const toNode = this.flowDiagram.findNodeForKey(toNodeKey);
+          const path = this.collectAllPaths(rootAddressNode, toNode) as go.List<go.List<go.Node>>
+          path.each(p => {
+            const path = p as go.List<go.Node>;
+            for (let i = 1; i < path.count; i++) {
+              const from = path.get(i-1);
+              const to = path.get(i);
+              const links = from.findLinksBetween(to);
+              links.each(link =>{
+                link.isHighlighted = true;
+              });
+            }
+          });
+        });
+
+
       this.isLoadingDiagram = false;
 
     }, console.error, () => {
@@ -489,6 +511,34 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     });
 
 
+  }
+
+  // Recursively walk the graph starting from the BEGIN node;
+  // when reaching the END node remember the list of nodes along the current path.
+  // Finally return the collection of paths, which may be empty.
+  // This assumes all links are directional.
+  collectAllPaths(begin, end) {
+    const stack = new go.List(/*go.Node*/);
+    const coll = new go.List(/*go.List*/);
+
+    const find = (source, end) => {
+      source.findNodesOutOf().each(function (n) {
+        if (n === source) return;  // ignore reflexive links
+        if (n === end) {  // success
+          var path = stack.copy();
+          path.add(end);  // finish the path at the end node
+          coll.add(path);  // remember the whole path
+        } else if (!stack.has(n)) {  // inefficient way to check having visited
+          stack.add(n);  // remember that we've been here for this path (but not forever)
+          find(n, end);
+          stack.removeAt(stack.count - 1);
+        }  // else might be a cycle
+      });
+    }
+
+    stack.add(begin);  // start the path at the begin node
+    find(begin, end);
+    return coll;
   }
 
 
@@ -763,10 +813,11 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  openRuleDrawer(ruleId: string){
+  openRuleDrawer(ruleId: string) {
     this.showRuleDrawer = true;
     this.currRuleId = ruleId;
   }
+
   closeRuleDrawer() {
     this.showRuleDrawer = false;
   }
