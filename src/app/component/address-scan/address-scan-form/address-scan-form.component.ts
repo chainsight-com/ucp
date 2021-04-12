@@ -56,7 +56,13 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
       backwardEnabled: [true],
       backwardMaxLevel: [3, [Validators.required]],
       dateRange: [[]],
-      enableAddressCluster: [false, [Validators.required]]
+      enableAddressCluster: [false, [Validators.required]],
+      enablePrediction: [true, [Validators.required]],
+      enableExcessiveMiddleAddressDetection: [true, [Validators.required]],
+      enableCycleBackDetection: [true, [Validators.required]],
+      enableNatureAmountDetection: [true, [Validators.required]],
+      enableFusiformDetection: [true, [Validators.required]],
+      enableLabelRiskDetection: [true, [Validators.required]],
     });
 
     this.reload();
@@ -110,6 +116,12 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
       timeoutSecs: 3600,
       batchMode: false,
       enableAddressCluster: formValue.enableAddressCluster,
+      enablePrediction: formValue.enablePrediction,
+      enableExcessiveMiddleAddressDetection: formValue.enableExcessiveMiddleAddressDetection,
+      enableCycleBackDetection: formValue.enableCycleBackDetection,
+      enableNatureAmountDetection: formValue.enableNatureAmountDetection,
+      enableFusiformDetection: formValue.enableFusiformDetection,
+      enableLabelRiskDetection: formValue.enableLabelRiskDetection,
     };
 
 

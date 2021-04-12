@@ -11,7 +11,7 @@ import {
   ClusterNodeDto,
   FlowGraphDto,
   IncidentAddressScanApiService,
-  IncidentDto,
+  IncidentDto, LabelApiService, LabelDto,
   PageOfWitnessDto
 } from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
@@ -126,7 +126,8 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private addressScanApiService: AddressScanApiService,
               private addressCaseApiService: AddressCaseApiService,
-              private incidentAddressScanApiService: IncidentAddressScanApiService) {
+              private incidentAddressScanApiService: IncidentAddressScanApiService,
+              private labelApiService: LabelApiService) {
   }
 
 
@@ -173,11 +174,22 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       this.witnessSummary[2] = Number(sc.riskLowCount);
       this.witnessSummary[1] = Number(sc.riskNormalCount);
 
+      this.reloadLabel();
       this.reloadWitnessPage(true);
       this.reloadAddressCase()
     }, console.error, () => {
       this.isLoadingPipeline = false;
     });
+  }
+
+  reloadLabel() {
+    this.labelApiService.searchLabelsUsingGET(this.addressScan.currency.id, this.addressScan.address, this.addressScan.project.id)
+      .pipe(
+        take(1)
+      ).subscribe(resp => {
+        this.labels = resp.globalLabels.concat(resp.projectLabels)
+
+    })
   }
 
   reloadWitnessPage(resetPage: boolean, category?: RuleCategory) {
@@ -493,10 +505,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
           path.each(p => {
             const path = p as go.List<go.Node>;
             for (let i = 1; i < path.count; i++) {
-              const from = path.get(i-1);
+              const from = path.get(i - 1);
               const to = path.get(i);
               const links = from.findLinksBetween(to);
-              links.each(link =>{
+              links.each(link => {
                 link.isHighlighted = true;
               });
             }
@@ -571,6 +583,8 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   };
   public showRuleDrawer: boolean = false;
   public currRuleId: String = null;
+
+  public labels: LabelDto[] = [];
 
   getAvgScoreEvColor(avgScoreEv: number) {
     if (avgScoreEv < 0.0005) {

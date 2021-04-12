@@ -50,11 +50,43 @@
                  [nzTooltipVisible]="'always'" [nzMin]="1" [nzMax]="3" [nzStep]="1"></nz-slider>
     </nz-form-control>
   </nz-form-item>
+
   <nz-form-item>
     <nz-form-control>
       <label nz-checkbox formControlName="enableAddressCluster">Enable address clustering</label>
     </nz-form-control>
   </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <label nz-checkbox formControlName="enablePrediction">Enable Prediction</label>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <label nz-checkbox formControlName="enableExcessiveMiddleAddressDetection">Enable excessive mid-address detection</label>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <label nz-checkbox formControlName="enableCycleBackDetection">Enable cycle detection</label>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <label nz-checkbox formControlName="enableNatureAmountDetection">Enable nature amount detection</label>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <label nz-checkbox formControlName="enableFusiformDetection">Enable fusiform detection</label>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <label nz-checkbox formControlName="enableLabelRiskDetection">Enable label detection</label>
+    </nz-form-control>
+  </nz-form-item>
+
   <nz-form-item>
     <nz-form-label nzFor="dateRange">Range</nz-form-label>
     <nz-form-control>

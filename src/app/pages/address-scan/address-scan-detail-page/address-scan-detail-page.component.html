@@ -10,6 +10,11 @@
 </div>
 <div nz-row>
   <div nz-col>
+    <nz-tag *ngFor="let label of labels" [nzColor]="riskLevels[label.category.riskLevel].colorAlias">{{label.id}} ({{label.categoryId}})</nz-tag>
+  </div>
+</div>
+<div nz-row>
+  <div nz-col>
     <nz-alert *ngIf="addressScan?.status === 'FAILED'" nzType="error" nzMessage="Error" nzDescription="Failed to load logs: Unsuccessful HTTP response" nzShowIcon> </nz-alert>
   </div>
 </div>
