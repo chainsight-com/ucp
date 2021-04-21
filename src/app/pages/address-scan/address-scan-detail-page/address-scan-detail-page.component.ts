@@ -8,7 +8,7 @@ import {
   AddressCaseDto,
   AddressScanApiService,
   AddressScanDto,
-  ClusterNodeDto,
+  ClusterNodeDto, CurrencyApiService,
   FlowGraphDto,
   IncidentAddressScanApiService,
   IncidentDto, LabelApiService, LabelDto,
@@ -127,7 +127,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
               private addressScanApiService: AddressScanApiService,
               private addressCaseApiService: AddressCaseApiService,
               private incidentAddressScanApiService: IncidentAddressScanApiService,
-              private labelApiService: LabelApiService) {
+              private currencyApiService: CurrencyApiService) {
   }
 
 
@@ -183,7 +183,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   }
 
   reloadLabel() {
-    this.labelApiService.searchLabelsUsingGET(this.addressScan.currency.id, this.addressScan.address, this.addressScan.project.id)
+    this.currencyApiService.searchLabelsUsingGET(this.addressScan.currency.id, this.addressScan.address, this.addressScan.project.id)
       .pipe(
         take(1)
       ).subscribe(resp => {

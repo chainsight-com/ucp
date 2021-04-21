@@ -66,8 +66,10 @@
           </nz-form-item>
           <nz-form-item>
             <nz-form-label [nzNoColon]="true">Tag</nz-form-label>
-            <nz-form-control nzErrorTip="Please input the Name">
-              <input type="text" nz-input formControlName="tag" placeholder="Tag"/>
+            <nz-form-control nzErrorTip="Please select label">
+              <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a label" formControlName="labelId">
+                <nz-option *ngFor="let label of labels" [nzLabel]="label.id" [nzValue]="label.id"></nz-option>
+              </nz-select>
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>

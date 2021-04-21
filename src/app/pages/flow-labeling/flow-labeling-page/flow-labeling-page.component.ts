@@ -4,13 +4,13 @@ import {
   HolderGroupDto,
   ProjectApiService,
   FlowLabelingDto,
-  ProjectDto
+  ProjectDto, LabelDto, LabelApiService
 } from '@profyu/unblock-ng-sdk';
 import {Subject, Observable, interval} from 'rxjs';
 import {NzMessageService, NzModalRef, NzModalService} from 'ng-zorro-antd';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/user.service';
-import {takeUntil, switchMap} from 'rxjs/operators';
+import {takeUntil, switchMap, take} from 'rxjs/operators';
 import {formatDate} from '@angular/common';
 import {UtilsService} from '../../../services/utils.service';
 import {TblColumn} from "../../../shared/table/tbl-column";
@@ -46,8 +46,8 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
       }
     },
     {
-      property: 'tag',
-      title: 'Tag'
+      property: 'labelId',
+      title: 'Label'
     },
     {
       property: 'forwardMaxLevel',
@@ -169,4 +169,6 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
+
 }

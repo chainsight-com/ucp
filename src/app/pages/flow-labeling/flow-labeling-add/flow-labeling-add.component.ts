@@ -2,7 +2,14 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {UserService} from '../../../services/user.service';
-import {FlowLabelingApiService, BlobDto, BlobApiService, CurrencyDto} from '@profyu/unblock-ng-sdk';
+import {
+  FlowLabelingApiService,
+  BlobDto,
+  BlobApiService,
+  CurrencyDto,
+  LabelDto,
+  LabelApiService
+} from '@profyu/unblock-ng-sdk';
 import {NzMessageService, UploadFile, UploadXHRArgs} from 'ng-zorro-antd';
 import {HttpClient, HttpEventType, HttpResponse} from '@angular/common/http';
 import {takeUntil, take} from 'rxjs/operators';
@@ -15,7 +22,7 @@ import {Subject} from 'rxjs';
   styleUrls: ['./flow-labeling-add.component.scss']
 })
 export class FlowLabelingAddComponent implements OnInit, OnDestroy {
-
+  public labels: LabelDto[]
   public isSubmitting = false;
   public projectId: string;
   public unsubscribe$ = new Subject<void>();
@@ -31,6 +38,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private message: NzMessageService,
               private flowLabelingApiService: FlowLabelingApiService,
+              private labelApiService: LabelApiService,
               public blobApiService: BlobApiService,
               private http: HttpClient) {
   }
@@ -44,6 +52,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
         if (project) {
           this.currencies = project.currencies;
           this.projectId = project.id;
+          this.reloadLabels(project.id);
         }
 
       });
@@ -55,7 +64,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
       backwardEnabled: [true],
       backwardMaxLevel: [3, [Validators.required]],
       dateRange: [null, Validators.required],
-      tag: [null, Validators.required]
+      labelId: [null, Validators.required]
     });
 
 
@@ -83,7 +92,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
       startingTime: formValue.dateRange[0],
       endingTime: formValue.dateRange[1],
       timeoutSecs: '3600',
-      tag: formValue.tag,
+      labelId: formValue.labelId,
       projectId: this.projectId,
       addressListBlobId: (this.fileList[0].response as BlobDto).id
     }).pipe(
@@ -142,6 +151,15 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  private reloadLabels(projectId: string) {
+    this.labelApiService.listLabelsUsingGET(projectId)
+      .pipe(
+        take(1)
+      ).subscribe(resp => {
+      this.labels = resp;
+    });
   }
 
 }
