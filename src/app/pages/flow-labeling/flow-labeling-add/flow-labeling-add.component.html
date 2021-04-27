@@ -65,7 +65,15 @@
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
-            <nz-form-label [nzNoColon]="true">Tag</nz-form-label>
+            <nz-form-label [nzNoColon]="true">Category</nz-form-label>
+            <nz-form-control nzErrorTip="Please select category">
+              <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a category" formControlName="categoryId">
+                <nz-option *ngFor="let category of categories" [nzLabel]="category.id" [nzValue]="category.id"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzNoColon]="true">Label</nz-form-label>
             <nz-form-control nzErrorTip="Please select label">
               <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a label" formControlName="labelId">
                 <nz-option *ngFor="let label of labels" [nzLabel]="label.id" [nzValue]="label.id"></nz-option>

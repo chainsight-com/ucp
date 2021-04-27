@@ -8,7 +8,7 @@ import {
   BlobApiService,
   CurrencyDto,
   LabelDto,
-  LabelApiService
+  LabelApiService, LabelCategoryDto, LabelCategoryApiService
 } from '@profyu/unblock-ng-sdk';
 import {NzMessageService, UploadFile, UploadXHRArgs} from 'ng-zorro-antd';
 import {HttpClient, HttpEventType, HttpResponse} from '@angular/common/http';
@@ -22,6 +22,7 @@ import {Subject} from 'rxjs';
   styleUrls: ['./flow-labeling-add.component.scss']
 })
 export class FlowLabelingAddComponent implements OnInit, OnDestroy {
+  public categories: LabelCategoryDto[];
   public labels: LabelDto[]
   public isSubmitting = false;
   public projectId: string;
@@ -38,6 +39,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
               private userService: UserService,
               private message: NzMessageService,
               private flowLabelingApiService: FlowLabelingApiService,
+              private labelCategoryApiService: LabelCategoryApiService,
               private labelApiService: LabelApiService,
               public blobApiService: BlobApiService,
               private http: HttpClient) {
@@ -52,7 +54,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
         if (project) {
           this.currencies = project.currencies;
           this.projectId = project.id;
-          this.reloadLabels(project.id);
+          this.reloadLabelCategories(project.id);
         }
 
       });
@@ -64,9 +66,19 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
       backwardEnabled: [true],
       backwardMaxLevel: [3, [Validators.required]],
       dateRange: [null, Validators.required],
+      categoryId: [null],
       labelId: [null, Validators.required]
     });
 
+    this.form.controls.categoryId.valueChanges
+      .pipe(
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe(categoryId => {
+        if (categoryId) {
+          this.reloadLabels(categoryId);
+        }
+      });
 
 
   }
@@ -123,6 +135,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
       });
   }
 
+
   forwardEnableChanged(forwardEnabled: boolean): void {
     const ctrl = this.form.get('forwardMaxLevel');
     if (!forwardEnabled) {
@@ -153,8 +166,18 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  private reloadLabels(projectId: string) {
-    this.labelApiService.listLabelsUsingGET(projectId)
+  private reloadLabelCategories(projectId: string) {
+    this.labelCategoryApiService.listLabelCategoriesUsingGET(projectId)
+      .pipe(
+        take(1)
+      ).subscribe(resp => {
+      this.categories = resp;
+    });
+  }
+
+  private reloadLabels(categoryId: string) {
+    this.form.controls.categoryId.setValue(null);
+    this.labelApiService.listLabelsUsingGET(categoryId)
       .pipe(
         take(1)
       ).subscribe(resp => {
