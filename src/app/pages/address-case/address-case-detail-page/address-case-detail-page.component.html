@@ -72,11 +72,30 @@
               </div>
               <nz-list [nzDataSource]="comments" [nzRenderItem]="comment" [nzItemLayout]="'horizontal'">
                 <ng-template #comment let-comment>
-                  <nz-comment [nzAuthor]="formatAuthor(comment)"
-                              [nzDatetime]="readableDuration(comment.createdTime)">
+                  <nz-comment [nzAuthor]="formatAuthor(comment.data)"
+                              [nzDatetime]="readableDuration(comment.data.createdTime)">
                     <nz-avatar nz-comment-avatar nzIcon="user"></nz-avatar>
+                    <nz-comment-action>
+                      <span (click)="updateComment(comment)">Edit</span>
+                    </nz-comment-action>
+                    <nz-comment-action>
+                      <span nz-popconfirm nzPopconfirmTitle="Are you sure?" nzOkText="Ok" nzCancelText="Cancel" (nzOnConfirm)="deleteComment(comment)">Delete</span>
+                    </nz-comment-action>
                     <nz-comment-content>
-                      <p>{{ comment.comment }}</p>
+                      <p *ngIf="!comment.isEditing">{{ comment.data.comment }}</p>
+                      <div *ngIf="comment.isEditing">
+                        <nz-form-item>
+                          <textarea nz-input rows="4" [(ngModel)]="comment.currComment"></textarea>
+                        </nz-form-item>
+                        <nz-form-item>
+                          <button nz-button nzType="primary" [nzLoading]="comment.isSubmitting"
+                                  (click)="submitCommentUpdates(comment)"
+                                  [disabled]="!comment.currComment">
+                            Save
+                          </button>
+                        </nz-form-item>
+                      </div>
+
                     </nz-comment-content>
                     <!--                    <nz-comment-action>Reply to</nz-comment-action>-->
                   </nz-comment>

@@ -62,8 +62,14 @@ export class AddressScanBatchAddPageComponent implements OnInit {
       backwardEnabled: [true],
       backwardMaxLevel: [3, [Validators.required]],
       dateRange: [[]],
+      label: [null],
       enableAddressCluster: [false, [Validators.required]],
-      label: [null]
+      enablePrediction: [true, [Validators.required]],
+      enableExcessiveMiddleAddressDetection: [true, [Validators.required]],
+      enableCycleBackDetection: [true, [Validators.required]],
+      enableNatureAmountDetection: [true, [Validators.required]],
+      enableFusiformDetection: [true, [Validators.required]],
+      enableLabelRiskDetection: [true, [Validators.required]],
     });
     this.userService.project$.pipe(
       takeUntil(this.unsubscribe$)
@@ -103,6 +109,12 @@ export class AddressScanBatchAddPageComponent implements OnInit {
       startingTime: formValue.dateRange[0],
       endingTime: formValue.dateRange[1],
       enableAddressCluster: formValue.enableAddressCluster,
+      enablePrediction: formValue.enablePrediction,
+      enableExcessiveMiddleAddressDetection: formValue.enableExcessiveMiddleAddressDetection,
+      enableCycleBackDetection: formValue.enableCycleBackDetection,
+      enableNatureAmountDetection: formValue.enableNatureAmountDetection,
+      enableFusiformDetection: formValue.enableFusiformDetection,
+      enableLabelRiskDetection: formValue.enableLabelRiskDetection,
       timeoutSecs: 3600,
     };
 

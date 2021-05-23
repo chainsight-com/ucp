@@ -46,7 +46,7 @@ export class DashboardPageComponent implements OnInit {
   ];
 
 
-  public page: Page<AddressScanDto> = EMPTY_PAGE;
+  public page: Page<TxDto> = EMPTY_PAGE;
   public pageSize = 30;
   public pageSizeOptions = [30, 50, 100];
   public pageIdx = 1;

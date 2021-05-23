@@ -43,7 +43,12 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   private incidentTable: IncidentTableComponent;
 
   public isLoadingPipeline = false;
-  public addressScan: AddressScanDto = {};
+  public addressScan: AddressScanDto = {
+    enableCycleBackDetection: false,
+    enableFusiformDetection: false,
+    enableLabelRiskDetection: false,
+    enableNatureAmountDetection: false
+  };
 
   // graph
   public graphEdgeSize = 300;

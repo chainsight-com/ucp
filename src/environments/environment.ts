@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  // baseApiUrl: 'http://localhost:8585',
-  baseApiUrl: 'https://api.dev.unblock-analysis.com',
+  baseApiUrl: 'http://localhost:8080',
+  // baseApiUrl: 'https://api.dev.unblock-analysis.com',
   googleOAuthClientId: '1086750536934-rfnbr5soh8dk7cqtujeubcgm6cejo2j6.apps.googleusercontent.com'
 };
 
