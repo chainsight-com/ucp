@@ -93,6 +93,7 @@
   <app-address-scan-form #addressScanForm [projectId]="incident?.projectId"
                          [currencyId]="selectedIncidentClusterNode?.currency?.id"
                          [address]="selectedIncidentClusterNode?.clusterId"
+                         [forceEnableAddressCluster]="true"
                          (onSubmitted)="onScanSubmitted($event)"></app-address-scan-form>
 </nz-drawer>
 

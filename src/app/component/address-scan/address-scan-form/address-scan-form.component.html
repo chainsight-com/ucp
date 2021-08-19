@@ -65,7 +65,7 @@
 
   <nz-form-item>
     <nz-form-control>
-      <label nz-checkbox formControlName="enableAddressCluster">Enable address clustering</label>
+      <label nz-checkbox formControlName="enableAddressCluster" [nzDisabled]="forceEnableAddressCluster">Enable address clustering</label>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>

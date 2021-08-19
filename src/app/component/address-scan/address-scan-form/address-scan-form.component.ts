@@ -13,6 +13,7 @@ import {QrScannerService} from "../../../services/qr-scanner.service";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "../../../services/user.service";
 import {filter, finalize, take, takeUntil} from "rxjs/operators";
+import {NzMessageService} from "ng-zorro-antd";
 
 @Component({
   selector: 'app-address-scan-form',
@@ -26,6 +27,8 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
   public currencyId: string;
   @Input()
   public address: string;
+  @Input()
+  public forceEnableAddressCluster: boolean = false;
 
   @Output()
   public onSubmitted: EventEmitter<AddressScanDto> = new EventEmitter<AddressScanDto>();
@@ -43,7 +46,8 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
               private accountApiService: AccountApiService,
               private projectApiService: ProjectApiService,
               private router: Router,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private message: NzMessageService) {
   }
 
   ngOnInit() {
@@ -56,7 +60,7 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
       backwardEnabled: [true],
       backwardMaxLevel: [3, [Validators.required]],
       dateRange: [[]],
-      enableAddressCluster: [false, [Validators.required]],
+      enableAddressCluster: [this.forceEnableAddressCluster, [Validators.required]],
       enablePrediction: [true, [Validators.required]],
       enableExcessiveMiddleAddressDetection: [true, [Validators.required]],
       enableCycleBackDetection: [true, [Validators.required]],
@@ -104,6 +108,11 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
     }
 
     const formValue = this.form.value;
+
+    if (!formValue.forwardEnabled && !formValue.backwardEnabled) {
+      this.message.error(`<span class="pfy-message-error">You must enabled either backward or forward scanning</span>`);
+      return;
+    }
 
     const body: AddressScanCreation = {
       projectId: formValue.projectId,
