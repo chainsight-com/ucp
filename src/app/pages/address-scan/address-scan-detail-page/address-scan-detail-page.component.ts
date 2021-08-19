@@ -193,8 +193,21 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
         take(1)
       ).subscribe(resp => {
         this.labels = resp.globalLabels.concat(resp.projectLabels)
-
+        if(this.addressScan && this.addressScan.onlineLabelList){
+          this.labels = this.labels.concat(this.addressScan.onlineLabelList.map(lb => {
+              return {
+                id: lb,
+                categoryId: '0',
+                category: {
+                  id: '0',
+                  projectId: '0',
+                  riskLevel: 1
+                }
+              };
+          }));
+        }
     })
+
   }
 
   reloadWitnessPage(resetPage: boolean, category?: RuleCategory) {
