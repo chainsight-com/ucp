@@ -1,57 +1,55 @@
-<nz-layout style="height: 100vh;">
-  <nz-layout style="height: 100%;">
+<nz-layout class="left-layout">
+  <nz-sider>
     <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzBreakpoint]="'lg'" [nzCollapsedWidth]="0" [nzWidth]="270"
               [nzTrigger]="null">
       <pfy-side-menu [isCollapsed]="isCollapsed">
       </pfy-side-menu>
     </nz-sider>
-    <nz-layout class="content">
-      <nz-header>
-        <div>
-          <i class="trigger"
-             nz-icon
-             [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-             (click)="isCollapsed = !isCollapsed"
-          ></i>
-        </div>
-        <div>
-          <span class="header-title">{{title}}</span>
-          <span class="header-subtitle">{{subtitle}} </span>
-        </div>
-        <div class="avatar"
-             nz-dropdown
-             [nzDropdownMenu]="menu"
-             [nzPlacement]="'bottomCenter'">
-          <span>{{userName}}@{{project?.name}}</span>
-          <span><nz-avatar nzIcon="user"></nz-avatar></span>
-        </div>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu>
-            <li nz-menu-item *ngFor="let availableProject of availableProjects"
-                (click)="switchProject(availableProject)">
-              {{availableProject?.name}}
-              <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
-                 *ngIf="availableProject?.id === project?.id"></i>
-            </li>
-            <li nz-menu-divider *ngIf="!!availableProjects && availableProjects.length>0"></li>
-            <li nz-menu-item
-                nz-popover
-                nz-popconfirm
-                nzPopconfirmTitle="Are you sure you want to logout?"
-                nzPopconfirmPlacement="leftBottom"
-                (nzOnConfirm)="logout()"
-            ><i nz-icon nzType="logout" nzTheme="outline"></i>Logout
-            </li>
-          </ul>
-        </nz-dropdown-menu>
-      </nz-header>
-      <nz-content>
-        <div class="inner-content">
-          <router-outlet></router-outlet>
-        </div>
-      </nz-content>
-      <nz-footer>Unblock Analysis ©2021</nz-footer>
-    </nz-layout>
+  </nz-sider>
+  <nz-layout class="right-layout">
+    <nz-header>
+      <div>
+        <i class="trigger"
+           nz-icon
+           [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+           (click)="isCollapsed = !isCollapsed"
+        ></i>
+      </div>
+      <div>
+        <span class="header-title">{{title}}</span>
+        <span class="header-subtitle">{{subtitle}} </span>
+      </div>
+      <div class="avatar"
+           nz-dropdown
+           [nzDropdownMenu]="menu"
+           [nzPlacement]="'bottomCenter'">
+        <span>{{userName}}@{{project?.name}}</span>
+        <span><nz-avatar nzIcon="user"></nz-avatar></span>
+      </div>
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item *ngFor="let availableProject of availableProjects"
+              (click)="switchProject(availableProject)">
+            {{availableProject?.name}}
+            <i nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"
+               *ngIf="availableProject?.id === project?.id"></i>
+          </li>
+          <li nz-menu-divider *ngIf="!!availableProjects && availableProjects.length>0"></li>
+          <li nz-menu-item
+              nz-popover
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure you want to logout?"
+              nzPopconfirmPlacement="leftBottom"
+              (nzOnConfirm)="logout()"
+          ><i nz-icon nzType="logout" nzTheme="outline"></i>Logout
+          </li>
+        </ul>
+      </nz-dropdown-menu>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
   </nz-layout>
-
 </nz-layout>

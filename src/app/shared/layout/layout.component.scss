@@ -99,19 +99,27 @@ nz-header {
 }
 
 nz-content {
+  margin: 24px 16px 0;
+  overflow: initial;
 }
 
 nz-breadcrumb {
   margin: 16px 0;
 }
 
+//.inner-content {
+//  margin: 0px 0px 0px 0px;
+//  background: #fff;
+//  height: calc(100vh - 124px);
+//  border-radius: 5px;
+//  padding: 20px 20px 30px 20px;
+//  overflow-y: auto;
+//}
+
 .inner-content {
-  margin: 30px 20px 0px 20px;
+  padding: 24px;
   background: #fff;
-  height: calc(100vh - 124px);
-  border-radius: 5px;
-  padding: 20px 20px 30px 20px;
-  overflow-y: scroll;
+  min-height: calc(100vh - 124px);
 }
 
 nz-footer {
@@ -168,4 +176,16 @@ nz-footer {
 
 .login-form-button {
   width: 100%;
+}
+.left-layout {
+  height: 100vh;
+}
+nz-sider {
+  overflow: auto;
+  height: 100%;
+  position: fixed;
+  left: 0;
+}
+.right-layout {
+  margin-left: 270px;
 }
