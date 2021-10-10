@@ -7,9 +7,13 @@ import {
   IncidentClusterNodeDto, IncidentDto, IncidentHolderEdge, IncidentHolderNode
 } from "@profyu/unblock-ng-sdk";
 import * as go from "gojs";
-import {take} from "rxjs/operators";
-import {GraphLinksModel, GraphObject} from "gojs";
+import {filter, take, takeUntil} from "rxjs/operators";
+import {DiagramEvent, GraphLinksModel, GraphObject, Link, Shape} from "gojs";
 import {CcPipe} from "../../pipes/cc.pipe";
+import {interval, Subject} from "rxjs";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {environment} from "../../../environments/environment";
+import {UserService} from "../../services/user.service";
 
 export const COLORS = [
   ['#AC193D', '#BF1E4B'],
@@ -50,15 +54,31 @@ export class IncidentClusterGraphComponent implements OnInit {
   public pageIdx = 0;
   public pageSize = 10;
   public isLoading = false;
+  private unsubscribe$ = new Subject<void>();
+  private annotationFirstLoaded = false;
 
   @ViewChild('ctxMenu', {static: false})
   private ctxMenuRef: ElementRef;
 
 
-  constructor(private incidentApiService: IncidentApiService) {
+  constructor(private incidentApiService: IncidentApiService, private http: HttpClient, private userService: UserService) {
   }
 
   ngOnInit() {
+    interval(1000)
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        // filter(d => this.autoReload)
+      ).subscribe(
+      data => {
+        this.saveAnnotationModel();
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -67,6 +87,34 @@ export class IncidentClusterGraphComponent implements OnInit {
         this.reload();
       }
     }
+
+  }
+
+  public saveAnnotationModel() {
+    if (!this.incident) {
+      return;
+    }
+    if (!this.diagram) {
+      return;
+    }
+    if (!this.annotationFirstLoaded) {
+      return;
+    }
+    const fullModel = JSON.parse(this.diagram.model.toJson());
+    const data = {
+      nodeDataArray: fullModel.nodeDataArray.filter(n => n.category === 'Annotation'),
+      linkDataArray: fullModel.linkDataArray.filter(l => l.category === 'Annotation')
+    };
+    const body = {
+      json: JSON.stringify(data)
+    };
+    this.http.patch(environment.baseApiUrl + '/api/incident/' + this.incident.id + '/annotation', body, {
+      headers: new HttpHeaders({'Authorization': "Bearer "+this.userService.token})
+    })
+      .subscribe((incident) => {
+       console.log('Annotation saved');
+      }, console.error, () => {
+      });
 
   }
 
@@ -106,6 +154,15 @@ export class IncidentClusterGraphComponent implements OnInit {
         this.renderHolder(graph.nodes, graph.edges);
       });
 
+      // render annotation
+      const annotationJson = (this.incident as any).annotationJson;
+      if(annotationJson) {
+        const annotation = JSON.parse(annotationJson);
+        const model = this.diagram.model as GraphLinksModel;
+        model.addNodeDataCollection(annotation.nodeDataArray);
+        model.addLinkDataCollection(annotation.linkDataArray);
+      }
+      this.annotationFirstLoaded = true;
       this.isLoading = false;
     }, console.error, () => {
       this.isLoading = false;
@@ -199,6 +256,8 @@ export class IncidentClusterGraphComponent implements OnInit {
 
 
   initDiagram() {
+
+
     go.Shape.defineFigureGenerator('RoundedTopRectangle', function (shape: go.Shape, w: number, h: number) {
       // this figure takes one parameter, the size of the corner
       let p1 = 5;  // default corner size
@@ -245,10 +304,67 @@ export class IncidentClusterGraphComponent implements OnInit {
       return geo;
     });
     const $ = go.GraphObject.make;
+
+
     this.diagram = $(go.Diagram, this.diagramRef.nativeElement, // the ID of the DIV HTML element
       {
+        grid: $(go.Panel, "Grid",  // a simple 10x10 grid
+          $(go.Shape, "LineH", {stroke: "lightgray", strokeWidth: 0.5}),
+          $(go.Shape, "LineV", {stroke: "lightgray", strokeWidth: 0.5})
+        ),
+        "draggingTool.isGridSnapEnabled": true,
         initialAutoScale: go.Diagram.UniformToFill,
+        handlesDragDropForTopLevelParts: true,
         'animationManager.isEnabled': false,
+        mouseDrop: (e) => {
+          // when the selection is dropped in the diagram's background,
+          // make sure the selected Parts no longer belong to any Group
+          var ok = e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true);
+          if (!ok) e.diagram.currentTool.doCancel();
+        },
+        // commandHandler: $((window as any).DrawCommandHandler),  // support offset copy-and-paste
+        "clickCreatingTool.archetypeNodeData": {
+          category: "Annotation",
+          text: "NEW Annotation"
+        },  // create a new node by double-clicking in background
+        "PartCreated": (e: DiagramEvent) => {
+          const node = e.subject;  // the newly inserted Node -- now need to snap its location to the grid
+          node.location = node.location.copy().snapToGridPoint(e.diagram.grid.gridOrigin, e.diagram.grid.gridCellSize);
+          setTimeout(() => {  // and have the user start editing its text
+            e.diagram.commandHandler.editTextBlock();
+          }, 20);
+        },
+        "LinkDrawn": (e: DiagramEvent) => {
+          const link = e.subject as Link;
+          // if (link.fromNode.category === 'Annotation' || link.toNode.category === 'Annotation') {
+          //
+          // }
+          if (!link.category) {
+            link.category = 'Annotation';
+
+            this.diagram.model.setDataProperty(link.data, "text", "New Link");
+            link.invalidateRoute();
+          }
+        },
+        "commandHandler.archetypeGroupData": {isGroup: true, text: "NEW GROUP"},
+        "SelectionGrouped": (e) => {
+          const group = e.subject;
+          setTimeout(() => {  // and have the user start editing its text
+            e.diagram.commandHandler.editTextBlock();
+          })
+        },
+        "LinkRelinked": (e) => {
+          // re-spread the connections of other links connected with both old and new nodes
+          const oldnode = e.parameter.part;
+          oldnode.invalidateConnectedLinks();
+          const link = e.subject;
+          if (e.diagram.toolManager.linkingTool.isForwards) {
+            link.toNode.invalidateConnectedLinks();
+          } else {
+            link.fromNode.invalidateConnectedLinks();
+          }
+        },
+        "undoManager.isEnabled": true,
         layout: $(go.LayeredDigraphLayout, {
           layerSpacing: 100
         }),
@@ -258,7 +374,6 @@ export class IncidentClusterGraphComponent implements OnInit {
             const node = subject.part as go.Node;
 
           }
-
         }
         // ChangedSelection: (e) => {
         //   console.log("select", e)
@@ -271,6 +386,68 @@ export class IncidentClusterGraphComponent implements OnInit {
       });
 
     this.diagram.allowRelink = false;
+
+
+    const makeArrowButton = (spot, fig) => {
+      var maker = function (e, shape) {
+        e.handled = true;
+        e.diagram.model.commit(function (m) {
+          var selnode = shape.part.adornedPart;
+          // create a new node in the direction of the spot
+          var p = new go.Point().setRectSpot(selnode.actualBounds, spot);
+          p.subtract(selnode.location);
+          p.scale(2, 2);
+          p.x += Math.sign(p.x) * 60;
+          p.y += Math.sign(p.y) * 60;
+          p.add(selnode.location);
+          p.snapToGridPoint(e.diagram.grid.gridOrigin, e.diagram.grid.gridCellSize);
+          // make the new node a copy of the selected node
+          var nodedata = m.copyNodeData(selnode.data);
+          // add to same group as selected node
+          m.setGroupKeyForNodeData(nodedata, m.getGroupKeyForNodeData(selnode.data));
+          m.addNodeData(nodedata);  // add to model
+          // create a link from the selected node to the new node
+          var linkdata = {from: selnode.key, to: m.getKeyForNodeData(nodedata), category: "Annotation"};
+          m.addLinkData(linkdata);  // add to model
+          // move the new node to the computed location, select it, and start to edit it
+          var newnode = e.diagram.findNodeForData(nodedata);
+          newnode.location = p;
+          e.diagram.select(newnode);
+          setTimeout(function () {
+            e.diagram.commandHandler.editTextBlock();
+          }, 20);
+        });
+      };
+      return $(go.Shape,
+        {
+          figure: fig,
+          alignment: spot, alignmentFocus: spot.opposite(),
+          width: (spot.equals(go.Spot.Top) || spot.equals(go.Spot.Bottom)) ? 36 : 18,
+          height: (spot.equals(go.Spot.Top) || spot.equals(go.Spot.Bottom)) ? 18 : 36,
+          fill: "orange", strokeWidth: 0,
+          isActionable: true,  // needed because it's in an Adornment
+          click: maker, contextClick: maker
+        });
+    }
+    const CMButton = (options) => {
+      return $(go.Shape,
+        {
+          fill: "orange", stroke: "gray", background: "transparent",
+          geometryString: "F1 M0 0 M0 4h4v4h-4z M6 4h4v4h-4z M12 4h4v4h-4z M0 12",
+          isActionable: true, cursor: "context-menu",
+          click: function (e, shape) {
+            e.diagram.commandHandler.showContextMenu(shape.part.adornments[0]);
+          }
+        },
+        options || {});
+    }
+    const makeAdornmentPathPattern = (w) => {
+      return $(go.Shape,
+        {
+          stroke: "dodgerblue", strokeWidth: 2, strokeCap: "square",
+          geometryString: "M0 0 M4 2 H3 M4 " + (w + 4).toString() + " H3"
+        });
+    }
 
     const hideCX = () => {
       if (this.diagram.currentTool instanceof go.ContextMenuTool) {
@@ -322,13 +499,19 @@ export class IncidentClusterGraphComponent implements OnInit {
         contextMenu: ctxMenu,
         defaultStretch: go.GraphObject.Horizontal
       },
-      {fromSpot: go.Spot.RightSide, toSpot: go.Spot.LeftSide},
+      {
+        locationSpot: go.Spot.Center,
+        locationObjectName: "SHAPE",
+        fromSpot: go.Spot.RightSide,
+        toSpot: go.Spot.LeftSide,
+        fromLinkable: true, toLinkable: true,
+      },
       $(go.Panel, "Auto",
         $(go.Shape, "RoundedTopRectangle",
           {},
           new go.Binding("fill", "headerFill")),
         $(go.TextBlock,
-          {stroke: "white" ,margin: new go.Margin(2, 2, 0, 2), textAlign: "center"},
+          {stroke: "white", margin: new go.Margin(2, 2, 0, 2), textAlign: "center"},
           new go.Binding("text", "headerText"))
       ),
       $(go.Panel, "Auto",
@@ -349,18 +532,216 @@ export class IncidentClusterGraphComponent implements OnInit {
       )
     );
 
+    // define annotation context menu buttons
+    // A button-defining helper function that returns a click event handler.
+    // PROPNAME is the name of the data property that should be set to the given VALUE.
+    const ClickFunction = (propname, value) => {
+      return function (e, obj) {
+        e.handled = true;  // don't let the click bubble up
+        e.diagram.model.commit(function (m) {
+          m.set(obj.part.adornedPart.data, propname, value);
+        });
+      };
+    }
 
-    // define the Link template
-    const linkSelectionAdornmentTemplate =
-      $(go.Adornment, 'Link',
-        $(go.Shape,
-          {
-            isPanelMain: true,
-            fill: null,
-            stroke: 'rgba(0, 0, 255, 0.3)',
-            strokeWidth: 0
-          })
-      );
+    // Create a context menu button for setting a data property with a color value.
+    const ColorButton = (color, propname?) => {
+      if (!propname) propname = "color";
+      return $(go.Shape,
+        {
+          width: 16, height: 16, stroke: "lightgray", fill: color,
+          margin: 1, background: "transparent",
+          mouseEnter: (e, shape) => {
+            (shape as Shape).stroke = "dodgerblue";
+          },
+          mouseLeave: (e, shape) => {
+            (shape as Shape).stroke = "lightgray";
+          },
+          click: ClickFunction(propname, color), contextClick: ClickFunction(propname, color)
+        });
+    }
+
+    const LightFillButtons = () => {  // used by multiple context menus
+      return [
+        $("ContextMenuButton",
+          $(go.Panel, "Horizontal",
+            ColorButton("white", "fill"), ColorButton("beige", "fill"), ColorButton("aliceblue", "fill"), ColorButton("lightyellow", "fill")
+          )
+        ),
+        $("ContextMenuButton",
+          $(go.Panel, "Horizontal",
+            ColorButton("lightgray", "fill"), ColorButton("lightgreen", "fill"), ColorButton("lightblue", "fill"), ColorButton("pink", "fill")
+          )
+        )
+      ];
+    }
+
+    const DarkColorButtons = () => {  // used by multiple context menus
+      return [
+        $("ContextMenuButton",
+          $(go.Panel, "Horizontal",
+            ColorButton("black"), ColorButton("green"), ColorButton("blue"), ColorButton("red")
+          )
+        ),
+        $("ContextMenuButton",
+          $(go.Panel, "Horizontal",
+            ColorButton("brown"), ColorButton("magenta"), ColorButton("purple"), ColorButton("orange")
+          )
+        )
+      ];
+    }
+
+    // Create a context menu button for setting a data property with a stroke width value.
+    const ThicknessButton = (sw, propname?) => {
+      if (!propname) propname = "thickness";
+      return $(go.Shape, "LineH",
+        {
+          width: 16, height: 16, strokeWidth: sw,
+          margin: 1, background: "transparent",
+          mouseEnter: function (e, shape) {
+            shape.background = "dodgerblue";
+          },
+          mouseLeave: function (e, shape) {
+            shape.background = "transparent";
+          },
+          click: ClickFunction(propname, sw), contextClick: ClickFunction(propname, sw)
+        });
+    }
+
+    // Create a context menu button for setting a data property with a stroke dash Array value.
+    const DashButton = (dash, propname?) => {
+      if (!propname) propname = "dash";
+      return $(go.Shape, "LineH",
+        {
+          width: 24, height: 16, strokeWidth: 2,
+          strokeDashArray: dash,
+          margin: 1, background: "transparent",
+          mouseEnter: function (e, shape) {
+            shape.background = "dodgerblue";
+          },
+          mouseLeave: function (e, shape) {
+            shape.background = "transparent";
+          },
+          click: ClickFunction(propname, dash), contextClick: ClickFunction(propname, dash)
+        });
+    }
+
+    const StrokeOptionsButtons = () => {  // used by multiple context menus
+      return [
+        $("ContextMenuButton",
+          $(go.Panel, "Horizontal",
+            ThicknessButton(1), ThicknessButton(2), ThicknessButton(3), ThicknessButton(4)
+          )
+        ),
+        $("ContextMenuButton",
+          $(go.Panel, "Horizontal",
+            DashButton(null), DashButton([2, 4]), DashButton([4, 4])
+          )
+        )
+      ];
+    }
+
+
+    const FigureButton = (fig, propname?) => {
+      if (!propname) propname = "figure";
+      return $(go.Shape,
+        {
+          width: 32, height: 32, scale: 0.5, fill: "lightgray", figure: fig,
+          margin: 1, background: "transparent",
+          mouseEnter: function (e, shape) {
+            (shape as Shape).fill = "dodgerblue";
+          },
+          mouseLeave: function (e, shape) {
+            (shape as Shape).fill = "lightgray";
+          },
+          click: ClickFunction(propname, fig), contextClick: ClickFunction(propname, fig)
+        });
+    }
+
+
+    const ArrowButton = (num) => {
+      var geo = "M0 0 M16 16 M0 8 L16 8  M12 11 L16 8 L12 5";
+      if (num === 0) {
+        geo = "M0 0 M16 16 M0 8 L16 8";
+      } else if (num === 2) {
+        geo = "M0 0 M16 16 M0 8 L16 8  M12 11 L16 8 L12 5  M4 11 L0 8 L4 5";
+      }
+      return $(go.Shape,
+        {
+          geometryString: geo,
+          margin: 2, background: "transparent",
+          mouseEnter: function (e, shape) {
+            shape.background = "dodgerblue";
+          },
+          mouseLeave: function (e, shape) {
+            shape.background = "transparent";
+          },
+          click: ClickFunction("dir", num), contextClick: ClickFunction("dir", num)
+        });
+    }
+
+    const AllSidesButton = (to) => {
+      var setter = function (e, shape) {
+        e.handled = true;
+        e.diagram.model.commit(function (m) {
+          var link = shape.part.adornedPart;
+          m.set(link.data, (to ? "toSpot" : "fromSpot"), go.Spot.stringify(go.Spot.AllSides));
+          // re-spread the connections of other links connected with the node
+          (to ? link.toNode : link.fromNode).invalidateConnectedLinks();
+        });
+      };
+      return $(go.Shape,
+        {
+          width: 12, height: 12, fill: "transparent",
+          mouseEnter: function (e, shape) {
+            shape.background = "dodgerblue";
+          },
+          mouseLeave: function (e, shape) {
+            shape.background = "transparent";
+          },
+          click: setter, contextClick: setter
+        });
+    }
+
+    const SpotButton = (spot, to) => {
+      var ang = 0;
+      var side = go.Spot.RightSide;
+      if (spot.equals(go.Spot.Top)) {
+        ang = 270;
+        side = go.Spot.TopSide;
+      } else if (spot.equals(go.Spot.Left)) {
+        ang = 180;
+        side = go.Spot.LeftSide;
+      } else if (spot.equals(go.Spot.Bottom)) {
+        ang = 90;
+        side = go.Spot.BottomSide;
+      }
+      if (!to) ang -= 180;
+      var setter = function (e, shape) {
+        e.handled = true;
+        e.diagram.model.commit(function (m) {
+          var link = shape.part.adornedPart;
+          m.set(link.data, (to ? "toSpot" : "fromSpot"), go.Spot.stringify(side));
+          // re-spread the connections of other links connected with the node
+          (to ? link.toNode : link.fromNode).invalidateConnectedLinks();
+        });
+      };
+      return $(go.Shape,
+        {
+          alignment: spot, alignmentFocus: spot.opposite(),
+          geometryString: "M0 0 M12 12 M12 6 L1 6 L4 4 M1 6 L4 8",
+          angle: ang,
+          background: "transparent",
+          mouseEnter: function (e, shape) {
+            shape.background = "dodgerblue";
+          },
+          mouseLeave: function (e, shape) {
+            shape.background = "transparent";
+          },
+          click: setter, contextClick: setter
+        });
+    }
+
 
     this.diagram.linkTemplate =
       $("Link",
@@ -405,9 +786,14 @@ export class IncidentClusterGraphComponent implements OnInit {
 
     this.diagram.nodeTemplateMap.add("Holder",
       $(go.Node, "Auto",
-        {},
+        {
+          resizable: true,
+          resizeCellSize: new go.Size(20, 20)
+        },
         {},
         new go.Binding("text", "name"),
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+        new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
         // define the node's outer shape
         $(go.Shape, "Rectangle",
           {
@@ -465,6 +851,135 @@ export class IncidentClusterGraphComponent implements OnInit {
       $(go.Link, go.Link.Orthogonal,
         {corner: 5},
         $(go.Shape, {strokeWidth: 4, stroke: "#00a4a4"})));
+
+    // define annotation template
+    const selectionAdornment = $(go.Adornment, "Spot",
+      $(go.Placeholder, {padding: 10}),
+      makeArrowButton(go.Spot.Top, "TriangleUp"),
+      makeArrowButton(go.Spot.Left, "TriangleLeft"),
+      makeArrowButton(go.Spot.Right, "TriangleRight"),
+      makeArrowButton(go.Spot.Bottom, "TriangleDown"),
+      CMButton({alignment: new go.Spot(0.75, 0)})
+    );
+    this.diagram.nodeTemplateMap.add("Annotation",
+      $(go.Node, "Auto",
+        {
+          locationSpot: go.Spot.Center, locationObjectName: "SHAPE",
+          desiredSize: new go.Size(120, 60), minSize: new go.Size(40, 40),
+          resizable: true, resizeCellSize: new go.Size(20, 20),
+          selectionAdornmentTemplate: selectionAdornment,
+          contextMenu: $("ContextMenu",
+            $("ContextMenuButton",
+              $(go.Panel, "Horizontal",
+                FigureButton("Rectangle"), FigureButton("RoundedRectangle"), FigureButton("Ellipse"), FigureButton("Diamond")
+              )
+            ),
+            LightFillButtons(),
+            DarkColorButtons(),
+            StrokeOptionsButtons()
+          )
+        },
+        // these Bindings are TwoWay because the DraggingTool and ResizingTool modify the target properties
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+        new go.Binding("desiredSize", "size", go.Size.parse).makeTwoWay(go.Size.stringify),
+        $(go.Shape,
+          { // the border
+            name: "SHAPE", fill: "white",
+            portId: "", cursor: "pointer",
+            fromLinkable: true, toLinkable: true,
+            fromLinkableDuplicates: true, toLinkableDuplicates: true,
+            fromSpot: go.Spot.AllSides, toSpot: go.Spot.AllSides
+          },
+          new go.Binding("figure"),
+          new go.Binding("fill"),
+          new go.Binding("stroke", "color"),
+          new go.Binding("strokeWidth", "thickness"),
+          new go.Binding("strokeDashArray", "dash")),
+        // this Shape prevents mouse events from reaching the middle of the port
+        $(go.Shape, {width: 100, height: 40, strokeWidth: 0, fill: "transparent"}),
+        $(go.TextBlock,
+          {margin: 1, textAlign: "center", overflow: go.TextBlock.OverflowEllipsis, editable: true},
+          // this Binding is TwoWay due to the user editing the text with the TextEditingTool
+          new go.Binding("text").makeTwoWay(),
+          new go.Binding("stroke", "color"))
+      ),
+    );
+    this.diagram.linkTemplateMap.add("Annotation",
+      $(go.Link,
+        {
+          layerName: "Foreground",
+          routing: go.Link.AvoidsNodes, corner: 10,
+          toShortLength: 4,  // assume arrowhead at "to" end, need to avoid bad appearance when path is thick
+          relinkableFrom: true, relinkableTo: true,
+          reshapable: true, resegmentable: true,
+          selectionAdornmentTemplate: $(go.Adornment,  // use a special selection Adornment that does not obscure the link path itself
+            $(go.Shape,
+              { // this uses a pathPattern with a gap in it, in order to avoid drawing on top of the link path Shape
+                isPanelMain: true,
+                stroke: "transparent", strokeWidth: 6,
+                pathPattern: makeAdornmentPathPattern(2)  // == thickness or strokeWidth
+              },
+              new go.Binding("pathPattern", "thickness", makeAdornmentPathPattern)),
+            CMButton({alignmentFocus: new go.Spot(0, 0, -6, -4)})
+          ),
+          contextMenu: $("ContextMenu",
+            DarkColorButtons(),
+            StrokeOptionsButtons(),
+            $("ContextMenuButton",
+              $(go.Panel, "Horizontal",
+                ArrowButton(0), ArrowButton(1), ArrowButton(2)
+              )
+            ),
+            $("ContextMenuButton",
+              $(go.Panel, "Horizontal",
+                $(go.Panel, "Spot",
+                  AllSidesButton(false),
+                  SpotButton(go.Spot.Top, false), SpotButton(go.Spot.Left, false), SpotButton(go.Spot.Right, false), SpotButton(go.Spot.Bottom, false)
+                ),
+                $(go.Panel, "Spot",
+                  {margin: new go.Margin(0, 0, 0, 2)},
+                  AllSidesButton(true),
+                  SpotButton(go.Spot.Top, true), SpotButton(go.Spot.Left, true), SpotButton(go.Spot.Right, true), SpotButton(go.Spot.Bottom, true)
+                )
+              )
+            )
+          )
+        },
+        new go.Binding("fromSpot", "fromSpot", go.Spot.parse),
+        new go.Binding("toSpot", "toSpot", go.Spot.parse),
+        new go.Binding("fromShortLength", "dir", function (dir) {
+          return dir === 2 ? 4 : 0;
+        }),
+        new go.Binding("toShortLength", "dir", function (dir) {
+          return dir >= 1 ? 4 : 0;
+        }),
+        new go.Binding("points").makeTwoWay(),  // TwoWay due to user reshaping with LinkReshapingTool
+        $(go.Shape, {strokeWidth: 2},
+          new go.Binding("stroke", "color"),
+          new go.Binding("strokeWidth", "thickness"),
+          new go.Binding("strokeDashArray", "dash")),
+        $(go.Shape, {fromArrow: "Backward", strokeWidth: 0, scale: 4 / 3, visible: false},
+          new go.Binding("visible", "dir", function (dir) {
+            return dir === 2;
+          }),
+          new go.Binding("fill", "color"),
+          new go.Binding("scale", "thickness", function (t) {
+            return (2 + t) / 3;
+          })),
+        $(go.Shape, {toArrow: "Standard", strokeWidth: 0, scale: 4 / 3},
+          new go.Binding("visible", "dir", function (dir) {
+            return dir >= 1;
+          }),
+          new go.Binding("fill", "color"),
+          new go.Binding("scale", "thickness", function (t) {
+            return (2 + t) / 3;
+          })),
+        $(go.TextBlock,
+          {alignmentFocus: new go.Spot(0, 1, -4, 0), editable: true},
+          new go.Binding("text").makeTwoWay(),  // TwoWay due to user editing with TextEditingTool
+          new go.Binding("stroke", "color"))
+      )
+    );
 
     const data = {
       class: 'go.GraphLinksModel',

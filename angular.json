@@ -40,7 +40,9 @@
               "node_modules/marked/lib/marked.js",
               "node_modules/d3/build/d3.min.js",
               "node_modules/gojs/extensions/BalloonLink.js",
-              "node_modules/gojs/extensions/RoundedRectangles.js"
+              "node_modules/gojs/extensions/RoundedRectangles.js",
+              "node_modules/gojs/extensions/Figures.js",
+              "node_modules/gojs/extensions/DrawCommandHandler.js"
             ]
           },
           "configurations": {

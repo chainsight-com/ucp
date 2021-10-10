@@ -8,17 +8,24 @@
   artifacts:
     paths:
       - dist/
-.deploy:
-  image: profyu/gcloud-sdk:285.0.1
+
+.deploy-image:
+  image: docker:19.03.13
+  services:
+    - docker:19.03.13-dind
   before_script:
-    - export PATH=/google-cloud-sdk/bin/:$PATH
-    - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
-    - gcloud auth configure-docker
+    - cat $GCLOUD_SERVICE_KEY | docker login -u _json_key --password-stdin https://$GCR_HOST
   script:
-    - docker build . -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+    - docker build target/docker -t $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
     - docker push $GCR_HOST/$GCLOUD_PROJECT_ID/$IMAGE_NAME:$CI_COMMIT_TAG
+  dependencies:
+    - build
+.deploy-chart:
+  image: alpine/k8s:1.21.2
+  script:
+    - helm repo add chartmuseum $CHARTMUSEUM_URL
     - helm package $CHART_DIR --app-version $CI_COMMIT_TAG --version $CI_COMMIT_TAG
-    - curl --data-binary @$CHART_NAME-$CI_COMMIT_TAG.tgz $CHARTMUSEUM_URL/api/charts
+    - helm push $CHART_NAME-$CI_COMMIT_TAG.tgz chartmuseum
 .rollout:
   image: profyu/gcloud-sdk:285.0.1
   before_script:
@@ -32,7 +39,8 @@ stages:
   - validate
   - build
   - test
-  - deploy
+  - deploy-image
+  - deploy-chart
   - rollout
 image: docker:19.03.13
 variables:
@@ -74,30 +82,22 @@ build-prod:
   only:
     refs:
       - /^\d+\.\d+\.\d+$/@ucp/unblock-ui
-deploy-dev:
-  extends: .deploy
-  stage: deploy
+deploy-image:
+  extends: .deploy-image
+  stage: deploy-image
   only:
     refs:
-      - /^\d+\.\d+\.\d+-beta$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-api
   dependencies:
     - build-dev
-deploy-staging:
-  extends: .deploy
-  stage: deploy
-  only:
-    refs:
-      - /^\d+\.\d+\.\d+-ga$/@ucp/unblock-ui
-  dependencies:
     - build-staging
-deploy-prod:
-  extends: .deploy
-  stage: deploy
+    - build-prod
+deploy-chart:
+  extends: .deploy-chart
+  stage: deploy-chart
   only:
     refs:
-      - /^\d+\.\d+\.\d+$/@ucp/unblock-ui
-  dependencies:
-    - build-prod
+      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-api
 rollout-dev:
   extends: .rollout
   stage: rollout

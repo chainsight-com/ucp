@@ -1,22 +1,25 @@
-<div class="func-area">
-  <div class="pfy-btn-right">
-    <button (click)="addScan()" nz-button nzType="primary" [disabled]="!(project?.isAddressScanEnabled)">
-      <i nz-icon
-         nzType="plus"
-         nzTheme="outline">
-      </i>
-      New Scan
-    </button>
-    <button (click)="addressScanTable.reload(true, false)" nzType="default" nz-button>
-      <i nz-icon
-         nzType="reload"
-         nzTheme="outline">
-      </i>Reload
-    </button>
+<div nz-row>
+  <div nz-col nzSpan="24" class="func-area">
+    <div class="pfy-btn-right">
+      <button (click)="addScan()" nz-button nzType="primary" [disabled]="!(project?.isAddressScanEnabled)">
+        <i nz-icon
+           nzType="plus"
+           nzTheme="outline">
+        </i>
+        New Scan
+      </button>
+      <button (click)="addressScanTable.reload(true, false)" nzType="default" nz-button>
+        <i nz-icon
+           nzType="reload"
+           nzTheme="outline">
+        </i>Reload
+      </button>
+    </div>
   </div>
 </div>
-<div class="pfy-page-content">
+<div nz-row class="pfy-page-content">
   <app-address-scan-table #addressScanTable
+                          size
                           [autoReload]="true"
                           [projectId]="project?.id"
                           (detailClick)="handleDetailClick($event)"></app-address-scan-table>

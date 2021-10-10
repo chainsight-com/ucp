@@ -99,7 +99,7 @@ nz-header {
 }
 
 nz-content {
-  margin: 24px 16px 0;
+  margin: 0px 16px 0;
   overflow: initial;
 }
 
@@ -117,8 +117,8 @@ nz-breadcrumb {
 //}
 
 .inner-content {
-  padding: 24px;
-  background: #fff;
+  padding: 0px 15px;
+  //background: #fff;
   min-height: calc(100vh - 124px);
 }
 
