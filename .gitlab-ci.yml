@@ -87,7 +87,7 @@ deploy-image:
   stage: deploy-image
   only:
     refs:
-      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-api
+      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-ui
   dependencies:
     - build-dev
     - build-staging
@@ -97,7 +97,7 @@ deploy-chart:
   stage: deploy-chart
   only:
     refs:
-      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-api
+      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-ui
 rollout-dev:
   extends: .rollout
   stage: rollout
