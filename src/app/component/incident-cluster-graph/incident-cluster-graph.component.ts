@@ -55,7 +55,7 @@ export class IncidentClusterGraphComponent implements OnInit {
   public pageSize = 10;
   public isLoading = false;
   private unsubscribe$ = new Subject<void>();
-  private annotationFirstLoaded = false;
+  private shouldSaveAnnotation = false;
 
   @ViewChild('ctxMenu', {static: false})
   private ctxMenuRef: ElementRef;
@@ -68,7 +68,7 @@ export class IncidentClusterGraphComponent implements OnInit {
     interval(1000)
       .pipe(
         takeUntil(this.unsubscribe$),
-        // filter(d => this.autoReload)
+        filter(d => this.incident && this.diagram && this.shouldSaveAnnotation)
       ).subscribe(
       data => {
         this.saveAnnotationModel();
@@ -91,15 +91,6 @@ export class IncidentClusterGraphComponent implements OnInit {
   }
 
   public saveAnnotationModel() {
-    if (!this.incident) {
-      return;
-    }
-    if (!this.diagram) {
-      return;
-    }
-    if (!this.annotationFirstLoaded) {
-      return;
-    }
     const fullModel = JSON.parse(this.diagram.model.toJson());
     const data = {
       nodeDataArray: fullModel.nodeDataArray.filter(n => n.category === 'Annotation'),
@@ -141,6 +132,7 @@ export class IncidentClusterGraphComponent implements OnInit {
 
   reloadPage() {
     this.isLoading = true;
+    this.shouldSaveAnnotation = false;
     this.incidentApiService.getIncidentClusterGraphUsingGET(this.incidentId, this.pageIdx, this.pageSize)
       .pipe(
         take(1)
@@ -162,7 +154,7 @@ export class IncidentClusterGraphComponent implements OnInit {
         model.addNodeDataCollection(annotation.nodeDataArray);
         model.addLinkDataCollection(annotation.linkDataArray);
       }
-      this.annotationFirstLoaded = true;
+      this.shouldSaveAnnotation = true;
       this.isLoading = false;
     }, console.error, () => {
       this.isLoading = false;
@@ -177,6 +169,8 @@ export class IncidentClusterGraphComponent implements OnInit {
       this.initDiagram();
     }
     const model = this.diagram.model as GraphLinksModel;
+    model.nodeDataArray = [];
+    model.linkDataArray = [];
     const filteredNodes = nodes
       .filter(n => !model.findNodeDataForKey(n.clusterId));
 
