@@ -1,21 +1,25 @@
-<div class="func-area">
-  <div class="pfy-btn-right">
-    <button (click)="addIncident()" nz-button nzType="primary">
-      <i nz-icon
-         nzType="plus"
-         nzTheme="outline">
-      </i>
-      Open Incident
-    </button>
-    <button (click)="incidentTable.reload(true, false)" nzType="default" nz-button>
-      <i nz-icon
-         nzType="reload"
-         nzTheme="outline">
-      </i>Reload
-    </button>
+<div nz-row>
+  <div nz-col nzSpan="24" class="func-area">
+    <div class="pfy-btn-right">
+      <button (click)="addIncident()" nz-button nzType="primary">
+        <i nz-icon
+           nzType="plus"
+           nzTheme="outline">
+        </i>
+        Open Incident
+      </button>
+      <button (click)="incidentTable.reload(true, false)" nzType="default" nz-button>
+        <i nz-icon
+           nzType="reload"
+           nzTheme="outline">
+        </i>Reload
+      </button>
+    </div>
   </div>
 </div>
-<div class="pfy-page-content">
+
+
+<div nz-row class="pfy-page-content">
   <app-incident-table #incidentTable
                           [projectId]="project?.id"
                           (detailClick)="handleDetailClick($event)"></app-incident-table>

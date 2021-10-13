@@ -1,66 +1,72 @@
-<h1>Project - {{project?.name}}</h1>
-<nz-row [nzGutter]="16">
-  <nz-col [nzSpan]="4">
-    <nz-card>
-      <nz-statistic [nzValue]="project?.balanceAmount | number" [nzTitle]="'Project Balance'"></nz-statistic>
-    </nz-card>
-  </nz-col>
-</nz-row>
-<nz-row>
-  <div nz-col nzSpan="24">
-    <nz-divider></nz-divider>
-  </div>
-</nz-row>
-<nz-row [nzGutter]="4">
-  <nz-col [nzSpan]="4">
-    <nz-card nzTitle="Available Features" [nzBodyStyle]="{'height': '400px', 'overflow-y':'scroll'}">
-      <nz-list
-        nzSize="small"
-      >
-        <nz-list-item>
-          <nz-badge [nzStatus]="project?.isAddressScanEnabled ? 'success' : 'default'" nzText="Address Scan"></nz-badge>
-        </nz-list-item>
-        <nz-list-item>
-          <nz-badge [nzStatus]="project?.isFlowLabelingEnabled ? 'success' : 'default'" nzText="Flow Labeling"></nz-badge>
-        </nz-list-item>
-      </nz-list>
-    </nz-card>
-  </nz-col>
-  <nz-col [nzSpan]="4" >
-    <nz-card nzTitle="Available Currencies" [nzBodyStyle]="{'height': '400px', 'overflow-y':'scroll'}">
-      <nz-list
-        [nzDataSource]="currencies"
-        nzSize="small"
-        [nzRenderItem]="currencyItem"
-      >
-        <ng-template #currencyItem let-currency>
+<nz-content style="margin:24px 16px 0;">
+  <h1>Project - {{project?.name}}</h1>
+  <nz-row [nzGutter]="16">
+    <nz-col [nzSpan]="4">
+      <nz-card>
+        <nz-statistic [nzValue]="project?.balanceAmount | number" [nzTitle]="'Project Balance'"></nz-statistic>
+      </nz-card>
+    </nz-col>
+  </nz-row>
+  <nz-row>
+    <div nz-col nzSpan="24">
+      <nz-divider></nz-divider>
+    </div>
+  </nz-row>
+  <nz-row [nzGutter]="4">
+    <nz-col [nzSpan]="4">
+      <nz-card nzTitle="Available Features" [nzBodyStyle]="{'min-height': '400px', 'overflow-y':'scroll'}">
+        <nz-list
+          nzSize="small"
+        >
           <nz-list-item>
-            <nz-badge [nzStatus]="currency.isAvailable ? 'success' : 'default'" [nzText]="currency.name.toUpperCase()"></nz-badge>
+            <nz-badge [nzStatus]="project?.isAddressScanEnabled ? 'success' : 'default'"
+                      nzText="Address Scan"></nz-badge>
           </nz-list-item>
-        </ng-template>
-      </nz-list>
-    </nz-card>
-  </nz-col>
-  <nz-col [nzSpan]="16">
-    <nz-card nzTitle="Project Transactions" [nzBodyStyle]="{'height': '400px', 'overflow-y':'scroll'}" [nzExtra]="extraTemplate">
-      <div class="pfy-page-content">
-        <pfy-table
-          [tblSize]="'small'"
-          [tblColumns]="columns"
-          [tblData]="page.content"
-          [total]="page.totalElements"
-          [(pageIndex)]="pageIdx"
-          [loading]="isLoading"
-          (detailClick)="handleDetailClick($event)"
-          (actionClick)="handleActionClick($event)"
-          [pageable]="true"
-          [pageSizeOptions]="pageSizeOptions"
-          (pageSizeChange)="handlePageSizeChange($event)"
-        ></pfy-table>
-      </div>
-    </nz-card>
-    <ng-template #extraTemplate>
-      <a (click)="reload(true)">Reload</a>
-    </ng-template>
-  </nz-col>
-</nz-row>
+          <nz-list-item>
+            <nz-badge [nzStatus]="project?.isFlowLabelingEnabled ? 'success' : 'default'"
+                      nzText="Flow Labeling"></nz-badge>
+          </nz-list-item>
+        </nz-list>
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="4">
+      <nz-card nzTitle="Available Currencies" [nzBodyStyle]="{'min-height': '400px', 'overflow-y':'scroll'}">
+        <nz-list
+          [nzDataSource]="currencies"
+          nzSize="small"
+          [nzRenderItem]="currencyItem"
+        >
+          <ng-template #currencyItem let-currency>
+            <nz-list-item>
+              <nz-badge [nzStatus]="currency.isAvailable ? 'success' : 'default'"
+                        [nzText]="currency.name.toUpperCase()"></nz-badge>
+            </nz-list-item>
+          </ng-template>
+        </nz-list>
+      </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="16">
+      <nz-card nzTitle="Project Transactions" [nzBodyStyle]="{'min-height': '400px', 'overflow-y':'scroll'}"
+               [nzExtra]="extraTemplate">
+        <div class="pfy-page-content">
+          <pfy-table
+            [tblSize]="'small'"
+            [tblColumns]="columns"
+            [tblData]="page.content"
+            [total]="page.totalElements"
+            [(pageIndex)]="pageIdx"
+            [loading]="isLoading"
+            (detailClick)="handleDetailClick($event)"
+            (actionClick)="handleActionClick($event)"
+            [pageable]="true"
+            [pageSizeOptions]="pageSizeOptions"
+            (pageSizeChange)="handlePageSizeChange($event)"
+          ></pfy-table>
+        </div>
+      </nz-card>
+      <ng-template #extraTemplate>
+        <a (click)="reload(true)">Reload</a>
+      </ng-template>
+    </nz-col>
+  </nz-row>
+</nz-content>

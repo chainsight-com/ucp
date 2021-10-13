@@ -1,15 +1,19 @@
-<div class="func-area">
-  <div class="pfy-btn-right">
-    <button (click)="addFlowLabeling()" nz-button nzType="primary" [disabled]="!(project?.isFlowLabelingEnabled)">
-      <i nz-icon nzType="plus" nzTheme="outline"></i>
-      New Flow Labeling
-    </button>
-    <button (click)="reload()" nz-button nzType="primary">
-      <i nz-icon nzType="reload" nzTheme="outline"></i>Reload</button>
+<div nz-row>
+  <div nz-col nzSpan="24" class="func-area">
+    <div class="pfy-btn-right">
+      <button (click)="addFlowLabeling()" nz-button nzType="primary" [disabled]="!(project?.isFlowLabelingEnabled)">
+        <i nz-icon nzType="plus" nzTheme="outline"></i>
+        New Flow Labeling
+      </button>
+      <button (click)="reload()" nz-button nzType="default">
+        <i nz-icon nzType="reload" nzTheme="outline"></i>Reload</button>
+    </div>
   </div>
 </div>
-<div class="pfy-page-content">
+
+<div nz-row class="pfy-page-content">
   <pfy-table
+    [tblSize]="'medium'"
     [tblColumns]="tblColumns"
     [tblData]="listOfData"
     [total]="totalElements"

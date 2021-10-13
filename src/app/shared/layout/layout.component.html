@@ -8,14 +8,7 @@
   </nz-sider>
   <nz-layout class="right-layout">
     <nz-header>
-      <div>
-        <i class="trigger"
-           nz-icon
-           [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-           (click)="isCollapsed = !isCollapsed"
-        ></i>
-      </div>
-      <div>
+      <div style="padding: 0 24px;">
         <span class="header-title">{{title}}</span>
         <span class="header-subtitle">{{subtitle}} </span>
       </div>

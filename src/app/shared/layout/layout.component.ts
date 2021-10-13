@@ -98,6 +98,14 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
         title: 'Flow Labeling',
         subtitle: 'Address automation labeling tool',
       },
+      AddressCasePageComponent: {
+        title: 'Case Management',
+        subtitle: '',
+      },
+      IncidentPageComponent: {
+        title: 'Incident Management',
+        subtitle: 'Incident investigation tool',
+      },
 
     };
     if (this.activatedRoute.firstChild) {
