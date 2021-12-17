@@ -27,6 +27,7 @@ import {CcPipe} from "../../../pipes/cc.pipe";
 import {IncidentAddressScanCreation} from "@profyu/unblock-ng-sdk/model/incident-address-scan-creation";
 import {IncidentTableComponent} from "../../../component/incident/incident-table/incident-table.component";
 import * as Highcharts from 'highcharts';
+import {formatDate} from "@angular/common";
 
 let Sunburst = require('highcharts/modules/sunburst');
 
@@ -504,7 +505,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
               to: edge.toAddress,
               width: this.getEdgeWidth(parseInt(edge.amount)),
               text: `${new CcPipe().transform(edge.amount, this.addressScan.currency.unitRate)} ${this.addressScan.currency.name.toUpperCase()}`,
-              toolTipText: edge.txCount + ' TX'
+              toolTipText: edge.txCount + `TX (${edge.minTxTime ? formatDate(edge.minTxTime, 'short', 'en-US', '') : 'Unknown'} ~ ${edge.maxTxTime ? formatDate(edge.maxTxTime, 'short', 'en-US', '') : 'Unknown'})`
             };
           })
 
