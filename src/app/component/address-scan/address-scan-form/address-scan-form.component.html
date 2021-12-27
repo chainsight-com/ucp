@@ -34,11 +34,11 @@
     <nz-form-label [nzSpan]="6" nzRequired nzFor="forwardMaxLevel">Forward Max Level</nz-form-label>
     <nz-form-control [nzSpan]="18">
       <nz-col nzSpan="18">
-        <nz-slider formControlName="forwardMaxLevel" id="forwardMaxLevel" [nzDefaultValue]="3"
-                   [nzTooltipVisible]="'default'" [nzMin]="1" [nzMax]="3" [nzStep]="1"></nz-slider>
+        <nz-slider formControlName="forwardMaxLevel" id="forwardMaxLevel" [nzDefaultValue]="2"
+                   [nzTooltipVisible]="'default'" [nzMin]="1" [nzMax]="2" [nzStep]="1"></nz-slider>
       </nz-col>
       <div nz-col nzSpan="4">
-        <nz-input-number disabled [nzMin]="1" [nzMax]="3" [ngStyle]="{ marginLeft: '16px' }" [(ngModel)]="form.controls.forwardMaxLevel.value" [ngModelOptions]="{standalone: true}"></nz-input-number>
+        <nz-input-number disabled [nzMin]="1" [nzMax]="2" [ngStyle]="{ marginLeft: '16px' }" [(ngModel)]="form.controls.forwardMaxLevel.value" [ngModelOptions]="{standalone: true}"></nz-input-number>
       </div>
 
     </nz-form-control>
@@ -53,11 +53,11 @@
     </nz-form-label>
     <nz-form-control [nzSpan]="18">
       <nz-col nzSpan="18">
-        <nz-slider formControlName="backwardMaxLevel" id="backwardMaxLevel" [nzDefaultValue]="3"
-                   [nzTooltipVisible]="'default'" [nzMin]="1" [nzMax]="3" [nzStep]="1"></nz-slider>
+        <nz-slider formControlName="backwardMaxLevel" id="backwardMaxLevel" [nzDefaultValue]="2"
+                   [nzTooltipVisible]="'default'" [nzMin]="1" [nzMax]="2" [nzStep]="1"></nz-slider>
       </nz-col>
       <div nz-col nzSpan="4">
-        <nz-input-number disabled [nzMin]="1" [nzMax]="3" [ngStyle]="{ marginLeft: '16px' }" [(ngModel)]="form.controls.backwardMaxLevel.value" [ngModelOptions]="{standalone: true}"></nz-input-number>
+        <nz-input-number disabled [nzMin]="1" [nzMax]="2" [ngStyle]="{ marginLeft: '16px' }" [(ngModel)]="form.controls.backwardMaxLevel.value" [ngModelOptions]="{standalone: true}"></nz-input-number>
       </div>
 
     </nz-form-control>
