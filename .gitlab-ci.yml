@@ -12,7 +12,6 @@
   artifacts:
     paths:
       - dist/
-
 .deploy-image:
   image: docker:19.03.13
   services:
@@ -25,9 +24,9 @@
 .deploy-chart:
   image: alpine/k8s:1.21.2
   script:
-    - helm repo add chartmuseum $CHARTMUSEUM_URL
+    - helm repo add --username $HELM_REGISTRY_USERNAME --password $HELM_REGISTRY_PASSWORD unblock $HELM_REGISTRY_URL
     - helm package $CHART_DIR --app-version $CI_COMMIT_TAG --version $CI_COMMIT_TAG
-    - helm push $CHART_NAME-$CI_COMMIT_TAG.tgz chartmuseum
+    - helm push $CHART_NAME-$CI_COMMIT_TAG.tgz unblock
 .rollout:
   image: profyu/gcloud-sdk:285.0.1
   before_script:
@@ -35,8 +34,8 @@
     - gcloud auth activate-service-account --key-file $GCLOUD_SERVICE_KEY
     - gcloud container clusters get-credentials $GCLOUD_KUBE_CLUSTER_NAME -z $GCLOUD_KUBE_ZONE --project $GCLOUD_PROJECT_ID
   script:
-    - helm repo add chartmuseum $CHARTMUSEUM_URL
-    - helm upgrade --install -n $KUBE_DEPLOY_NS --version $CI_COMMIT_TAG --set ingress.hosts[0].host=$INGRESS_HOST --set ingress.hosts[0].paths[0]="$INGRESS_PATH" --set ingress.tls[0].hosts[0]=$INGRESS_HOST --set ingress.tls[0].secretName=$INGRESS_TLS_NAME $RELEASE_NAME chartmuseum/$CHART_NAME
+    - helm repo add --username $HELM_REGISTRY_USERNAME --password $HELM_REGISTRY_PASSWORD unblock $HELM_REGISTRY_URL
+    - helm upgrade --install -n $KUBE_DEPLOY_NS --version $CI_COMMIT_TAG -f $CHAR_VALUES_FILE $RELEASE_NAME unblock/$CHART_NAME
 stages:
   - validate
   - build
@@ -46,14 +45,14 @@ stages:
   - rollout
 image: docker:19.03.13
 variables:
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
   IMAGE_NAME: unblock-ui
   CHART_NAME: unblock-ui
   CHART_DIR: ./chart/unblock-ui
   RELEASE_NAME: unblock-ui
-  INGRESS_TLS_NAME: unblock-ui-tls
-  INGRESS_PATH: /
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_TLS_CERTDIR: ""
 services:
   - docker:19.03.13-dind
 build-dev:
@@ -63,7 +62,7 @@ build-dev:
     ENV: dev
   only:
     refs:
-      - /^\d+\.\d+\.\d+-beta$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+-beta$/@unblock-analysis/ucp/unblock-ui
 build-staging:
   extends: .build
   stage: build
@@ -71,7 +70,7 @@ build-staging:
     ENV: staging
   only:
     refs:
-      - /^\d+\.\d+\.\d+-ga$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+-ga$/@unblock-analysis/ucp/unblock-ui
 build-prod:
   extends: .build
   stage: build
@@ -79,13 +78,13 @@ build-prod:
     ENV: prod
   only:
     refs:
-      - /^\d+\.\d+\.\d+$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+$/@unblock-analysis/ucp/unblock-ui
 deploy-image:
   extends: .deploy-image
   stage: deploy-image
   only:
     refs:
-      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@unblock-analysis/ucp/unblock-ui
   dependencies:
     - build-dev
     - build-staging
@@ -95,31 +94,31 @@ deploy-chart:
   stage: deploy-chart
   only:
     refs:
-      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+(-(beta|ga))?$/@unblock-analysis/ucp/unblock-ui
 rollout-dev:
   extends: .rollout
   stage: rollout
   variables:
     KUBE_DEPLOY_NS: unblock-dev
-    INGRESS_HOST: ucp.dev.unblock-analysis.com
+    CHAR_VALUES_FILE: ./chart/values-dev.yaml
   only:
     refs:
-      - /^\d+\.\d+\.\d+-beta$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+-beta$/@unblock-analysis/ucp/unblock-ui
 rollout-staging:
   extends: .rollout
   stage: rollout
   variables:
     KUBE_DEPLOY_NS: unblock-staging
-    INGRESS_HOST: ucp.staging.unblock-analysis.com
+    CHAR_VALUES_FILE: ./chart/values-stg.yaml
   only:
     refs:
-      - /^\d+\.\d+\.\d+-ga$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+-ga$/@unblock-analysis/ucp/unblock-ui
 rollout-prod:
   extends: .rollout
   stage: rollout
   variables:
     KUBE_DEPLOY_NS: unblock-prod
-    INGRESS_HOST: ucp.unblock-analysis.com
+    CHAR_VALUES_FILE: ./chart/values-prod.yaml
   only:
     refs:
-      - /^\d+\.\d+\.\d+$/@ucp/unblock-ui
+      - /^\d+\.\d+\.\d+$/@unblock-analysis/ucp/unblock-ui
