@@ -187,7 +187,7 @@ export class IncidentClusterGraphComponent implements OnInit {
           tags: node.tags ? node.tags.map(t => t.label) : [],
           payload: node,
           neighborPage: {
-            pageIdx: 0,
+            pageIdx: -1,
             pageSize: 10,
             isLast: false,
           }

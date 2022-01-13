@@ -129,7 +129,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
           labels: node.labels.map(l => l.label),
           payload: node,
           neighborPage: {
-            pageIdx: 0,
+            pageIdx: -1,
             pageSize: 10,
             isLast: false,
           }
@@ -200,10 +200,12 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
           if (subject.part instanceof go.Node) {
             const node = subject.part as go.Node;
             if (!node.data.neighborPage.isLast) {
+              const nextPageIdx = node.data.neighborPage.pageIdx + 1;
               this.loadNeighbor(node.data.payload,
-                node.data.neighborPage.pageIdx,
+                nextPageIdx,
                 node.data.neighborPage.pageSize,
                 (isLast) => {
+                  node.data.neighborPage.pageIdx = nextPageIdx;
                   node.data.neighborPage.isLast = isLast;
                 });
             }
