@@ -52,7 +52,7 @@ export class IncidentClusterGraphComponent implements OnInit {
   private diagramRef: ElementRef;
   private diagram: go.Diagram;
   public pageIdx = 0;
-  public pageSize = 10;
+  public pageSize = 200;
   public isLoading = false;
   private unsubscribe$ = new Subject<void>();
   private shouldSaveAnnotation = false;
