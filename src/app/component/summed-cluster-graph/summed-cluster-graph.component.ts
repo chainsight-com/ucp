@@ -60,7 +60,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
   private diagramRef: ElementRef;
   private diagram: go.Diagram;
   public pageIdx = 0;
-  public pageSize = 10;
+  public pageSize = 100;
   public isLoading = false;
 
   @ViewChild('ctxMenu', {static: false})
