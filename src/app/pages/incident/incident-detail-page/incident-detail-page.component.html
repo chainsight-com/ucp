@@ -31,6 +31,19 @@
         nzLabel="{{status.label}}">
       </nz-option>
     </nz-select>
+
+  </div>
+</div>
+<div nz-row>
+  <div nz-col nzSpan="24">
+    <div class="pfy-btn-right">
+      <button (click)="incidentClusterGraph.downloadSvg()" nzType="default" nz-button>
+        <i nz-icon
+           nzType="download"
+           nzTheme="outline">
+        </i>Download SVG
+      </button>
+    </div>
   </div>
 </div>
 <br/>

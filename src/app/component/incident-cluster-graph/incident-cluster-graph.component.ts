@@ -100,10 +100,10 @@ export class IncidentClusterGraphComponent implements OnInit {
       json: JSON.stringify(data)
     };
     this.http.patch(environment.baseApiUrl + '/api/incident/' + this.incident.id + '/annotation', body, {
-      headers: new HttpHeaders({'Authorization': "Bearer "+this.userService.token})
+      headers: new HttpHeaders({'Authorization': "Bearer " + this.userService.token})
     })
       .subscribe((incident) => {
-       console.log('Annotation saved');
+        console.log('Annotation saved');
       }, console.error, () => {
       });
 
@@ -148,7 +148,7 @@ export class IncidentClusterGraphComponent implements OnInit {
 
       // render annotation
       const annotationJson = (this.incident as any).annotationJson;
-      if(annotationJson) {
+      if (annotationJson) {
         const annotation = JSON.parse(annotationJson);
         const model = this.diagram.model as GraphLinksModel;
         model.addNodeDataCollection(annotation.nodeDataArray);
@@ -1002,4 +1002,28 @@ export class IncidentClusterGraphComponent implements OnInit {
   }
 
 
+  downloadSvg() {
+    var svg = this.diagram.makeSvg({scale: 1, background: "white"});
+    var svgstr = new XMLSerializer().serializeToString(svg);
+    var blob = new Blob([svgstr], {type: "image/svg+xml"});
+    var url = window.URL.createObjectURL(blob);
+    var filename = `incident_${this.incidentId}.svg`;
+    var a  = document.createElement("a");
+    a.setAttribute('style', "display: none");
+    a.href = url;
+    a.download = filename;
+
+    // IE 11
+    if (window.navigator.msSaveBlob !== undefined) {
+      window.navigator.msSaveBlob(blob, filename);
+      return;
+    }
+
+    document.body.appendChild(a);
+    requestAnimationFrame(() => {
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    });
+  }
 }
