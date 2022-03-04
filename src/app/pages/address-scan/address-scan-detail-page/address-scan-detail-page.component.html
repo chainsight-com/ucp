@@ -153,7 +153,18 @@
                     <nz-divider></nz-divider>
                   </div>
                 </div>
-
+                <div nz-row>
+                  <div nz-col nzSpan="24">
+                    <div class="pfy-btn-right">
+                      <button (click)="downloadFlowSvg()" nzType="default" nz-button>
+                        <i nz-icon
+                           nzType="download"
+                           nzTheme="outline">
+                        </i>Download SVG
+                      </button>
+                    </div>
+                  </div>
+                </div>
                 <div nz-row>
                   <div nz-col nzSpan="24">
                     <div class="flow-diagram" #flowDiagramDiv></div>
@@ -165,8 +176,19 @@
             </nz-tab>
             <nz-tab [nzTitle]="'Cluster'" *ngIf="addressScan?.enableAddressCluster">
               <ng-template nz-tab>
-
-                <app-summed-cluster-graph *ngIf="addressScan" [addressScanId]="addressScan?.id"
+                <div nz-row>
+                  <div nz-col nzSpan="24">
+                    <div class="pfy-btn-right">
+                      <button (click)="summedClusterGraph.downloadSvg()" nzType="default" nz-button>
+                        <i nz-icon
+                           nzType="download"
+                           nzTheme="outline">
+                        </i>Download SVG
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <app-summed-cluster-graph #summedClusterGraph *ngIf="addressScan" [addressScanId]="addressScan?.id"
                   [nodeActions]="clusterGraphActions" (onNodeAction)="handleClusterGraphAction($event)">
                 </app-summed-cluster-graph>
               </ng-template>

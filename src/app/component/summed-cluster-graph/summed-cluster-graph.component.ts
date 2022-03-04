@@ -347,4 +347,28 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
       this.isLoading = false;
     });
   }
+  downloadSvg() {
+    var svg = this.diagram.makeSvg({scale: 1, background: "white"});
+    var svgstr = new XMLSerializer().serializeToString(svg);
+    var blob = new Blob([svgstr], {type: "image/svg+xml"});
+    var url = window.URL.createObjectURL(blob);
+    var filename = `summed_cluster_${this.addressScanId}.svg`;
+    var a  = document.createElement("a");
+    a.setAttribute('style', "display: none");
+    a.href = url;
+    a.download = filename;
+
+    // IE 11
+    if (window.navigator.msSaveBlob !== undefined) {
+      window.navigator.msSaveBlob(blob, filename);
+      return;
+    }
+
+    document.body.appendChild(a);
+    requestAnimationFrame(() => {
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    });
+  }
 }

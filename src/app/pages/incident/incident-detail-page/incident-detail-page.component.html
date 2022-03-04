@@ -83,8 +83,21 @@
   [nzWidth]="900"
   [nzClosable]="false"
   (nzOnClose)="closeAddressScanDrawer()">
+  <div nz-row>
+    <div nz-col nzSpan="24">
+      <div class="pfy-btn-right">
+        <button (click)="summedClusterGraph.downloadSvg()" nzType="default" nz-button>
+          <i nz-icon
+             nzType="download"
+             nzTheme="outline">
+          </i>Download SVG
+        </button>
+      </div>
+    </div>
+  </div>
   <nz-spin [nzSpinning]="isLoadingAddressScanGraph">
     <app-summed-cluster-graph
+      #summedClusterGraph
       [addressScanId]="currentAddressScan?.id" [nodeActions]="addressScanGraphActions"
       (onNodeAction)="onAddressScanGraphAction($event)">
     </app-summed-cluster-graph>

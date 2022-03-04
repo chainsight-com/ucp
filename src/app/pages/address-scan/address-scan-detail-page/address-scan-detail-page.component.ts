@@ -28,6 +28,10 @@ import {IncidentAddressScanCreation} from "@profyu/unblock-ng-sdk/model/incident
 import {IncidentTableComponent} from "../../../component/incident/incident-table/incident-table.component";
 import * as Highcharts from 'highcharts';
 import {formatDate} from "@angular/common";
+import {
+  IncidentClusterGraphComponent
+} from "../../../component/incident-cluster-graph/incident-cluster-graph.component";
+import {SummedClusterGraphComponent} from "../../../component/summed-cluster-graph/summed-cluster-graph.component";
 
 let Sunburst = require('highcharts/modules/sunburst');
 
@@ -42,6 +46,9 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   @ViewChild("incidentTable", {static: false})
   private incidentTable: IncidentTableComponent;
+
+  @ViewChild("summedClusterGraph", {static: false})
+  private summedClusterGraph: SummedClusterGraphComponent;
 
   public isLoadingPipeline = false;
   public addressScan: AddressScanDto = {
@@ -853,5 +860,30 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   closeRuleDrawer() {
     this.showRuleDrawer = false;
+  }
+
+  downloadFlowSvg() {
+    var svg = this.flowDiagram.makeSvg({scale: 1, background: "white"});
+    var svgstr = new XMLSerializer().serializeToString(svg);
+    var blob = new Blob([svgstr], {type: "image/svg+xml"});
+    var url = window.URL.createObjectURL(blob);
+    var filename = `flow_${this.addressScan.id}.svg`;
+    var a  = document.createElement("a");
+    a.setAttribute('style', "display: none");
+    a.href = url;
+    a.download = filename;
+
+    // IE 11
+    if (window.navigator.msSaveBlob !== undefined) {
+      window.navigator.msSaveBlob(blob, filename);
+      return;
+    }
+
+    document.body.appendChild(a);
+    requestAnimationFrame(() => {
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    });
   }
 }

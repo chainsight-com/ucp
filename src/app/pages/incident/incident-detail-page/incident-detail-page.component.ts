@@ -27,6 +27,7 @@ import {IncidentClusterGraphComponent} from "../../../component/incident-cluster
 import {AddressScanTableComponent} from "../../../component/address-scan/address-scan-table/address-scan-table.component";
 import {IncidentClusterUpdates} from "@profyu/unblock-ng-sdk/model/incident-cluster-updates";
 import {AddressScanFormComponent} from "../../../component/address-scan/address-scan-form/address-scan-form.component";
+import {SummedClusterGraphComponent} from "../../../component/summed-cluster-graph/summed-cluster-graph.component";
 
 
 export const COLORS = [
@@ -64,6 +65,9 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   @ViewChild("addressScanForm", {static: false})
   private addressScanForm: AddressScanFormComponent;
+
+  @ViewChild("summedClusterGraph", {static: false})
+  private summedClusterGraph: SummedClusterGraphComponent;
 
   public fillColorOptions: string[] = COLORS.map(c => c[0]);
   public strokeColorOptions: string[] = COLORS.map(c => c[1]);
