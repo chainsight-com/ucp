@@ -110,7 +110,7 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
     const formValue = this.form.value;
 
     if (!formValue.forwardEnabled && !formValue.backwardEnabled) {
-      this.message.error(`<span class="pfy-message-error">You must enabled either backward or forward scanning</span>`);
+      this.message.error(`<span class="pfy-message-error">You must enable either backward or forward scanning</span>`);
       return;
     }
 

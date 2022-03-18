@@ -96,6 +96,12 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
       return;
     }
     const formValue = this.form.value;
+
+    if (!formValue.forwardEnabled && !formValue.backwardEnabled) {
+      this.message.error(`<span class="pfy-message-error">You must enable either backward or forward scanning</span>`);
+      return;
+    }
+
     this.isSubmitting = true;
     this.flowLabelingApiService.createFlowLabelingUsingPOST({
       currencyId: formValue.currencyId,
