@@ -61,6 +61,8 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
 
     this.form = this.fb.group({
       currencyId: [null, [Validators.required]],
+      method: ['TAINT', [Validators.required]],
+      methodOptMaxN: [3, [Validators.required]],
       forwardEnabled: [true],
       forwardMaxLevel: [3, [Validators.required]],
       backwardEnabled: [true],
@@ -103,8 +105,11 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
     }
 
     this.isSubmitting = true;
-    this.flowLabelingApiService.createFlowLabelingUsingPOST({
+    // @ts-ignore
+    (this.flowLabelingApiService as any).createFlowLabelingUsingPOST({
       currencyId: formValue.currencyId,
+      method: formValue.method,
+      methodOptMaxN: formValue.methodOptMaxN,
       forwardMaxLevel: formValue.forwardMaxLevel,
       backwardMaxLevel: formValue.backwardMaxLevel,
       startingTime: formValue.dateRange[0],
@@ -141,6 +146,15 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
       });
   }
 
+  methodChanged(method: String): void {
+    const ctrl = this.form.get('methodOptMaxN');
+    if (method !== 'MAX') {
+      ctrl.setValue(0);
+    } else {
+      ctrl.setValue(3);
+    }
+    ctrl.updateValueAndValidity();
+  }
 
   forwardEnableChanged(forwardEnabled: boolean): void {
     const ctrl = this.form.get('forwardMaxLevel');
