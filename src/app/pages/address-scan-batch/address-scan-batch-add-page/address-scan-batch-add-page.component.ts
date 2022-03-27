@@ -57,6 +57,8 @@ export class AddressScanBatchAddPageComponent implements OnInit {
     this.form = this.fb.group({
       name: ['', [Validators.required]],
       currencyId: [null, [Validators.required]],
+      method: ['TAINT', [Validators.required]],
+      methodOptMaxN: [3, [Validators.required]],
       forwardEnabled: [true],
       forwardMaxLevel: [3, [Validators.required]],
       backwardEnabled: [true],
@@ -99,11 +101,14 @@ export class AddressScanBatchAddPageComponent implements OnInit {
 
     const formValue = this.form.value;
 
-    const body: AddressScanBatchCreationFromBlob = {
+    this.isSubmitting = true;
+    (this.addressScanBatchApiService as any).createAddressScanBatchFromBlobUsingPOST({
       name: formValue.name,
       projectId: this.userService.project.id,
       addressListBlobId:  (this.fileList[0].response as BlobDto).id,
       currencyId: formValue.currencyId,
+      method: formValue.method,
+      methodOptMaxN: formValue.methodOptMaxN,
       forwardMaxLevel: formValue.forwardMaxLevel,
       backwardMaxLevel: formValue.backwardMaxLevel,
       startingTime: formValue.dateRange[0],
@@ -116,10 +121,7 @@ export class AddressScanBatchAddPageComponent implements OnInit {
       enableFusiformDetection: formValue.enableFusiformDetection,
       enableLabelRiskDetection: formValue.enableLabelRiskDetection,
       timeoutSecs: 3600,
-    };
-
-    this.isSubmitting = true;
-    this.addressScanBatchApiService.createAddressScanBatchFromBlobUsingPOST(body).pipe(
+    }).pipe(
       take(1),
       finalize(() => {
         this.isSubmitting = false;
@@ -145,7 +147,15 @@ export class AddressScanBatchAddPageComponent implements OnInit {
     }
     ctrl.updateValueAndValidity();
   }
-
+  methodChanged(method: String): void {
+    const ctrl = this.form.get('methodOptMaxN');
+    if (method !== 'MAX') {
+      ctrl.setValue(0);
+    } else {
+      ctrl.setValue(3);
+    }
+    ctrl.updateValueAndValidity();
+  }
   backwardEnableChanged(backwardEnabled: boolean): void {
     const ctrl = this.form.get('backwardMaxLevel');
     if (!backwardEnabled) {

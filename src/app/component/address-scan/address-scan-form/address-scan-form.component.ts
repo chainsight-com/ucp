@@ -55,6 +55,8 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
       projectId: [this.projectId, [Validators.required]],
       currencyId: [this.currencyId, [Validators.required]],
       address: [this.address, [Validators.required]],
+      method: ['TAINT', [Validators.required]],
+      methodOptMaxN: [3, [Validators.required]],
       forwardEnabled: [true],
       forwardMaxLevel: [2, [Validators.required]],
       backwardEnabled: [true],
@@ -114,10 +116,14 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
       return;
     }
 
-    const body: AddressScanCreation = {
+
+    this.isSubmitting = true;
+    (this.addressScanApi as any).createAddressScanUsingPOST({
       projectId: formValue.projectId,
       currencyId: formValue.currencyId,
       address: formValue.address,
+      method: formValue.method,
+      methodOptMaxN: formValue.methodOptMaxN,
       forwardMaxLevel: formValue.forwardMaxLevel,
       backwardMaxLevel: formValue.backwardMaxLevel,
       startingTime: formValue.dateRange[0],
@@ -131,11 +137,7 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
       enableNatureAmountDetection: formValue.enableNatureAmountDetection,
       enableFusiformDetection: formValue.enableFusiformDetection,
       enableLabelRiskDetection: formValue.enableLabelRiskDetection,
-    };
-
-
-    this.isSubmitting = true;
-    this.addressScanApi.createAddressScanUsingPOST(body)
+    })
       .pipe(
         take(1),
         finalize(() => {
@@ -154,6 +156,16 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  methodChanged(method: String): void {
+    const ctrl = this.form.get('methodOptMaxN');
+    if (method !== 'MAX') {
+      ctrl.setValue(0);
+    } else {
+      ctrl.setValue(3);
+    }
+    ctrl.updateValueAndValidity();
   }
 
   forwardEnableChanged(forwardEnabled: boolean): void {

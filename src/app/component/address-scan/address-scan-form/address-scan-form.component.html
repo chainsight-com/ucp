@@ -26,6 +26,21 @@
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
+    <nz-form-label [nzNoColon]="true">Method</nz-form-label>
+    <nz-form-control nzErrorTip="Please input method!">
+      <nz-select formControlName="method" nzPlaceHolder="Choose" (ngModelChange)="methodChanged($event)">
+        <nz-option nzValue="TAINT" nzLabel="TAINT"></nz-option>
+        <nz-option nzValue="MAX" nzLabel="MAX"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item style="margin-top: 32px;" *ngIf="form.get('method')?.value === 'MAX'">
+    <nz-form-label [nzSpan]="6" nzRequired nzFor="methodOptMaxN">Max N</nz-form-label>
+    <nz-form-control [nzSpan]="18">
+      <nz-input-number formControlName="methodOptMaxN" id="methodOptMaxN" [nzMin]="1" [nzMax]="10" [nzStep]="1"></nz-input-number>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
     <nz-form-control>
       <label nz-checkbox formControlName="forwardEnabled" (ngModelChange)="forwardEnableChanged($event)">Forward Scan</label>
     </nz-form-control>
