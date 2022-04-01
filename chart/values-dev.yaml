@@ -6,8 +6,14 @@ ingress:
     - host: ucp.dev.unblock-analysis.com
       paths:
         - /
+    - host: ucp.dev.chainsight.com
+      paths:
+        - /
   tls:
     - secretName: unblock-ui-tls
       hosts:
         - ucp.dev.unblock-analysis.com
+    - secretName: chainsight-ui-tls
+      hosts:
+        - ucp.dev.chainsight.com
 
