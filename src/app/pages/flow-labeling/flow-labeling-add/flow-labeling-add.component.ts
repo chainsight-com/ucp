@@ -1,19 +1,13 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {UserService} from '../../../services/user.service';
-import {
-  FlowLabelingApiService,
-  BlobDto,
-  BlobApiService,
-  CurrencyDto,
-  LabelDto,
-  LabelApiService, LabelCategoryDto, LabelCategoryApiService
-} from '@profyu/unblock-ng-sdk';
-import {NzMessageService, UploadFile, UploadXHRArgs} from 'ng-zorro-antd';
-import {HttpClient, HttpEventType, HttpResponse} from '@angular/common/http';
-import {takeUntil, take} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserService } from '../../../services/user.service';
+import { NzMessageService, UploadFile, UploadXHRArgs } from 'ng-zorro-antd';
+import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
+import { takeUntil, take, map } from 'rxjs/operators';
+import { from, Subject } from 'rxjs';
+import { BlobDto, CurrencyDto, LabelCategoryDto, LabelDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 
 @Component({
@@ -35,14 +29,11 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   constructor(private fb: FormBuilder,
-              private router: Router,
-              private userService: UserService,
-              private message: NzMessageService,
-              private flowLabelingApiService: FlowLabelingApiService,
-              private labelCategoryApiService: LabelCategoryApiService,
-              private labelApiService: LabelApiService,
-              public blobApiService: BlobApiService,
-              private http: HttpClient) {
+    private router: Router,
+    private userService: UserService,
+    private message: NzMessageService,
+    private api: ApiService,
+    private http: HttpClient) {
   }
 
   ngOnInit(): void {
@@ -105,8 +96,8 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
     }
 
     this.isSubmitting = true;
-    // @ts-ignore
-    (this.flowLabelingApiService as any).createFlowLabelingUsingPOST({
+
+    from(this.api.flowLabelingApi.createFlowLabelingUsingPOST({
       currencyId: formValue.currencyId,
       method: formValue.method,
       methodOptMaxN: formValue.methodOptMaxN,
@@ -118,8 +109,10 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
       labelId: formValue.labelId,
       projectId: this.projectId,
       addressListBlobId: (this.fileList[0].response as BlobDto).id
-    }).pipe(
-      take(1)
+    })
+    ).pipe(
+      take(1),
+      map(resp => resp.data)
     ).subscribe(resBody => {
       this.router.navigate(['/flow-labeling-page']);
     }, (err) => console.error(err), () => {
@@ -136,9 +129,10 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
     formData.append('file', item.file as any);
     formData.append('id', '1000');
 
-    return this.blobApiService.createBlobUsingPOST(item.file as any)
+    return from(this.api.blobApi.createBlobUsingPOST(item.file as any))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe(blob => {
         item.onSuccess!(blob, item.file!, null);
       }, err => {
@@ -187,22 +181,24 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
   }
 
   private reloadLabelCategories(projectId: string) {
-    this.labelCategoryApiService.listLabelCategoriesUsingGET(projectId)
+    from(this.api.labelCategoryApi.listLabelCategoriesUsingGET(projectId))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe(resp => {
-      this.categories = resp;
-    });
+        this.categories = resp;
+      });
   }
 
   private reloadLabels(categoryId: string) {
     this.form.controls.categoryId.setValue(null);
-    this.labelApiService.listLabelsUsingGET(categoryId)
+    from(this.api.labelApi.listLabelsUsingGET(categoryId))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe(resp => {
-      this.labels = resp;
-    });
+        this.labels = resp;
+      });
   }
 
 }

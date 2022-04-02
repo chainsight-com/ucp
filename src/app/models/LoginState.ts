@@ -1,4 +1,5 @@
-import {AccountDto, ProjectDto} from "@profyu/unblock-ng-sdk";
+import { AccountDto } from "@chainsight/unblock-api-axios-sdk";
+
 
 export interface LoginState {
   accessToken: string;

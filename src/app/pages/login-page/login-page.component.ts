@@ -1,12 +1,13 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {AccountCredentials, AuthApiService} from "@profyu/unblock-ng-sdk";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService, GoogleLoginProvider} from "angularx-social-login";
 import {filter, map, mergeMap, take, takeUntil, tap} from "rxjs/operators";
 import {NzMessageService} from "ng-zorro-antd";
-import {Subject} from "rxjs";
+import {from, Subject} from "rxjs";
 import {UserService} from "../../services/user.service";
 import {Router} from "@angular/router";
+import { ApiService } from 'src/app/services/api.service';
+import { AccountCredentials } from '@chainsight/unblock-api-axios-sdk';
 
 @Component({
   selector: 'app-login-page',
@@ -20,8 +21,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private api: ApiService,
     private authService: AuthService,
-    private authApiService: AuthApiService,
+    private apiService: ApiService,
     private userService: UserService,
     private message: NzMessageService,
     private fb: FormBuilder) {
@@ -49,7 +51,8 @@ export class LoginPageComponent implements OnInit, OnDestroy {
           displayName: user.name,
         };
       }),
-      mergeMap((cred) => this.authApiService.authenticateWithGoogleUsingPOST(cred))
+      mergeMap((cred) => from(this.api.authApi.authenticateWithGoogleUsingPOST(cred))),
+      map(resp => resp.data)
     ).subscribe((tokenPair) => {
       this.userService.signIn(tokenPair.token);
     });
@@ -80,10 +83,10 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       password: formValue.password
     };
     this.isSpinning = true;
-    this.authApiService.authenticateUsingPOST(body)
+    from(this.api.authApi.authenticateUsingPOST(body))
       .pipe(
         take(1),
-        // catchError((err, caught) => err),
+        map(resp => resp.data)
       ).subscribe(
       (tokenPair) => {
         this.userService.signIn(tokenPair.token);

@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {AccountDto, IncidentApiService, IncidentDto, ProjectDto} from "@profyu/unblock-ng-sdk";
 import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {filter, take, takeUntil} from "rxjs/operators";
 import {IncidentTableComponent} from "../../../component/incident/incident-table/incident-table.component";
 import {Subject} from "rxjs";
-import {IncidentAddressScanCreation} from "@profyu/unblock-ng-sdk/model/incident-address-scan-creation";
+import { AccountDto, IncidentDto, ProjectDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-incident-page',
@@ -25,7 +25,6 @@ export class IncidentPageComponent implements OnInit {
   public showIncidentFormDrawer: boolean = false;
 
   constructor(
-    private incidentApiService: IncidentApiService,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router) {

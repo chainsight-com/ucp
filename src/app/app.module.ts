@@ -12,7 +12,6 @@ import {AuthServiceConfig, GoogleLoginProvider, SocialLoginModule} from 'angular
 import {JwtModule} from '@auth0/angular-jwt';
 import {AddressScanAddPageComponent} from './pages/address-scan/address-scan-add-page/address-scan-add-page.component';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
-import {BASE_PATH} from '@profyu/unblock-ng-sdk';
 import {environment} from 'src/environments/environment';
 import {CryptoPipe} from './pipes/crypto.pipe';
 import {AddressScanPageComponent} from './pages/address-scan/address-scan-page/address-scan-page.component';
@@ -53,6 +52,7 @@ import { IncidentPageComponent } from './pages/incident/incident-page/incident-p
 import { ClusterInfoComponent } from './component/cluster/cluster-info/cluster-info.component';
 import { AddressTableComponent } from './component/cluster/address-table/address-table.component';
 import { RuleInfoComponent } from './component/rule-info/rule-info.component';
+import { BASE_PATH } from '@chainsight/unblock-api-axios-sdk/dist/base';
 
 const menus: any[] = [
 

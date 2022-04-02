@@ -1,19 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {interval, Subject} from "rxjs";
-import {
-  AccountDto,
-  AddressScanApiService,
-  AddressScanBatchApiService,
-  AddressScanBatchDto,
-  AddressScanDto, ProjectDto
-} from "@profyu/unblock-ng-sdk";
+import {from, interval, Subject} from "rxjs";
 import {TblColumn} from "../../../shared/table/tbl-column";
 import {formatDate} from "@angular/common";
 import {EMPTY_PAGE, Page} from "../../../models/type/page";
 import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {filter, take, takeUntil} from "rxjs/operators";
+import {filter, map, take, takeUntil} from "rxjs/operators";
 import {TblAction} from "../../../shared/table/tbl-action";
+import { AddressScanBatchDto, AddressScanBatchDtoStatusEnum, AddressScanDtoStatusEnum, ProjectDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-address-scan-batch-page',
@@ -66,7 +61,7 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
   public project: ProjectDto;
 
   constructor(
-    private addressScanBatchApiService: AddressScanBatchApiService,
+    private api: ApiService,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router) {
@@ -105,9 +100,10 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
     if (!silent) {
       this.isLoading = true;
     }
-    this.addressScanBatchApiService.paginateAddressScanBatchUsingGET(this.pageIdx-1, this.pageSize, this.userService.project.id)
+    from(this.api.addressScanBatchApi.paginateAddressScanBatchUsingGET(this.pageIdx-1, this.pageSize, this.userService.project.id))
       .pipe(
         take(1),
+        map(resp => resp.data)
       ).subscribe(page => {
       this.page = page;
       this.totalElements = Number(page.totalElements);
@@ -139,7 +135,7 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  statusFormatter(status: AddressScanDto.StatusEnum) {
+  statusFormatter(status: AddressScanBatchDtoStatusEnum) {
 
     let res = null;
     switch (status) {

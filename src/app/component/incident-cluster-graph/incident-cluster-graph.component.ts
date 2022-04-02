@@ -1,19 +1,14 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {
-  AddressScanApiService,
-  AddressScanDto,
-  ClusterEdgeDto,
-  ClusterNodeDto, IncidentApiService, IncidentClusterDto, IncidentClusterEdgeDto,
-  IncidentClusterNodeDto, IncidentDto, IncidentHolderEdge, IncidentHolderNode
-} from "@profyu/unblock-ng-sdk";
 import * as go from "gojs";
-import {filter, take, takeUntil} from "rxjs/operators";
+import {filter, map, take, takeUntil} from "rxjs/operators";
 import {DiagramEvent, GraphLinksModel, GraphObject, Link, Shape} from "gojs";
 import {CcPipe} from "../../pipes/cc.pipe";
-import {interval, Subject} from "rxjs";
+import {from, interval, Subject} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {UserService} from "../../services/user.service";
+import { IncidentClusterDto, IncidentClusterEdgeDto, IncidentClusterNodeDto, IncidentDto, IncidentHolderEdge, IncidentHolderNode } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 export const COLORS = [
   ['#AC193D', '#BF1E4B'],
@@ -61,7 +56,7 @@ export class IncidentClusterGraphComponent implements OnInit {
   private ctxMenuRef: ElementRef;
 
 
-  constructor(private incidentApiService: IncidentApiService, private http: HttpClient, private userService: UserService) {
+  constructor(private api: ApiService, private http: HttpClient, private userService: UserService) {
   }
 
   ngOnInit() {
@@ -120,8 +115,10 @@ export class IncidentClusterGraphComponent implements OnInit {
   }
 
   reload() {
-    this.incidentApiService.getIncidentUsingGET(this.incidentId).pipe(
-      take(1)
+    from(this.api.incidentApi.getIncidentUsingGET(this.incidentId))
+    .pipe(
+      take(1),
+      map(resp => resp.data)
     ).subscribe((incident) => {
       this.incident = incident;
       this.pageIdx = 0;
@@ -133,21 +130,23 @@ export class IncidentClusterGraphComponent implements OnInit {
   reloadPage() {
     this.isLoading = true;
     this.shouldSaveAnnotation = false;
-    this.incidentApiService.getIncidentClusterGraphUsingGET(this.incidentId, this.pageIdx, this.pageSize)
+    from(this.api.incidentApi.getIncidentClusterGraphUsingGET(this.incidentId, this.pageIdx, this.pageSize))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe((graph) => {
       this.render(graph.nodes, graph.edges.content);
 
-      this.incidentApiService.listIncidentHolderUsingGET(this.incidentId)
+      from(this.api.incidentApi.listIncidentHolderUsingGET(this.incidentId))
         .pipe(
-          take(1)
+          take(1),
+          map(resp => resp.data)
         ).subscribe(graph => {
         this.renderHolder(graph.nodes, graph.edges);
       });
 
       // render annotation
-      const annotationJson = (this.incident as any).annotationJson;
+      const annotationJson = this.incident.annotationJson;
       if (annotationJson) {
         const annotation = JSON.parse(annotationJson);
         const model = this.diagram.model as GraphLinksModel;
@@ -1012,12 +1011,6 @@ export class IncidentClusterGraphComponent implements OnInit {
     a.setAttribute('style', "display: none");
     a.href = url;
     a.download = filename;
-
-    // IE 11
-    if (window.navigator.msSaveBlob !== undefined) {
-      window.navigator.msSaveBlob(blob, filename);
-      return;
-    }
 
     document.body.appendChild(a);
     requestAnimationFrame(() => {

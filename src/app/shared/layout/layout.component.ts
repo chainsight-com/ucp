@@ -11,13 +11,13 @@ import {
 } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subject} from 'rxjs';
-import {AccountCredentials, AccountDto, ProjectDto} from '@profyu/unblock-ng-sdk';
 import {Menu} from "../side-menu/menu";
 import {filter, map, mergeMap, take, takeUntil, tap} from "rxjs/operators";
 import {AuthService} from "angularx-social-login";
 import {UserService} from "../../services/user.service";
 import {ActivatedRoute, NavigationEnd, Router, RouterEvent} from "@angular/router";
 import {DashboardPageComponent} from "../../pages/dashboard-page/dashboard-page.component";
+import { AccountDto, ProjectDto } from '@chainsight/unblock-api-axios-sdk';
 
 
 @Component({

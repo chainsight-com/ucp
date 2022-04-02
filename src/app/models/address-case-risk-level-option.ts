@@ -1,25 +1,25 @@
-import {AccountDto, AddressCaseDto, ProjectDto} from "@profyu/unblock-ng-sdk";
+import { AddressCaseDtoLevelEnum } from "@chainsight/unblock-api-axios-sdk";
 import {ADDRESS_CASE_STATUS_LIST, AddressCaseStatusOption} from "./address-case-status-option";
 
 export interface AddressCaseRiskLevelOption {
-  value: AddressCaseDto.LevelEnum,
+  value: AddressCaseDtoLevelEnum,
   label: string,
   color: string,
 }
 
 export const RISK_LEVEL_LIST: AddressCaseRiskLevelOption[] = [
   {
-    value: "HIGH",
+    value: AddressCaseDtoLevelEnum.High,
     label: 'High',
     color: '#f50',
   },
   {
-    value: "MEDIUM",
+    value: AddressCaseDtoLevelEnum.Medium,
     label: 'Medium',
     color: '#108ee9',
   },
   {
-    value: "LOW",
+    value: AddressCaseDtoLevelEnum.Low,
     label: 'Low',
     color: '#87d068',
   }

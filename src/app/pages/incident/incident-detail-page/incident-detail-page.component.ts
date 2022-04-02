@@ -1,33 +1,20 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild} from '@angular/core';
-import {
-  Address,
-  AddressCaseApiService,
-  AddressCaseCommentApiService,
-  AddressCaseCommentCreation,
-  AddressCaseCommentDto,
-  AddressCaseDto, AddressScanCreation,
-  AddressScanDto,
-  ClusterNodeDto,
-  IncidentAddressScanApiService,
-  IncidentApiService,
-  IncidentClusterApiService, IncidentClusterBulkCreation, IncidentClusterDto, IncidentClusterNodeDto,
-  IncidentDto
-} from "@profyu/unblock-ng-sdk";
 import {RISK_LEVEL_LIST, RISK_LEVEL_MAP} from "../../../models/address-case-risk-level-option";
 import {ADDRESS_CASE_STATUS_LIST, ADDRESS_CASE_STATUS_MAP} from "../../../models/address-case-status-option";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Subject} from "rxjs";
+import {from, Subject} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
-import {finalize, take, takeUntil} from "rxjs/operators";
+import {finalize, map, take, takeUntil} from "rxjs/operators";
 import * as dateFns from 'date-fns';
 import {INCIDENT_STATUS_LIST} from "../../../models/incident-status-option";
 import {EMPTY_PAGE, Page} from "../../../models/type/page";
 import {NzDrawerRef, NzMessageService} from "ng-zorro-antd";
 import {IncidentClusterGraphComponent} from "../../../component/incident-cluster-graph/incident-cluster-graph.component";
 import {AddressScanTableComponent} from "../../../component/address-scan/address-scan-table/address-scan-table.component";
-import {IncidentClusterUpdates} from "@profyu/unblock-ng-sdk/model/incident-cluster-updates";
 import {AddressScanFormComponent} from "../../../component/address-scan/address-scan-form/address-scan-form.component";
 import {SummedClusterGraphComponent} from "../../../component/summed-cluster-graph/summed-cluster-graph.component";
+import { Address, AddressCaseCommentDto, AddressCaseDtoLevelEnum, AddressCaseDtoStatusEnum, AddressScanDto, ClusterNodeDto, IncidentClusterBulkCreation, IncidentClusterNodeDto, IncidentClusterUpdates, IncidentDto, IncidentDtoStatusEnum } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 
 export const COLORS = [
@@ -77,13 +64,13 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   public incidentStatusList = INCIDENT_STATUS_LIST;
   public isSubmittingStatus: boolean;
-  public _status: IncidentDto.StatusEnum;
+  public _status: IncidentDtoStatusEnum;
 
-  get status(): IncidentDto.StatusEnum {
+  get status(): IncidentDtoStatusEnum {
     return this._status;
   }
 
-  set status(value: IncidentDto.StatusEnum) {
+  set status(value: IncidentDtoStatusEnum) {
     this._status = value;
     if (this.incident && value && this.incident.status !== value) {
       this.submitStatus(value);
@@ -142,10 +129,8 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
   constructor(private router: Router,
               private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
-              private incidentApiService: IncidentApiService,
-              private incidentClusterApiService: IncidentClusterApiService,
-              private messageService: NzMessageService,
-              private incidentAddressScanApiService: IncidentAddressScanApiService) {
+              private api: ApiService,
+              private messageService: NzMessageService) {
     this.editIncidentClusterForm = this.fb.group({
       title: [null, []],
       subtitle: [null, []],
@@ -177,9 +162,10 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   reload(id: string) {
     this.isLoadingIncident = true;
-    this.incidentApiService.getIncidentUsingGET(id)
+    from(this.api.incidentApi.getIncidentUsingGET(id))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe(resBody => {
       this.incident = resBody;
       this.status = this.incident.status;
@@ -212,7 +198,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   }
 
-  statusFormatter(status: AddressCaseDto.StatusEnum) {
+  statusFormatter(status: AddressCaseDtoStatusEnum) {
 
     const attr = ADDRESS_CASE_STATUS_MAP[status];
     if (!attr) {
@@ -228,7 +214,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
     };
   }
 
-  levelFormatter(level: AddressCaseDto.LevelEnum) {
+  levelFormatter(level: AddressCaseDtoLevelEnum) {
     const attr = RISK_LEVEL_MAP[level];
     if (!attr) {
       return {
@@ -243,11 +229,12 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
     };
   }
 
-  private submitStatus(value: IncidentDto.StatusEnum) {
+  private submitStatus(value: IncidentDtoStatusEnum) {
     this.isSubmittingStatus = true;
-    this.incidentApiService.patchIncidentStatusUsingPATCH(this.incident.id, value)
+    from(this.api.incidentApi.patchIncidentStatusUsingPATCH(this.incident.id, value))
       .pipe(
         take(1),
+        map(resp => resp.data),
         finalize(() => {
           this.isSubmittingStatus = false;
         })
@@ -302,9 +289,10 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
         })
       };
       this.isLoadingAddressScanGraph = true;
-      this.incidentClusterApiService.createIncidentClusterUsingPOST(payload)
+      from(this.api.incidentClusterApi.createIncidentClusterUsingPOST(payload))
         .pipe(
-          take(1)
+          take(1),
+          map(resp => resp.data)
         )
         .subscribe(() => {
           this.incidentClusterGraph.reload();
@@ -364,12 +352,13 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
   onScanSubmitted(created: AddressScanDto) {
     this.showAddScanDrawer = false;
 
-    this.incidentAddressScanApiService.createIncidentAddressScanUsingPOST({
+    from(this.api.incidentAddressScanApi.createIncidentAddressScanUsingPOST({
       incidentId: this.incidentId,
       addressScanId: created.id,
-    })
+    }))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe(resp => {
       this.addressScanTable.reload(true, false);
     }, console.error);
@@ -397,9 +386,10 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
 
     this.isSubmittingEditIncidentCluster = true;
-    this.incidentClusterApiService.updateIncidentClusterUsingPUT(this.selectedIncidentClusterNode.incidentCluster.id, body)
+    from(this.api.incidentClusterApi.updateIncidentClusterUsingPUT(this.selectedIncidentClusterNode.incidentCluster.id, body))
       .pipe(
         take(1),
+        map(resp => resp.data),
         finalize(() => {
           this.isSubmittingEditIncidentCluster = false;
         })

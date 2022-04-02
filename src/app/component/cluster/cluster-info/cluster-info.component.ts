@@ -1,12 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {
-  Address,
-  AddressCaseApiService,
-  AddressCaseDto,
-  HolderApiService,
-  HolderDto,
-  PageOfHolderAddressDto
-} from "@profyu/unblock-ng-sdk";
+import { Address } from '@chainsight/unblock-api-axios-sdk';
 import {filter, map, take} from "rxjs/operators";
 import {RISK_LEVEL_MAP} from "../../../models/holder-risk-level-option";
 

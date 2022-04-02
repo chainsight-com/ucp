@@ -1,15 +1,10 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {
-  AddressCaseApiService,
-  AddressCaseDto,
-  HolderAddressDto,
-  HolderApiService,
-  HolderDto, PageOfHolderAddressDto, PageOfWitnessDto
-} from "@profyu/unblock-ng-sdk";
 import {filter, map, take} from "rxjs/operators";
 import {RISK_LEVEL_MAP} from "../../models/holder-risk-level-option";
 import {formatDate} from "@angular/common";
-
+import { AddressCaseDto, HolderDto, HolderDtoLevelEnum, PageOfHolderAddressDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-address-info',
@@ -42,8 +37,7 @@ export class AddressInfoComponent implements OnInit, OnChanges {
   private isAddressCaseLoading: boolean = false;
 
 
-  constructor(private holderApiService: HolderApiService,
-              private addressCaseApiService: AddressCaseApiService) {
+  constructor(private api: ApiService) {
   }
 
   ngOnInit() {
@@ -65,9 +59,10 @@ export class AddressInfoComponent implements OnInit, OnChanges {
 
   reloadHolder() {
     this.isHolderLoading = true;
-    this.holderApiService.paginateHolderUsingGET(0, 1, this.projectId, null, null, this.currencyId, this.address)
+    from(this.api.holderApi.paginateHolderUsingGET(0, 1, this.projectId, null, null, this.currencyId, this.address))
       .pipe(
         take(1),
+        map(resp => resp.data),
         filter(page => page.content.length == 1),
         map(page => page.content[0])
       ).subscribe(holder => {
@@ -79,9 +74,10 @@ export class AddressInfoComponent implements OnInit, OnChanges {
 
   private reloadAddressCase() {
     this.isAddressCaseLoading = true;
-    this.addressCaseApiService.paginateAddressCaseUsingGET(0, 1, this.projectId, this.currencyId, this.address)
+    from(this.api.addressCaseApi.paginateAddressCaseUsingGET(0, 1, this.projectId, this.currencyId, this.address))
       .pipe(
         take(1),
+        map(resp => resp.data),
         filter(page => page.content.length == 1),
         map(page => page.content[0])
       ).subscribe(addressCase => {
@@ -92,7 +88,7 @@ export class AddressInfoComponent implements OnInit, OnChanges {
   }
 
 
-  holderLevelFormatter(level: HolderDto.LevelEnum) {
+  holderLevelFormatter(level: HolderDtoLevelEnum) {
     const attr = RISK_LEVEL_MAP[level];
     if (!attr) {
       return {

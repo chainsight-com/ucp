@@ -2,24 +2,15 @@ import {Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges} from '@an
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 
 import {HttpClient} from '@angular/common/http';
-import {catchError, filter, finalize, take, takeUntil} from 'rxjs/operators';
-import {
-  AccountApiService,
-  AccountDto, AddressCaseApiService,
-  AddressCaseCreation,
-  AddressCaseDto,
-  AddressScanApiService,
-  AddressScanCreation,
-  CurrencyDto,
-  ProjectDto, RestApiException,
-} from '@profyu/unblock-ng-sdk';
+import {catchError, filter, finalize, map, take, takeUntil} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {QrScannerService} from 'src/app/services/qr-scanner.service';
-import {Subject} from 'rxjs';
+import {from, Subject} from 'rxjs';
 import {UserService} from "../../../services/user.service";
-import ApiErrorCodeEnum = RestApiException.ApiErrorCodeEnum;
 import {NzMessageService} from "ng-zorro-antd";
 import {RISK_LEVEL_LIST, AddressCaseRiskLevelOption} from "../../../models/address-case-risk-level-option";
+import { AddressCaseCreation, CurrencyDto, RestApiExceptionApiErrorCodeEnum } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 
 @Component({
@@ -45,8 +36,7 @@ export class AddressCaseAddPageComponent implements OnInit, OnChanges {
               private qrScannerService: QrScannerService,
               private fb: FormBuilder,
               private httpClient: HttpClient,
-              private addressCaseApi: AddressCaseApiService,
-              private accountApiService: AccountApiService,
+              private api: ApiService,
               private userService: UserService,
               private message: NzMessageService,
               private activatedRoute: ActivatedRoute) {
@@ -129,9 +119,10 @@ export class AddressCaseAddPageComponent implements OnInit, OnChanges {
 
 
     this.isSubmitting = true;
-    this.addressCaseApi.createAddressCaseUsingPOST(body)
+    from(this.api.addressCaseApi.createAddressCaseUsingPOST(body))
       .pipe(
         take(1),
+        map(resp => resp.data),
         finalize(() => {
           this.isSubmitting = false;
         })
@@ -140,7 +131,7 @@ export class AddressCaseAddPageComponent implements OnInit, OnChanges {
     }, (req) => {
       console.error(req);
       const body = req.error;
-      if (body.apiErrorCode == ApiErrorCodeEnum.DUPLICATEDADDRESSCASE) {
+      if (body.apiErrorCode == RestApiExceptionApiErrorCodeEnum.DuplicatedAddressCase) {
         this.message.error('Case already exists');
       }
     });

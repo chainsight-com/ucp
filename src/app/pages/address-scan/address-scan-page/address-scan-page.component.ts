@@ -1,8 +1,4 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {
-  AccountDto,
-  AddressScanApiService, AddressScanDto, ProjectDto
-} from '@profyu/unblock-ng-sdk';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, take, takeUntil} from 'rxjs/operators';
 import {NzTabComponent} from 'ng-zorro-antd';
@@ -12,6 +8,8 @@ import {UserService} from "../../../services/user.service";
 import {TblColumn} from "../../../shared/table/tbl-column";
 import {interval, Subject} from "rxjs";
 import {AddressScanTableComponent} from "../../../component/address-scan/address-scan-table/address-scan-table.component";
+import { AccountDto, AddressScanDto, ProjectDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-address-scan-page',
@@ -29,7 +27,7 @@ export class AddressScanPageComponent implements OnInit, OnChanges, OnDestroy {
   public addressScanTable: AddressScanTableComponent;
 
   constructor(
-    private addressScanApiService: AddressScanApiService,
+    private api: ApiService,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router) {

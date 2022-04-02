@@ -1,18 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {
-  CurrencyApiService,
-  AddressScanDto, CurrencyDto,
-  PageOfTxDto,
-  ProjectApiService,
-  ProjectDto, TxApiService, TxDto
-} from "@profyu/unblock-ng-sdk";
-import {UserService} from "../../services/user.service";
-import {filter, mergeMap, take, takeUntil, tap} from "rxjs/operators";
-import {Subject} from "rxjs";
-import {TblColumn} from "../../shared/table/tbl-column";
-import {formatDate} from "@angular/common";
-import {EMPTY_PAGE, Page} from "../../models/type/page";
-import {ActivatedRoute, Router} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { UserService } from "../../services/user.service";
+import { filter, map, mergeMap, take, takeUntil, tap } from "rxjs/operators";
+import { from, Subject } from "rxjs";
+import { TblColumn } from "../../shared/table/tbl-column";
+import { formatDate } from "@angular/common";
+import { EMPTY_PAGE, Page } from "../../models/type/page";
+import { ActivatedRoute, Router } from "@angular/router";
+import { CurrencyDto, ProjectDto, TxDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 
 @Component({
@@ -57,9 +52,7 @@ export class DashboardPageComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private projectApiService: ProjectApiService,
-    private txApiService: TxApiService,
-    private currencyApiService: CurrencyApiService,
+    private api: ApiService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {
@@ -70,7 +63,9 @@ export class DashboardPageComponent implements OnInit {
       .pipe(
         takeUntil(this.unsubscribe$),
         filter(project => !!project),
-        mergeMap(project => this.projectApiService.getProjectUsingGET(project.id))
+        mergeMap(project => from(this.api.projectApi.getProjectUsingGET(project.id))),
+        map(resp => resp.data)
+
       )
       .subscribe((project) => {
         this.project = project;
@@ -85,20 +80,22 @@ export class DashboardPageComponent implements OnInit {
       this.pageIdx = 0;
     }
     this.isLoading = true;
-    this.txApiService.paginateTxUsingGET(this.pageIdx, this.pageSize, this.userService.project.id)
+    from(this.api.txApi.paginateTxUsingGET(this.pageIdx, this.pageSize, this.userService.project.id))
       .pipe(
         take(1),
+        map(resp => resp.data)
       ).subscribe(page => {
-      this.page = page;
-    }, console.error, () => {
-      this.isLoading = false;
-    });
+        this.page = page;
+      }, console.error, () => {
+        this.isLoading = false;
+      });
   }
 
   loadCurrencies(projectCurrencies: CurrencyDto[]) {
-    this.currencyApiService.listCurrenciesUsingGET()
+    from(this.api.currencyApi.listCurrenciesUsingGET())
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       )
       .subscribe(allCurrencies => {
         this.currencies = allCurrencies.map(c => {

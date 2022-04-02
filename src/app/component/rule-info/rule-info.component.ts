@@ -1,7 +1,9 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {RuleApiService, RuleDto} from "@profyu/unblock-ng-sdk";
-import {finalize, take} from "rxjs/operators";
+import {finalize, map, take} from "rxjs/operators";
 import {DomSanitizer} from "@angular/platform-browser";
+import { RuleDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-rule-info',
@@ -23,7 +25,7 @@ export class RuleInfoComponent implements OnInit, OnChanges {
 
   }
 
-  constructor(private ruleApiService: RuleApiService, private sanitizer: DomSanitizer) {
+  constructor(private api: ApiService, private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
@@ -39,9 +41,10 @@ export class RuleInfoComponent implements OnInit, OnChanges {
   reloadRule() {
     this.rule = null;
     this.isLoading = true;
-    this.ruleApiService.getHolderUsingGET1(this.ruleId)
+    from(this.api.ruleApi.getHolderUsingGET1(this.ruleId))
       .pipe(
         take(1),
+        map(resp => resp.data),
         finalize(() => this.isLoading = false)
       ).subscribe(resp => {
       this.rule = resp;

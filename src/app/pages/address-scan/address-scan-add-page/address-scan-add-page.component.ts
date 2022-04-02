@@ -3,14 +3,13 @@ import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 
 import {HttpClient} from '@angular/common/http';
 import {filter, finalize, take, takeUntil} from 'rxjs/operators';
-import {
-  AccountApiService, AccountDto, AddressScanApiService, AddressScanCreation, AddressScanDto, CurrencyDto, ProjectDto,
-} from '@profyu/unblock-ng-sdk';
+
 import {ActivatedRoute, Router} from '@angular/router';
 import {QrScannerService} from 'src/app/services/qr-scanner.service';
 import {Subject} from 'rxjs';
 import {UserService} from "../../../services/user.service";
 import { ApiService } from 'src/app/services/api.service';
+import { AddressScanDto, ProjectDto } from '@chainsight/unblock-api-axios-sdk';
 
 
 @Component({
@@ -28,8 +27,7 @@ export class AddressScanAddPageComponent implements OnInit, OnDestroy {
               private qrScannerService: QrScannerService,
               private fb: FormBuilder,
               private httpClient: HttpClient,
-              private addressScanApi: AddressScanApiService,
-              private accountApiService: AccountApiService,
+              private api: ApiService,
               private userService: UserService,
               private activatedRoute: ActivatedRoute) {
   }

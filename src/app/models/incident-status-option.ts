@@ -1,24 +1,24 @@
-import {AccountDto, AddressCaseDto, ProjectDto} from "@profyu/unblock-ng-sdk";
+import { AddressCaseDtoStatusEnum } from "@chainsight/unblock-api-axios-sdk";
 
 export interface IncidentStatusOption {
-  value: AddressCaseDto.StatusEnum,
+  value: AddressCaseDtoStatusEnum,
   label: string,
   color: string,
 }
 
 export const INCIDENT_STATUS_LIST: IncidentStatusOption[] = [
   {
-    value: "OPEN",
+    value: AddressCaseDtoStatusEnum.Open,
     label: 'Open',
     color: '#52c41a',
   },
   {
-    value: "IN_REVIEW",
+    value: AddressCaseDtoStatusEnum.InReview,
     label: 'In Review',
     color: 'blue',
   },
   {
-    value: "CLOSED",
+    value: AddressCaseDtoStatusEnum.Closed,
     label: 'Closed',
     color: '#d9d9d9'
   }

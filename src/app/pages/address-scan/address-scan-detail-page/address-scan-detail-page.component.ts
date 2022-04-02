@@ -1,19 +1,7 @@
 import {Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter, Output, AfterViewInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-import {Subject, pipe} from 'rxjs';
-import {takeUntil, take, mergeMap, finalize} from 'rxjs/operators';
-import {
-  Address,
-  AddressCaseApiService,
-  AddressCaseDto,
-  AddressScanApiService,
-  AddressScanDto,
-  ClusterNodeDto, CurrencyApiService,
-  FlowGraphDto,
-  IncidentAddressScanApiService,
-  IncidentDto, LabelApiService, LabelDto,
-  PageOfWitnessDto
-} from '@profyu/unblock-ng-sdk';
+import {Subject, pipe, from} from 'rxjs';
+import {takeUntil, take, mergeMap, finalize, map} from 'rxjs/operators';
 import * as go from 'gojs';
 
 import {SankeyLayout} from '../../../shared/sankey-layout';
@@ -24,7 +12,6 @@ import {RuleCategory} from "../../../models/type/rule-category.enum";
 import BigNumber from "bignumber.js";
 import {RiskLevel} from "../../../models/type/risk-level.enum";
 import {CcPipe} from "../../../pipes/cc.pipe";
-import {IncidentAddressScanCreation} from "@profyu/unblock-ng-sdk/model/incident-address-scan-creation";
 import {IncidentTableComponent} from "../../../component/incident/incident-table/incident-table.component";
 import * as Highcharts from 'highcharts';
 import {formatDate} from "@angular/common";
@@ -32,6 +19,8 @@ import {
   IncidentClusterGraphComponent
 } from "../../../component/incident-cluster-graph/incident-cluster-graph.component";
 import {SummedClusterGraphComponent} from "../../../component/summed-cluster-graph/summed-cluster-graph.component";
+import { Address, AddressCaseDto, AddressScanDto, ClusterNodeDto, FlowGraphDto, IncidentAddressScanCreation, IncidentDto, LabelDto, PageOfWitnessDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 let Sunburst = require('highcharts/modules/sunburst');
 
@@ -137,10 +126,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router,
               private activatedRoute: ActivatedRoute,
-              private addressScanApiService: AddressScanApiService,
-              private addressCaseApiService: AddressCaseApiService,
-              private incidentAddressScanApiService: IncidentAddressScanApiService,
-              private currencyApiService: CurrencyApiService) {
+              private api: ApiService) {
   }
 
 
@@ -172,9 +158,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   reload(id: string) {
     this.isLoadingPipeline = true;
-    this.addressScanApiService.getAddressScanUsingGET(id)
+    from(this.api.addressScanApi.getAddressScanUsingGET(id))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe(sc => {
       this.addressScan = sc;
       this.maxDays = moment(this.addressScan.endingTime).diff(moment(this.addressScan.startingTime), 'days');
@@ -196,9 +183,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   }
 
   reloadLabel() {
-    this.currencyApiService.searchLabelsUsingGET(this.addressScan.currency.id, this.addressScan.address, this.addressScan.project.id)
+    from(this.api.currencyApi.searchLabelsUsingGET(this.addressScan.currency.id, this.addressScan.address, this.addressScan.project.id))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe(resp => {
         this.labels = resp.globalLabels.concat(resp.projectLabels)
         if(this.addressScan && this.addressScan.onlineLabelList){
@@ -239,9 +227,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     //   })
     //
     // });
-    this.addressScanApiService.paginateAddressScanWitnessUsingGET(this.addressScan.id, this.witnessPageIdx, this.witnessPageSize, category)
+    from(this.api.addressScanApi.paginateAddressScanWitnessUsingGET(this.addressScan.id, this.witnessPageIdx, this.witnessPageSize, category))
       .pipe(
         take(1),
+        map(resp => resp.data)
       ).subscribe(page => {
       this.witnessResultPage = page;
 
@@ -253,9 +242,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   public reloadAddressCase() {
     this.isAddressCaseLoading = true
-    this.addressCaseApiService.paginateAddressCaseUsingGET(0, 1, this.addressScan.project.id, this.addressScan.currency.id, this.addressScan.address)
+    from(this.api.addressCaseApi.paginateAddressCaseUsingGET(0, 1, this.addressScan.project.id, this.addressScan.currency.id, this.addressScan.address))
       .pipe(
         take(1),
+        map(resp => resp.data),
         finalize(() => {
           this.isAddressCaseLoading = false;
         })
@@ -484,8 +474,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     }
 
 
-    this.addressScanApiService.getAddressScanFlowGraphUsingGET(this.addressScan.id, 0, this.graphEdgeSize).pipe(
-      take(1)
+    from(this.api.addressScanApi.getAddressScanFlowGraphUsingGET(this.addressScan.id, 0, this.graphEdgeSize))
+    .pipe(
+      take(1),
+      map(resp => resp.data)
     ).subscribe((graph) => {
 
       const cryptoPipe = new CryptoPipe();
@@ -688,7 +680,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       incidentId: incident.id,
     }
     this.showIncidentFormDrawer = false;
-    this.incidentAddressScanApiService.createIncidentAddressScanUsingPOST(body)
+    from(this.api.incidentAddressScanApi.createIncidentAddressScanUsingPOST(body))
       .pipe(
         take(1)
       ).subscribe(resp => {
@@ -706,9 +698,10 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     if (!this.forwardLabelSunburstChart || !this.backwardLabelSunburstChart) {
       setTimeout(() => {
         this.isLoadingLabelSunburst = true;
-        this.addressScanApiService.getAddressScanLabelSunburstUsingGET(this.addressScan.id)
+        from(this.api.addressScanApi.getAddressScanLabelSunburstUsingGET(this.addressScan.id))
           .pipe(
             take(1),
+            map(resp => resp.data),
             finalize(() => {
               this.isLoadingLabelSunburst = false;
             })
@@ -872,12 +865,6 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     a.setAttribute('style', "display: none");
     a.href = url;
     a.download = filename;
-
-    // IE 11
-    if (window.navigator.msSaveBlob !== undefined) {
-      window.navigator.msSaveBlob(blob, filename);
-      return;
-    }
 
     document.body.appendChild(a);
     requestAnimationFrame(() => {

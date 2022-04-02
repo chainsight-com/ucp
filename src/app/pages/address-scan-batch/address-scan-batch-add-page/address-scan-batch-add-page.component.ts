@@ -1,20 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {Subject} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {
-  AddressScanApiService, AddressScanBatchApiService,
-  AddressScanBatchCreation, AddressScanBatchCreationFromBlob,
-  AddressScanCreation,
-  BlobApiService,
-  BlobDto,
-  CurrencyDto,
-  FlowLabelingApiService
-} from "@profyu/unblock-ng-sdk";
-import {NzMessageService, UploadFile, UploadXHRArgs} from "ng-zorro-antd";
-import {Router} from "@angular/router";
-import {UserService} from "../../../services/user.service";
-import {HttpClient} from "@angular/common/http";
-import {finalize, take, takeUntil} from "rxjs/operators";
+import { Component, OnInit } from '@angular/core';
+import { from, Subject } from "rxjs";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { NzMessageService, UploadFile, UploadXHRArgs } from "ng-zorro-antd";
+import { Router } from "@angular/router";
+import { UserService } from "../../../services/user.service";
+import { HttpClient } from "@angular/common/http";
+import { finalize, map, take, takeUntil } from "rxjs/operators";
+import { BlobDto, CurrencyDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-address-scan-batch-add-page',
@@ -33,12 +26,11 @@ export class AddressScanBatchAddPageComponent implements OnInit {
   fileList: UploadFile[] = [];
 
   constructor(private fb: FormBuilder,
-              private router: Router,
-              private userService: UserService,
-              private message: NzMessageService,
-              private addressScanBatchApiService: AddressScanBatchApiService,
-              public blobApiService: BlobApiService,
-              private http: HttpClient) {
+    private router: Router,
+    private userService: UserService,
+    private message: NzMessageService,
+    private api: ApiService,
+    private http: HttpClient) {
   }
 
   ngOnInit(): void {
@@ -102,10 +94,10 @@ export class AddressScanBatchAddPageComponent implements OnInit {
     const formValue = this.form.value;
 
     this.isSubmitting = true;
-    (this.addressScanBatchApiService as any).createAddressScanBatchFromBlobUsingPOST({
+    from(this.api.addressScanBatchApi.createAddressScanBatchFromBlobUsingPOST({
       name: formValue.name,
       projectId: this.userService.project.id,
-      addressListBlobId:  (this.fileList[0].response as BlobDto).id,
+      addressListBlobId: (this.fileList[0].response as BlobDto).id,
       currencyId: formValue.currencyId,
       method: formValue.method,
       methodOptMaxN: formValue.methodOptMaxN,
@@ -121,14 +113,16 @@ export class AddressScanBatchAddPageComponent implements OnInit {
       enableFusiformDetection: formValue.enableFusiformDetection,
       enableLabelRiskDetection: formValue.enableLabelRiskDetection,
       timeoutSecs: 3600,
-    }).pipe(
-      take(1),
-      finalize(() => {
-        this.isSubmitting = false;
-      })
-    ).subscribe(resBody => {
-      this.router.navigate(['/address-scan-batch']);
-    }, (err) => console.error(err));
+    }))
+      .pipe(
+        take(1),
+        map(resp => resp.data),
+        finalize(() => {
+          this.isSubmitting = false;
+        })
+      ).subscribe(resBody => {
+        this.router.navigate(['/address-scan-batch']);
+      }, (err) => console.error(err));
 
 
   }
@@ -173,9 +167,10 @@ export class AddressScanBatchAddPageComponent implements OnInit {
     formData.append('file', item.file as any);
     formData.append('id', '1000');
 
-    return this.blobApiService.createBlobUsingPOST(item.file as any)
+    return from(this.api.blobApi.createBlobUsingPOST(item.file as any))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe(blob => {
         item.onSuccess!(blob, item.file!, null);
       }, err => {

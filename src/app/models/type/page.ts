@@ -1,7 +1,3 @@
-import {WitnessDto} from "@profyu/unblock-ng-sdk/model/witness-dto";
-import {Pageable} from "@profyu/unblock-ng-sdk/model/pageable";
-import {Sort} from "@profyu/unblock-ng-sdk/model/sort";
-
 export let EMPTY_PAGE: Page<any> = {
   content: [],
   first: true,

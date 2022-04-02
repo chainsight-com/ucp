@@ -10,16 +10,9 @@ import {
     Input, OnChanges, SimpleChanges
 } from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-import {Subject, pipe} from 'rxjs';
-import {takeUntil, take, mergeMap, finalize} from 'rxjs/operators';
+import {Subject, pipe, from} from 'rxjs';
+import {takeUntil, take, mergeMap, finalize, map} from 'rxjs/operators';
 import * as dateFns from 'date-fns';
-import {
-    AddressCaseApiService, AddressCaseCommentApiService, AddressCaseCommentCreation,
-    AddressCaseCommentDto, AddressCaseCreation,
-    AddressCaseDto,
-    AddressScanApiService,
-    AddressScanDto, FlowGraphDto, PageOfWitnessDto
-} from '@profyu/unblock-ng-sdk';
 import * as go from 'gojs';
 
 import {SankeyLayout} from '../../../shared/sankey-layout';
@@ -34,6 +27,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {RISK_LEVEL_MAP, RISK_LEVEL_LIST} from "../../../models/address-case-risk-level-option";
 import {ADDRESS_CASE_STATUS_LIST, ADDRESS_CASE_STATUS_MAP} from "../../../models/address-case-status-option";
 import {AddressScanTableComponent} from "../../../component/address-scan/address-scan-table/address-scan-table.component";
+import { AddressCaseCommentCreation, AddressCaseCommentDto, AddressCaseDto, AddressCaseDtoLevelEnum, AddressCaseDtoStatusEnum, AddressScanDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 interface CommentItem {
     data: AddressCaseCommentDto,
@@ -67,12 +62,12 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     public riskLevels = RISK_LEVEL_LIST;
     public isSubmittingLevel: boolean;
-    public _level: AddressCaseDto.LevelEnum;
-    get level(): AddressCaseDto.LevelEnum {
+    public _level: AddressCaseDtoLevelEnum;
+    get level(): AddressCaseDtoLevelEnum {
         return this._level;
     }
 
-    set level(value: AddressCaseDto.LevelEnum) {
+    set level(value: AddressCaseDtoLevelEnum) {
         this._level = value;
         if (this.addressCase && value && this.addressCase.level !== value) {
             this.submitLevel(value);
@@ -83,12 +78,12 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     public addressCaseStatusList = ADDRESS_CASE_STATUS_LIST;
     public isSubmittingStatus: boolean;
-    public _status: AddressCaseDto.StatusEnum;
-    get status(): AddressCaseDto.StatusEnum {
+    public _status: AddressCaseDtoStatusEnum;
+    get status(): AddressCaseDtoStatusEnum {
         return this._status;
     }
 
-    set status(value: AddressCaseDto.StatusEnum) {
+    set status(value: AddressCaseDtoStatusEnum) {
         this._status = value;
         if (this.addressCase && value && this.addressCase.status !== value) {
             this.submitStatus(value);
@@ -114,8 +109,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
     constructor(private router: Router,
                 private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
-                private addressCaseApiService: AddressCaseApiService,
-                private addressCaseCommentApiService: AddressCaseCommentApiService) {
+                private api: ApiService) {
 
     }
 
@@ -147,9 +141,10 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     reload(id: string) {
         this.isLoadingAddressCase = true;
-        this.addressCaseApiService.getAddressCaseUsingGET(id)
+        from(this.api.addressCaseApi.getAddressCaseUsingGET(id))
             .pipe(
-                take(1)
+                take(1),
+                map(resp => resp.data)
             ).subscribe(resBody => {
             this.addressCase = resBody;
             this.level = this.addressCase.level;
@@ -162,9 +157,10 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     reloadCommentList() {
         this.isCommentLoading = true;
-        this.addressCaseApiService.listAddressCaseCommentUsingGET(this.addressCase.id)
+        from(this.api.addressCaseApi.listAddressCaseCommentUsingGET(this.addressCase.id))
             .pipe(
                 take(1),
+                map(resp => resp.data),
                 finalize(() => {
                     this.isCommentLoading = false;
                 })
@@ -207,9 +203,10 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
 
         this.isSubmittingComment = true;
-        this.addressCaseCommentApiService.createAddressCaseCommentUsingPOST(body)
+        from(this.api.addressCaseCommentApi.createAddressCaseCommentUsingPOST(body))
             .pipe(
                 take(1),
+                map(resp => resp.data),
                 finalize(() => {
                     this.isSubmittingComment = false;
                 })
@@ -235,7 +232,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     }
 
-    statusFormatter(status: AddressCaseDto.StatusEnum) {
+    statusFormatter(status: AddressCaseDtoStatusEnum) {
 
         const attr = ADDRESS_CASE_STATUS_MAP[status];
         if (!attr) {
@@ -251,7 +248,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
         };
     }
 
-    levelFormatter(level: AddressCaseDto.LevelEnum) {
+    levelFormatter(level: AddressCaseDtoLevelEnum) {
         const attr = RISK_LEVEL_MAP[level];
         if (!attr) {
             return {
@@ -266,12 +263,13 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
         };
     }
 
-    private submitLevel(value: AddressCaseDto.LevelEnum) {
+    private submitLevel(value: AddressCaseDtoLevelEnum) {
 
         this.isSubmittingLevel = true;
-        this.addressCaseApiService.patchAddressCaseLevelUsingPATCH(this.addressCase.id, value)
+        from(this.api.addressCaseApi.patchAddressCaseLevelUsingPATCH(this.addressCase.id, value))
             .pipe(
                 take(1),
+                map(resp => resp.data),
                 finalize(() => {
                     this.isSubmittingLevel = false;
                 })
@@ -280,11 +278,12 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
         }, console.error);
     }
 
-    private submitStatus(value: AddressCaseDto.StatusEnum) {
+    private submitStatus(value: AddressCaseDtoStatusEnum) {
         this.isSubmittingStatus = true;
-        this.addressCaseApiService.patchAddressCaseStatusUsingPATCH(this.addressCase.id, value)
+        from(this.api.addressCaseApi.patchAddressCaseStatusUsingPATCH(this.addressCase.id, value))
             .pipe(
                 take(1),
+                map(resp => resp.data),
                 finalize(() => {
                     this.isSubmittingStatus = false;
                 })
@@ -322,11 +321,12 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     submitCommentUpdates(item: CommentItem) {
         item.isSubmitting = true;
-        this.addressCaseCommentApiService.modifyAddressCaseUsingPUT(item.data.id, {
+        from(this.api.addressCaseCommentApi.modifyAddressCaseUsingPUT(item.data.id, {
             comment: item.currComment
-        })
+        }))
             .pipe(
                 take(1),
+                map(resp => resp.data),
                 finalize(() => {
                     item.isSubmitting = false;
                 })
@@ -338,9 +338,10 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     deleteComment(item: CommentItem) {
         this.isCommentLoading = true;
-        this.addressCaseCommentApiService.deleteAddressCaseCommentUsingDELETE(item.data.id)
+        from(this.api.addressCaseCommentApi.deleteAddressCaseCommentUsingDELETE(item.data.id))
             .pipe(
                 take(1),
+                map(resp => resp.data),
                 finalize(() => {
                     this.isCommentLoading = false;
                 })

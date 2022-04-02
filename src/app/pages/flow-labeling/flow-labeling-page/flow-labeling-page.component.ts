@@ -1,19 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {
-  HolderGroupApiService,
-  HolderGroupDto,
-  ProjectApiService,
-  FlowLabelingDto,
-  ProjectDto, LabelDto, LabelApiService
-} from '@profyu/unblock-ng-sdk';
-import {Subject, Observable, interval} from 'rxjs';
+import {Subject, Observable, interval, from} from 'rxjs';
 import {NzMessageService, NzModalRef, NzModalService} from 'ng-zorro-antd';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/user.service';
-import {takeUntil, switchMap, take} from 'rxjs/operators';
+import {takeUntil, switchMap, take, map} from 'rxjs/operators';
 import {formatDate} from '@angular/common';
 import {UtilsService} from '../../../services/utils.service';
 import {TblColumn} from "../../../shared/table/tbl-column";
+import { FlowLabelingDto, FlowLabelingDtoStatusEnum, ProjectDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-flow-labeling-page',
@@ -61,14 +56,14 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
       property: 'startingTime',
       title: 'Starting Time',
       formatter: row => {
-        return this.utilService.transformDateShort(row.startingTime);
+        return this.utilService.transformDateShort(new Date(row.startingTime));
       }
     },
     {
       property: 'endingTime',
       title: 'Ending Time',
       formatter: row => {
-        return this.utilService.transformDateShort(row.endingTime);
+        return this.utilService.transformDateShort(new Date(row.endingTime));
       }
     },
     {
@@ -81,7 +76,7 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router,
               private userService: UserService,
-              private projectApiService: ProjectApiService,
+              private api: ApiService,
               private utilService: UtilsService) {
   }
 
@@ -107,10 +102,14 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
 
   reload() {
     if (!!this.project) {
-      this.projectApiService.getProjectFlowLabelingUsingGET(
+      from(this.api.projectApi.getProjectFlowLabelingUsingGET(
         this.project.id,
         this.pageIndex - 1, this.pageSize
-      ).subscribe(x => {
+      ))
+      .pipe(
+        map(resp => resp.data)
+      )
+      .subscribe(x => {
         this.listOfData = x.content;
         this.totalElements = parseInt(x.totalElements);
       });
@@ -128,7 +127,7 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
     this.pageSize = pageSize;
   }
 
-  levelFormatter(data: FlowLabelingDto.StatusEnum) {
+  levelFormatter(data: FlowLabelingDtoStatusEnum) {
     let res = null;
     switch (data) {
       case 'PENDING':

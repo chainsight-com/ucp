@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {LabelWithRisk} from "@profyu/unblock-ng-sdk";
+import { LabelWithRisk } from '@chainsight/unblock-api-axios-sdk';
 
 @Component({
   selector: 'app-scored-tag',

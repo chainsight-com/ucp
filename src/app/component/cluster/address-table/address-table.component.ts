@@ -1,20 +1,15 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Subject} from "rxjs";
+import {from, Subject} from "rxjs";
 import {TblColumn} from "../../../shared/table/tbl-column";
-import {
-  Address, AddressApiService,
-  AddressCaseDto,
-  AddressDetail, AddressScanBatchDto,
-  HolderAddressApiService,
-  HolderAddressDto
-} from "@profyu/unblock-ng-sdk";
 import {EMPTY_PAGE, Page} from "../../../models/type/page";
 import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {finalize, take} from "rxjs/operators";
+import {finalize, map, take} from "rxjs/operators";
 import {ADDRESS_CASE_STATUS_MAP} from "../../../models/address-case-status-option";
 import {RISK_LEVEL_MAP} from "../../../models/address-case-risk-level-option";
 import {TblAction} from "../../../shared/table/tbl-action";
+import { Address, AddressCaseDtoLevelEnum, AddressCaseDtoStatusEnum, AddressDetail } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-address-table',
@@ -92,7 +87,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
 
 
   constructor(
-    private addressApiService: AddressApiService,
+    private api: ApiService,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router) {
@@ -119,16 +114,17 @@ export class AddressTableComponent implements OnInit, OnChanges {
     const body = {
       addresses: this.addresses
     }
-    this.addressApiService.listAddressDetailsUsingPOST(body, this.projectId)
+    from(this.api.addressApi.listAddressDetailsUsingPOST(body, this.projectId))
       .pipe(
         take(1),
+        map(resp => resp.data),
         finalize(() => {this.isLoading = false})
       ).subscribe(resp => {
       this.content = resp;
     }, console.error);
   }
 
-  caseStatusFormatter(status: AddressCaseDto.StatusEnum) {
+  caseStatusFormatter(status: AddressCaseDtoStatusEnum) {
     const attr = ADDRESS_CASE_STATUS_MAP[status];
     if (!attr) {
       return {
@@ -143,7 +139,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
     };
   }
 
-  caseLevelFormatter(level: AddressCaseDto.LevelEnum) {
+  caseLevelFormatter(level: AddressCaseDtoLevelEnum) {
     const attr = RISK_LEVEL_MAP[level];
     if (!attr) {
       return {

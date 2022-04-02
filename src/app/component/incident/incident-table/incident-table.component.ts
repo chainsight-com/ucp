@@ -1,13 +1,14 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {interval, Subject} from "rxjs";
-import {IncidentApiService, IncidentDto} from "@profyu/unblock-ng-sdk";
+import {from, interval, Subject} from "rxjs";
 import {TblColumn} from "../../../shared/table/tbl-column";
 import {formatDate} from "@angular/common";
 import {EMPTY_PAGE, Page} from "../../../models/type/page";
 import {Router} from "@angular/router";
-import {filter, take, takeUntil} from "rxjs/operators";
+import {filter, map, take, takeUntil} from "rxjs/operators";
 import {ADDRESS_CASE_STATUS_MAP} from "../../../models/address-case-status-option";
 import {INCIDENT_STATUS_MAP} from "../../../models/incident-status-option";
+import { IncidentDto, IncidentDtoStatusEnum } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-incident-table',
@@ -61,7 +62,7 @@ export class IncidentTableComponent implements OnInit, OnChanges, OnDestroy {
   public isLoading = false;
 
   constructor(private router: Router,
-              private incidentApiService: IncidentApiService) {
+              private api: ApiService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -81,9 +82,10 @@ export class IncidentTableComponent implements OnInit, OnChanges, OnDestroy {
     if (!silent) {
       this.isLoading = true;
     }
-    this.incidentApiService.paginateIncidentUsingGET(this.pageIdx - 1, this.pageSize, this.projectId, this.holderId, this.currencyId, this.address, this.title)
+    from(this.api.incidentApi.paginateIncidentUsingGET(this.pageIdx - 1, this.pageSize, this.projectId, this.holderId, this.currencyId, this.address, this.title))
       .pipe(
         take(1),
+        map(resp => resp.data)
       ).subscribe(page => {
       this.page = page;
       this.totalElements = Number(page.totalElements);
@@ -102,7 +104,7 @@ export class IncidentTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  statusFormatter(status: IncidentDto.StatusEnum) {
+  statusFormatter(status: IncidentDtoStatusEnum) {
 
     const attr = INCIDENT_STATUS_MAP[status];
     if (!attr) {

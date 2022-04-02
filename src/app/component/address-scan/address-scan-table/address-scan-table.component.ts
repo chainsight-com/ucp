@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {TblColumn} from "../../../shared/table/tbl-column";
-import {AddressScanApiService, AddressScanDto} from "@profyu/unblock-ng-sdk";
 import {formatDate} from "@angular/common";
 import {EMPTY_PAGE, Page} from "../../../models/type/page";
 import {Router} from "@angular/router";
-import {filter, take, takeUntil} from "rxjs/operators";
-import {interval, Subject} from "rxjs";
+import {filter, map, take, takeUntil} from "rxjs/operators";
+import {from, interval, Subject} from "rxjs";
+import { AddressScanDto, AddressScanDtoStatusEnum } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-address-scan-table',
@@ -93,7 +94,7 @@ export class AddressScanTableComponent implements OnInit, OnChanges, OnDestroy {
   public isLoading = false;
 
   constructor(private router: Router,
-              private addressScanApiService: AddressScanApiService) {
+              private api: ApiService) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -121,9 +122,10 @@ export class AddressScanTableComponent implements OnInit, OnChanges, OnDestroy {
     if (!silent) {
       this.isLoading = true;
     }
-    this.addressScanApiService.paginateAddressScanUsingGET(this.pageIdx - 1, this.pageSize, this.projectId, this.batchId, this.currencyId, this.address, this.incidentId)
+    from(this.api.addressScanApi.paginateAddressScanUsingGET(this.pageIdx - 1, this.pageSize, this.projectId, this.batchId, this.currencyId, this.address, this.incidentId))
       .pipe(
         take(1),
+        map(resp => resp.data)
       ).subscribe(page => {
       this.page = page;
       this.totalElements = Number(page.totalElements);
@@ -142,7 +144,7 @@ export class AddressScanTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  statusFormatter(status: AddressScanDto.StatusEnum) {
+  statusFormatter(status: AddressScanDtoStatusEnum) {
 
     let res = null;
     switch (status) {

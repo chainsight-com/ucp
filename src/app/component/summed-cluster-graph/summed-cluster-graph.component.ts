@@ -11,19 +11,15 @@ import {
 } from '@angular/core';
 import * as go from "gojs";
 import {SankeyLayout} from "../../shared/sankey-layout";
-import {take} from "rxjs/operators";
+import {map, take} from "rxjs/operators";
 import {CryptoPipe} from "../../pipes/crypto.pipe";
 import {CcPipe} from "../../pipes/cc.pipe";
 import {init} from "protractor/built/launcher";
-import {
-  AddressScanApiService,
-  AddressScanDto,
-  ClusterEdgeDto,
-  ClusterGraphDto,
-  ClusterNodeDto
-} from '@profyu/unblock-ng-sdk';
 import {GraphLinksModel, GraphObject} from "gojs";
 import {Cluster} from "cluster";
+import { AddressScanDto, ClusterEdgeDto, ClusterNodeDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
+import { from } from 'rxjs';
 
 
 export const COLORS = [
@@ -67,7 +63,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
   private ctxMenuRef: ElementRef;
 
 
-  constructor(private addressScanApiService: AddressScanApiService) {
+  constructor(private api: ApiService) {
   }
 
   ngOnInit() {
@@ -84,8 +80,10 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
 
 
   reload() {
-    this.addressScanApiService.getAddressScanUsingGET(this.addressScanId).pipe(
-      take(1)
+    from(this.api.addressScanApi.getAddressScanUsingGET(this.addressScanId))
+    .pipe(
+      take(1),
+      map(resp => resp.data)
     ).subscribe((scan) => {
       this.addressScan = scan;
       this.pageIdx = 0;
@@ -96,9 +94,10 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
 
   reloadPage() {
     this.isLoading = true;
-    this.addressScanApiService.getAddressScanClusterGraphUsingGET(this.addressScan.id, this.pageIdx, this.pageSize)
+    from(this.api.addressScanApi.getAddressScanClusterGraphUsingGET(this.addressScan.id, this.pageIdx, this.pageSize))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe((graph) => {
       this.render(graph.nodes, graph.edges.content);
       this.isLoading = false;
@@ -336,9 +335,10 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
 
   loadNeighbor(node: ClusterNodeDto, pageIdx: number, pageSize: number, isLastUpdater: (isLast: boolean) => void) {
     this.isLoading = true;
-    this.addressScanApiService.getAddressScanClusterGraphNeighborUsingGET(this.addressScanId, pageIdx, pageSize, [node.clusterId])
+    from(this.api.addressScanApi.getAddressScanClusterGraphNeighborUsingGET(this.addressScanId, pageIdx, pageSize, [node.clusterId]))
       .pipe(
-        take(1)
+        take(1),
+        map(resp => resp.data)
       ).subscribe((graph) => {
       this.render(graph.nodes, graph.edges.content);
       isLastUpdater(graph.edges.last)
@@ -357,12 +357,6 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
     a.setAttribute('style', "display: none");
     a.href = url;
     a.download = filename;
-
-    // IE 11
-    if (window.navigator.msSaveBlob !== undefined) {
-      window.navigator.msSaveBlob(blob, filename);
-      return;
-    }
 
     document.body.appendChild(a);
     requestAnimationFrame(() => {

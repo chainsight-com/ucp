@@ -1,12 +1,13 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {AccountApiService, AccountDto, ProjectDto} from '@profyu/unblock-ng-sdk';
-import {AuthService} from "angularx-social-login";
-import {filter, map, mergeMap, take, takeUntil, tap} from "rxjs/operators";
-import {JwtHelperService} from "@auth0/angular-jwt";
-import {NzMessageService} from "ng-zorro-antd";
-import {LoginState} from "../models/LoginState";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, from, Observable } from 'rxjs';
+import { AuthService } from "angularx-social-login";
+import { filter, map, mergeMap, take, takeUntil, tap } from "rxjs/operators";
+import { JwtHelperService } from "@auth0/angular-jwt";
+import { NzMessageService } from "ng-zorro-antd";
+import { LoginState } from "../models/LoginState";
+import { HttpClient } from "@angular/common/http";
+import { AccountDto, ProjectDto } from '@chainsight/unblock-api-axios-sdk';
+import { environment } from 'src/environments/environment';
 
 // export const LOCAL_TOKEN_KEY = 'access_token';
 // export const LOCAL_ME = 'me';
@@ -70,7 +71,6 @@ export class UserService {
   constructor(
     private jwtHelper: JwtHelperService,
     private authService: AuthService,
-    private accountApiService: AccountApiService,
     private message: NzMessageService,
     private httpClient: HttpClient
   ) {
@@ -81,20 +81,14 @@ export class UserService {
           this._availableProjects.next([]);
           return;
         }
-        this.accountApiService.getAccountProjectUsingGET(loginState.me.id)
-          .pipe(
-            take(1)
-          ).subscribe(pms => {
-          const projects = pms.map(pm => pm.project);
-          this._availableProjects.next(projects);
-          if (projects.length > 0) {
-            this._project$.next(projects[0]);
-          } else {
-            message.error('No project is available for this account');
-            this.signOut();
-          }
-        });
-
+        const projects = loginState.me.accessibleProjects.map(pm => pm.project);
+        this._availableProjects.next(projects);
+        if (projects.length > 0) {
+          this._project$.next(projects[0]);
+        } else {
+          message.error('No project is available for this account');
+          this.signOut();
+        }
       });
 
   }
@@ -125,7 +119,7 @@ export class UserService {
     loginState.accessToken = value
     // localStorage.setItem(LOCAL_TOKEN_KEY, value);
     const tknObj = this.jwtHelper.decodeToken(value);
-    this.httpClient.get(`${this.accountApiService.configuration.basePath}/api/account/me`, {
+    this.httpClient.get(`${environment.baseApiUrl}/api/account/me`, {
       headers: {
         'Authorization': `Bearer ${value}`
       }

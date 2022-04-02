@@ -3,16 +3,12 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {QrScannerService} from "../../../services/qr-scanner.service";
 import {HttpClient} from "@angular/common/http";
-import {
-  AccountApiService,
-  AddressCaseApiService,
-  AddressCaseCreation, AddressScanDto,
-  IncidentApiService, IncidentDto, RestApiException
-} from "@profyu/unblock-ng-sdk";
 import {UserService} from "../../../services/user.service";
 import {NzMessageService} from "ng-zorro-antd";
-import {finalize, take} from "rxjs/operators";
-import ApiErrorCodeEnum = RestApiException.ApiErrorCodeEnum;
+import {finalize, map, take} from "rxjs/operators";
+import { AddressCaseCreation, IncidentDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-incident-form',
@@ -31,7 +27,7 @@ export class IncidentFormComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private message: NzMessageService,
-              private incidentApiService: IncidentApiService) {
+              private api: ApiService) {
 
   }
 
@@ -64,9 +60,10 @@ export class IncidentFormComponent implements OnInit {
 
 
     this.isSubmitting = true;
-    this.incidentApiService.createIncidentUsingPOST(body)
+    from(this.api.incidentApi.createIncidentUsingPOST(body))
       .pipe(
         take(1),
+        map(resp => resp.data),
         finalize(() => {
           this.isSubmitting = false;
         })

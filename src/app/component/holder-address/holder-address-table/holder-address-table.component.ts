@@ -1,21 +1,15 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Subject} from "rxjs";
-import {
-  AccountDto,
-  AddressCaseApiService,
-  AddressCaseDto,
-  HolderAddressApiService,
-  HolderAddressDto,
-  ProjectDto
-} from "@profyu/unblock-ng-sdk";
+import {from, Subject} from "rxjs";
 import {TblColumn} from "../../../shared/table/tbl-column";
 import {formatDate} from "@angular/common";
 import {EMPTY_PAGE, Page} from "../../../models/type/page";
 import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {filter, take, takeUntil} from "rxjs/operators";
+import {filter, map, take, takeUntil} from "rxjs/operators";
 import {ADDRESS_CASE_STATUS_MAP} from "../../../models/address-case-status-option";
 import {RISK_LEVEL_MAP} from "../../../models/address-case-risk-level-option";
+import { AddressCaseDtoLevelEnum, AddressCaseDtoStatusEnum, HolderAddressDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-holder-address-table',
@@ -80,7 +74,7 @@ export class HolderAddressTableComponent implements OnInit, OnChanges {
   public holderId: string;
 
   constructor(
-    private holderAddressApiService: HolderAddressApiService,
+    private api: ApiService,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router) {
@@ -103,9 +97,10 @@ export class HolderAddressTableComponent implements OnInit, OnChanges {
     if (!silent) {
       this.isLoading = true;
     }
-    this.holderAddressApiService.paginateHolderAddressAddressUsingGET(this.pageIdx - 1, this.pageSize, null, this.holderId)
+    from(this.api.holderAddressApi.paginateHolderAddressAddressUsingGET(this.pageIdx - 1, this.pageSize, null, this.holderId))
       .pipe(
         take(1),
+        map(resp => resp.data)
       ).subscribe(page => {
       this.page = page;
       this.totalElements = Number(page.totalElements);
@@ -121,7 +116,7 @@ export class HolderAddressTableComponent implements OnInit, OnChanges {
   }
 
 
-  caseStatusFormatter(status: AddressCaseDto.StatusEnum) {
+  caseStatusFormatter(status: AddressCaseDtoStatusEnum) {
     const attr = ADDRESS_CASE_STATUS_MAP[status];
     if (!attr) {
       return {
@@ -136,7 +131,7 @@ export class HolderAddressTableComponent implements OnInit, OnChanges {
     };
   }
 
-  caseLevelFormatter(level: AddressCaseDto.LevelEnum) {
+  caseLevelFormatter(level: AddressCaseDtoLevelEnum) {
     const attr = RISK_LEVEL_MAP[level];
     if (!attr) {
       return {

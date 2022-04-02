@@ -1,18 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {
-  AccountDto, AddressCaseApiService, AddressCaseDto,
-  AddressScanApiService, AddressScanDto, ProjectDto
-} from '@profyu/unblock-ng-sdk';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter, take, takeUntil} from 'rxjs/operators';
+import {filter, map, take, takeUntil} from 'rxjs/operators';
 import {NzTabComponent} from 'ng-zorro-antd';
 import {formatDate} from '@angular/common';
 import {EMPTY_PAGE, Page} from "../../../models/type/page";
 import {UserService} from "../../../services/user.service";
 import {TblColumn} from "../../../shared/table/tbl-column";
-import {interval, Subject} from "rxjs";
+import {from, interval, Subject} from "rxjs";
 import {RISK_LEVEL_MAP} from "../../../models/address-case-risk-level-option";
 import {ADDRESS_CASE_STATUS_MAP} from "../../../models/address-case-status-option";
+import { AccountDto, AddressCaseDto, AddressCaseDtoLevelEnum, AddressCaseDtoStatusEnum, ProjectDto } from '@chainsight/unblock-api-axios-sdk';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-address-case-page',
@@ -78,7 +76,7 @@ export class AddressCasePageComponent implements OnInit {
   public project: ProjectDto;
 
   constructor(
-    private addressCaseApiService: AddressCaseApiService,
+    private api: ApiService,
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private router: Router) {
@@ -115,9 +113,10 @@ export class AddressCasePageComponent implements OnInit {
     if(!silent){
       this.isLoading = true;
     }
-    this.addressCaseApiService.paginateAddressCaseUsingGET(this.pageIdx-1, this.pageSize, this.userService.project.id)
+    from(this.api.addressCaseApi.paginateAddressCaseUsingGET(this.pageIdx-1, this.pageSize, this.userService.project.id))
       .pipe(
         take(1),
+        map(resp => resp.data)
       ).subscribe(page => {
       this.page = page;
       this.totalElements = Number(page.totalElements);
@@ -139,7 +138,7 @@ export class AddressCasePageComponent implements OnInit {
     this.router.navigate(['address-case', row.id]);
   }
 
-  statusFormatter(status:  AddressCaseDto.StatusEnum) {
+  statusFormatter(status:  AddressCaseDtoStatusEnum) {
 
     const attr = ADDRESS_CASE_STATUS_MAP[status];
     if(!attr){
@@ -154,7 +153,7 @@ export class AddressCasePageComponent implements OnInit {
       title: attr.label,
     };
   }
-  levelFormatter(level: AddressCaseDto.LevelEnum) {
+  levelFormatter(level: AddressCaseDtoLevelEnum) {
     const attr = RISK_LEVEL_MAP[level];
     if(!attr){
       return {
