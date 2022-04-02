@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {QrScannerService} from 'src/app/services/qr-scanner.service';
 import {Subject} from 'rxjs';
 import {UserService} from "../../../services/user.service";
+import { ApiService } from 'src/app/services/api.service';
 
 
 @Component({

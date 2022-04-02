@@ -3,7 +3,6 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-b
 import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {ZXingScannerModule} from '@zxing/ngx-scanner';
 import {en_US, NgZorroAntdModule, NZ_I18N} from 'ng-zorro-antd';
 import {registerLocaleData} from '@angular/common';
 import en from '@angular/common/locales/zh';
@@ -11,7 +10,6 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthServiceConfig, GoogleLoginProvider, SocialLoginModule} from 'angularx-social-login';
 import {JwtModule} from '@auth0/angular-jwt';
-import {ScanPageComponent} from './pages/scan-page/scan-page.component';
 import {AddressScanAddPageComponent} from './pages/address-scan/address-scan-add-page/address-scan-add-page.component';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
 import {BASE_PATH} from '@profyu/unblock-ng-sdk';
@@ -289,7 +287,6 @@ registerLocaleData(en);
     LayoutComponent,
     SideMenuComponent,
     TableComponent,
-    ScanPageComponent,
     AddressScanAddPageComponent,
     DashboardPageComponent,
     AddressScanDetailPageComponent,
@@ -332,11 +329,10 @@ registerLocaleData(en);
     FormsModule,
     ReactiveFormsModule,
     SocialLoginModule,
-    ZXingScannerModule,
     JwtModule.forRoot({
       config: {
         tokenGetter,
-        whitelistedDomains: ['unblock-analysis.com', 'localhost']
+        whitelistedDomains: ['chainsight.com', 'unblock-analysis.com', 'localhost']
       }
     }),
     MarkdownModule.forRoot(),

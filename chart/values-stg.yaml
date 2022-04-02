@@ -6,8 +6,13 @@ ingress:
     - host: ucp.staging.unblock-analysis.com
       paths:
         - /
+    - host: ucp.staging.chainsight.com
+      paths:
+        - /
   tls:
     - secretName: unblock-ui-tls
       hosts:
         - ucp.staging.unblock-analysis.com
-
+    - secretName: chainsight-ui-tls
+      hosts:
+        - ucp.staging.chainsight.com

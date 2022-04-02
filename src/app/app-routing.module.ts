@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {Route, RouterModule, Routes} from '@angular/router';
-import {ScanPageComponent} from './pages/scan-page/scan-page.component';
 import {AddressScanAddPageComponent} from './pages/address-scan/address-scan-add-page/address-scan-add-page.component';
 import {DashboardPageComponent} from './pages/dashboard-page/dashboard-page.component';
 import {AddressScanPageComponent} from './pages/address-scan/address-scan-page/address-scan-page.component';
@@ -42,7 +41,7 @@ const routes: Routes = [
       {path: 'incident', component: IncidentPageComponent },
       {path: 'incident/:id', component: IncidentDetailPageComponent },
 
-      {path: 'qr-scan', component: ScanPageComponent, },
+
       {path: 'flow-labeling-page', component: FlowLabelingPageComponent, },
       {path: 'flow-labeling-page/create', component: FlowLabelingAddComponent, },
 

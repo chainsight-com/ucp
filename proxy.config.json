@@ -1,6 +1,6 @@
 {
     "/api":{
-        "target": "https://apiv2.unblock-analysis.com/",
+        "target": "https://api.dev.chainsight.com/",
         "secure": false
     }
 }

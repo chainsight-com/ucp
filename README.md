@@ -1,12 +1,10 @@
 # Unblock Compliance Platform (UCP)
 
 # Environments
-* Dev: https://ucp.devel.unblock.profyu.com/
-* Staging https://ucp.staging.unblock-analysis.com/
-* Production: https://ucp.unblock-analysis.com/
+* Dev: https://ucp.dev.chainsight.com/
+* Staging https://ucp.staging.chainsight.com/
+* Production: https://ucp.chainsight.com/
 
-# JWT
-* Dev: `eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJ1bmJsb2NrLWFuYWx5c2lzLmNvbSIsImlhdCI6MTU3NTg2OTU1MiwiZXhwIjoxNzMzNTQ5NTUyLCJzdWIiOiJBQ0NPVU5UXzhmMzY0MTQ4LTcxODAtNDMzYS1iMmVhLWNhMTI5OTIwNWNjYSJ9.dgdrK3Mo5GLLGu2MC0JS5_ZgBg1mJCT8MDCKQUcWCIbWWSnEsUfyLXLagNv4CVBFCc0TbwRhR2HeIX6xXmISiQ`
 
 
 # UI Mockup
