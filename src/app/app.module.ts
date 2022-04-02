@@ -52,7 +52,6 @@ import { IncidentPageComponent } from './pages/incident/incident-page/incident-p
 import { ClusterInfoComponent } from './component/cluster/cluster-info/cluster-info.component';
 import { AddressTableComponent } from './component/cluster/address-table/address-table.component';
 import { RuleInfoComponent } from './component/rule-info/rule-info.component';
-import { BASE_PATH } from '@chainsight/unblock-api-axios-sdk/dist/base';
 
 const menus: any[] = [
 
@@ -338,7 +337,6 @@ registerLocaleData(en);
     MarkdownModule.forRoot(),
   ],
   providers: [
-    {provide: BASE_PATH, useValue: environment.baseApiUrl},
     {provide: NZ_I18N, useValue: en_US},
     // {provide: NZ_ICONS, useValue: icons},
     {

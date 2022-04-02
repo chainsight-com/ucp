@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { formatDate } from '@angular/common';
 import { AccountApi, AddressApi, AddressCaseApi, AddressCaseCommentApi, AddressScanApi, AddressScanBatchApi, AuthApi, BlobApi, Configuration, CurrencyApi, FlowLabelingApi, HolderAddressApi, HolderApi, IncidentAddressScanApi, IncidentApi, IncidentClusterApi, LabelApi, LabelCategoryApi, ProjectApi, RuleApi, TxApi } from '@chainsight/unblock-api-axios-sdk';
 import { UserService } from './user.service';
 import axios, { AxiosInstance } from 'axios';
