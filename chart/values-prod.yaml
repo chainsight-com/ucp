@@ -13,7 +13,7 @@ ingress:
     - secretName: unblock-ui-tls
       hosts:
         - ucp.unblock-analysis.com
-    - secretName: unblock-ui-tls
+    - secretName: chainsight-ui-tls
       hosts:
         - ucp.chainsight.com
             
