@@ -80,7 +80,7 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
     this.form.get('projectId').setValue(this.projectId);
     this.form.get('currencyId').setValue(this.currencyId);
     this.form.get('address').setValue(this.address);
-    from(this.api.projectApi.getProjectUsingGET(this.projectId))
+    from(this.api.projectApi.getProject(this.projectId))
       .pipe(
         take(1),
         map(resp => resp.data)
@@ -116,7 +116,7 @@ export class AddressScanFormComponent implements OnInit, OnChanges {
 
 
 
-    from(this.api.addressScanApi.createAddressScanUsingPOST({
+    from(this.api.addressScanApi.createAddressScan({
       projectId: formValue.projectId,
       currencyId: formValue.currencyId,
       address: formValue.address,

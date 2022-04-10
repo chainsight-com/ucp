@@ -41,7 +41,7 @@ export class RuleInfoComponent implements OnInit, OnChanges {
   reloadRule() {
     this.rule = null;
     this.isLoading = true;
-    from(this.api.ruleApi.getHolderUsingGET1(this.ruleId))
+    from(this.api.ruleApi.getRule(this.ruleId))
       .pipe(
         take(1),
         map(resp => resp.data),

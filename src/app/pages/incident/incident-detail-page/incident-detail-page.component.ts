@@ -162,7 +162,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   reload(id: string) {
     this.isLoadingIncident = true;
-    from(this.api.incidentApi.getIncidentUsingGET(id))
+    from(this.api.incidentApi.getIncident(id))
       .pipe(
         take(1),
         map(resp => resp.data)
@@ -231,7 +231,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
   private submitStatus(value: IncidentDtoStatusEnum) {
     this.isSubmittingStatus = true;
-    from(this.api.incidentApi.patchIncidentStatusUsingPATCH(this.incident.id, value))
+    from(this.api.incidentApi.patchIncidentStatus(this.incident.id, value))
       .pipe(
         take(1),
         map(resp => resp.data),
@@ -289,7 +289,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
         })
       };
       this.isLoadingAddressScanGraph = true;
-      from(this.api.incidentClusterApi.createIncidentClusterUsingPOST(payload))
+      from(this.api.incidentClusterApi.createIncidentCluster(payload))
         .pipe(
           take(1),
           map(resp => resp.data)
@@ -352,7 +352,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
   onScanSubmitted(created: AddressScanDto) {
     this.showAddScanDrawer = false;
 
-    from(this.api.incidentAddressScanApi.createIncidentAddressScanUsingPOST({
+    from(this.api.incidentAddressScanApi.createIncidentAddressScan({
       incidentId: this.incidentId,
       addressScanId: created.id,
     }))
@@ -386,7 +386,7 @@ export class IncidentDetailPageComponent implements OnInit, OnChanges {
 
 
     this.isSubmittingEditIncidentCluster = true;
-    from(this.api.incidentClusterApi.updateIncidentClusterUsingPUT(this.selectedIncidentClusterNode.incidentCluster.id, body))
+    from(this.api.incidentClusterApi.updateIncidentCluster(this.selectedIncidentClusterNode.incidentCluster.id, body))
       .pipe(
         take(1),
         map(resp => resp.data),

@@ -113,7 +113,7 @@ export class AddressCasePageComponent implements OnInit {
     if(!silent){
       this.isLoading = true;
     }
-    from(this.api.addressCaseApi.paginateAddressCaseUsingGET(this.pageIdx-1, this.pageSize, this.userService.project.id))
+    from(this.api.addressCaseApi.paginateAddressCase(this.pageIdx-1, this.pageSize, this.userService.project.id))
       .pipe(
         take(1),
         map(resp => resp.data)

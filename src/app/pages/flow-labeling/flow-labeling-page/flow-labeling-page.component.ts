@@ -102,7 +102,7 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
 
   reload() {
     if (!!this.project) {
-      from(this.api.projectApi.getProjectFlowLabelingUsingGET(
+      from(this.api.projectApi.getProjectFlowLabeling(
         this.project.id,
         this.pageIndex - 1, this.pageSize
       ))
@@ -111,7 +111,7 @@ export class FlowLabelingPageComponent implements OnInit, OnDestroy {
       )
       .subscribe(x => {
         this.listOfData = x.content;
-        this.totalElements = parseInt(x.totalElements);
+        this.totalElements = x.totalElements;
       });
     }
   }

@@ -63,7 +63,7 @@ export class DashboardPageComponent implements OnInit {
       .pipe(
         takeUntil(this.unsubscribe$),
         filter(project => !!project),
-        mergeMap(project => from(this.api.projectApi.getProjectUsingGET(project.id))),
+        mergeMap(project => from(this.api.projectApi.getProject(project.id))),
         map(resp => resp.data)
 
       )
@@ -80,7 +80,7 @@ export class DashboardPageComponent implements OnInit {
       this.pageIdx = 0;
     }
     this.isLoading = true;
-    from(this.api.txApi.paginateTxUsingGET(this.pageIdx, this.pageSize, this.userService.project.id))
+    from(this.api.txApi.paginateTx(this.pageIdx, this.pageSize, this.userService.project.id))
       .pipe(
         take(1),
         map(resp => resp.data)
@@ -92,7 +92,7 @@ export class DashboardPageComponent implements OnInit {
   }
 
   loadCurrencies(projectCurrencies: CurrencyDto[]) {
-    from(this.api.currencyApi.listCurrenciesUsingGET())
+    from(this.api.currencyApi.listCurrencies())
       .pipe(
         take(1),
         map(resp => resp.data)

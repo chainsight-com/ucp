@@ -39,8 +39,9 @@ export class ApiService {
       timeout: 30000,
     });
     const config = new Configuration({
-      apiKey: async () => {
-        return `Bearer ${userService.token}`;
+      
+      accessToken: async () => {
+        return `${userService.token}`;
       }
     });
     this.addressScanApi = new AddressScanApi(config, environment.baseApiUrl, axios);

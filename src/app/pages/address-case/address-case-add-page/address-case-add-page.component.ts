@@ -9,7 +9,7 @@ import {from, Subject} from 'rxjs';
 import {UserService} from "../../../services/user.service";
 import {NzMessageService} from "ng-zorro-antd";
 import {RISK_LEVEL_LIST, AddressCaseRiskLevelOption} from "../../../models/address-case-risk-level-option";
-import { AddressCaseCreation, CurrencyDto, RestApiExceptionApiErrorCodeEnum } from '@chainsight/unblock-api-axios-sdk';
+import { AddressCaseCreation, ApiErrorCode, CurrencyDto } from '@chainsight/unblock-api-axios-sdk';
 import { ApiService } from 'src/app/services/api.service';
 
 
@@ -119,7 +119,7 @@ export class AddressCaseAddPageComponent implements OnInit, OnChanges {
 
 
     this.isSubmitting = true;
-    from(this.api.addressCaseApi.createAddressCaseUsingPOST(body))
+    from(this.api.addressCaseApi.createAddressCase(body))
       .pipe(
         take(1),
         map(resp => resp.data),
@@ -131,7 +131,7 @@ export class AddressCaseAddPageComponent implements OnInit, OnChanges {
     }, (req) => {
       console.error(req);
       const body = req.error;
-      if (body.apiErrorCode == RestApiExceptionApiErrorCodeEnum.DuplicatedAddressCase) {
+      if (body.apiErrorCode == ApiErrorCode.DuplicatedAddressCase) {
         this.message.error('Case already exists');
       }
     });

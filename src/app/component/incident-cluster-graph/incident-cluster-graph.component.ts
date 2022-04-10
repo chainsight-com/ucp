@@ -115,7 +115,7 @@ export class IncidentClusterGraphComponent implements OnInit {
   }
 
   reload() {
-    from(this.api.incidentApi.getIncidentUsingGET(this.incidentId))
+    from(this.api.incidentApi.getIncident(this.incidentId))
     .pipe(
       take(1),
       map(resp => resp.data)
@@ -130,14 +130,14 @@ export class IncidentClusterGraphComponent implements OnInit {
   reloadPage() {
     this.isLoading = true;
     this.shouldSaveAnnotation = false;
-    from(this.api.incidentApi.getIncidentClusterGraphUsingGET(this.incidentId, this.pageIdx, this.pageSize))
+    from(this.api.incidentApi.getIncidentClusterGraph(this.incidentId, this.pageIdx, this.pageSize))
       .pipe(
         take(1),
         map(resp => resp.data)
       ).subscribe((graph) => {
       this.render(graph.nodes, graph.edges.content);
 
-      from(this.api.incidentApi.listIncidentHolderUsingGET(this.incidentId))
+      from(this.api.incidentApi.listIncidentHolder(this.incidentId))
         .pipe(
           take(1),
           map(resp => resp.data)
@@ -201,7 +201,7 @@ export class IncidentClusterGraphComponent implements OnInit {
         to: edge.toClusterId,
         payload: edge,
         width: 4,
-        text: `${new CcPipe().transform(edge.amount, fromNode.currency.unitRate).toFixed(3)} ${fromNode.currency.name.toUpperCase()}`,
+        text: `${new CcPipe().transform(edge.amount.toString(), fromNode.currency.unitRate.toString()).toFixed(3)} ${fromNode.currency.name.toUpperCase()}`,
       };
     }));
 

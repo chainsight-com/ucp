@@ -1,12 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {QrScannerService} from "../../../services/qr-scanner.service";
-import {HttpClient} from "@angular/common/http";
-import {UserService} from "../../../services/user.service";
-import {NzMessageService} from "ng-zorro-antd";
-import {finalize, map, take} from "rxjs/operators";
-import { AddressCaseCreation, IncidentDto } from '@chainsight/unblock-api-axios-sdk';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { QrScannerService } from "../../../services/qr-scanner.service";
+import { HttpClient } from "@angular/common/http";
+import { UserService } from "../../../services/user.service";
+import { NzMessageService } from "ng-zorro-antd";
+import { finalize, map, take } from "rxjs/operators";
+import { AddressCaseCreation, IncidentDto, AddressCaseCreationLevelEnum } from '@chainsight/unblock-api-axios-sdk';
 import { ApiService } from 'src/app/services/api.service';
 import { from } from 'rxjs';
 
@@ -26,8 +26,8 @@ export class IncidentFormComponent implements OnInit {
   public isSubmitting = false;
 
   constructor(private fb: FormBuilder,
-              private message: NzMessageService,
-              private api: ApiService) {
+    private message: NzMessageService,
+    private api: ApiService) {
 
   }
 
@@ -55,12 +55,15 @@ export class IncidentFormComponent implements OnInit {
 
     const body: AddressCaseCreation = {
       projectId: this.projectId,
-      title: formValue.title
+      title: formValue.title,
+      currencyId: null,
+      address: null,
+      level: AddressCaseCreationLevelEnum.High
     };
 
 
     this.isSubmitting = true;
-    from(this.api.incidentApi.createIncidentUsingPOST(body))
+    from(this.api.incidentApi.createIncident(body))
       .pipe(
         take(1),
         map(resp => resp.data),
@@ -68,8 +71,8 @@ export class IncidentFormComponent implements OnInit {
           this.isSubmitting = false;
         })
       ).subscribe(resBody => {
-      this.onSubmitted.emit(resBody)
-    }, console.error);
+        this.onSubmitted.emit(resBody)
+      }, console.error);
 
   }
 

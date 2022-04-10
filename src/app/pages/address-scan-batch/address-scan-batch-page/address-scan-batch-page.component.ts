@@ -100,7 +100,7 @@ export class AddressScanBatchPageComponent implements OnInit, OnDestroy {
     if (!silent) {
       this.isLoading = true;
     }
-    from(this.api.addressScanBatchApi.paginateAddressScanBatchUsingGET(this.pageIdx-1, this.pageSize, this.userService.project.id))
+    from(this.api.addressScanBatchApi.paginateAddressScanBatch(this.pageIdx-1, this.pageSize, this.userService.project.id))
       .pipe(
         take(1),
         map(resp => resp.data)

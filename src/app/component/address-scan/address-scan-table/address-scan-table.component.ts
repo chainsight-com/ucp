@@ -122,7 +122,7 @@ export class AddressScanTableComponent implements OnInit, OnChanges, OnDestroy {
     if (!silent) {
       this.isLoading = true;
     }
-    from(this.api.addressScanApi.paginateAddressScanUsingGET(this.pageIdx - 1, this.pageSize, this.projectId, this.batchId, this.currencyId, this.address, this.incidentId))
+    from(this.api.addressScanApi.paginateAddressScan(this.pageIdx - 1, this.pageSize, this.projectId, this.batchId, this.currencyId, this.address, this.incidentId))
       .pipe(
         take(1),
         map(resp => resp.data)

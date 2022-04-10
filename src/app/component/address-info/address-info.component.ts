@@ -1,8 +1,8 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {filter, map, take} from "rxjs/operators";
-import {RISK_LEVEL_MAP} from "../../models/holder-risk-level-option";
-import {formatDate} from "@angular/common";
-import { AddressCaseDto, HolderDto, HolderDtoLevelEnum, PageOfHolderAddressDto } from '@chainsight/unblock-api-axios-sdk';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { filter, map, take } from "rxjs/operators";
+import { RISK_LEVEL_MAP } from "../../models/holder-risk-level-option";
+import { formatDate } from "@angular/common";
+import { AddressCaseDto, HolderDto, HolderDtoLevelEnum, HolderAddressDto, PageHolderAddressDto } from '@chainsight/unblock-api-axios-sdk';
 import { ApiService } from 'src/app/services/api.service';
 import { from } from 'rxjs';
 
@@ -28,7 +28,7 @@ export class AddressInfoComponent implements OnInit, OnChanges {
   public isHolderAddressLoading = false;
   public holderAddressPageIdx = 0;
   public holderAddressPageSize = 500;
-  public holderAddressPage: PageOfHolderAddressDto = {
+  public holderAddressPage: PageHolderAddressDto = {
     last: false,
     content: [],
   };
@@ -59,32 +59,32 @@ export class AddressInfoComponent implements OnInit, OnChanges {
 
   reloadHolder() {
     this.isHolderLoading = true;
-    from(this.api.holderApi.paginateHolderUsingGET(0, 1, this.projectId, null, null, this.currencyId, this.address))
+    from(this.api.holderApi.paginateHolder(0,1, this.projectId, null, null, this.currencyId, this.address))
       .pipe(
         take(1),
         map(resp => resp.data),
         filter(page => page.content.length == 1),
         map(page => page.content[0])
       ).subscribe(holder => {
-      this.holder = holder;
-    }, console.error, () => {
-      this.isHolderLoading = false;
-    });
+        this.holder = holder;
+      }, console.error, () => {
+        this.isHolderLoading = false;
+      });
   }
 
   private reloadAddressCase() {
     this.isAddressCaseLoading = true;
-    from(this.api.addressCaseApi.paginateAddressCaseUsingGET(0, 1, this.projectId, this.currencyId, this.address))
+    from(this.api.addressCaseApi.paginateAddressCase(0,1, this.projectId, this.currencyId, this.address))
       .pipe(
         take(1),
         map(resp => resp.data),
         filter(page => page.content.length == 1),
         map(page => page.content[0])
       ).subscribe(addressCase => {
-      this.addressCase = addressCase;
-    }, console.error, () => {
-      this.isAddressCaseLoading = false;
-    });
+        this.addressCase = addressCase;
+      }, console.error, () => {
+        this.isAddressCaseLoading = false;
+      });
   }
 
 

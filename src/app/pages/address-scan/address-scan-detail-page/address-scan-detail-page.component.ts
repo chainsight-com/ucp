@@ -19,7 +19,7 @@ import {
   IncidentClusterGraphComponent
 } from "../../../component/incident-cluster-graph/incident-cluster-graph.component";
 import {SummedClusterGraphComponent} from "../../../component/summed-cluster-graph/summed-cluster-graph.component";
-import { Address, AddressCaseDto, AddressScanDto, ClusterNodeDto, FlowGraphDto, IncidentAddressScanCreation, IncidentDto, LabelDto, PageOfWitnessDto } from '@chainsight/unblock-api-axios-sdk';
+import { Address, AddressCaseDto, AddressScanDto, ClusterNodeDto, FlowGraphDto, IncidentAddressScanCreation, IncidentDto, LabelDto, PageWitnessDto, WitnessDto } from '@chainsight/unblock-api-axios-sdk';
 import { ApiService } from 'src/app/services/api.service';
 
 let Sunburst = require('highcharts/modules/sunburst');
@@ -76,7 +76,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   public isWitnessLoading = false;
   public witnessPageIdx = 0;
   public witnessPageSize = 500;
-  public witnessResultPage: PageOfWitnessDto = {
+  public witnessResultPage: PageWitnessDto = {
     last: false,
     content: [],
   };
@@ -158,7 +158,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   reload(id: string) {
     this.isLoadingPipeline = true;
-    from(this.api.addressScanApi.getAddressScanUsingGET(id))
+    from(this.api.addressScanApi.getAddressScan(id))
       .pipe(
         take(1),
         map(resp => resp.data)
@@ -183,7 +183,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
   }
 
   reloadLabel() {
-    from(this.api.currencyApi.searchLabelsUsingGET(this.addressScan.currency.id, this.addressScan.address, this.addressScan.project.id))
+    from(this.api.currencyApi.searchLabels(this.addressScan.currency.id, this.addressScan.address, this.addressScan.project.id))
       .pipe(
         take(1),
         map(resp => resp.data)
@@ -211,7 +211,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       this.witnessPageIdx = 0;
     }
     this.isWitnessLoading = true;
-    // this.addressScanApiService.listAddressScanWitnessSummaryUsingGET(this.addressScan.id)
+    // this.addressScanApiService.listAddressScanWitnessSummary(this.addressScan.id)
     //   .pipe(
     //     take(1),
     //   ).subscribe(summary => {
@@ -227,7 +227,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     //   })
     //
     // });
-    from(this.api.addressScanApi.paginateAddressScanWitnessUsingGET(this.addressScan.id, this.witnessPageIdx, this.witnessPageSize, category))
+    from(this.api.addressScanApi.paginateAddressScanWitness(this.addressScan.id, this.witnessPageIdx, this.witnessPageSize, category))
       .pipe(
         take(1),
         map(resp => resp.data)
@@ -242,7 +242,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
 
   public reloadAddressCase() {
     this.isAddressCaseLoading = true
-    from(this.api.addressCaseApi.paginateAddressCaseUsingGET(0, 1, this.addressScan.project.id, this.addressScan.currency.id, this.addressScan.address))
+    from(this.api.addressCaseApi.paginateAddressCase(0, 1, this.addressScan.project.id, this.addressScan.currency.id, this.addressScan.address))
       .pipe(
         take(1),
         map(resp => resp.data),
@@ -474,7 +474,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     }
 
 
-    from(this.api.addressScanApi.getAddressScanFlowGraphUsingGET(this.addressScan.id, 0, this.graphEdgeSize))
+    from(this.api.addressScanApi.getAddressScanFlowGraph(this.addressScan.id, 0, this.graphEdgeSize))
     .pipe(
       take(1),
       map(resp => resp.data)
@@ -502,8 +502,8 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
             return {
               from: edge.fromAddress,
               to: edge.toAddress,
-              width: this.getEdgeWidth(parseInt(edge.amount)),
-              text: `${new CcPipe().transform(edge.amount, this.addressScan.currency.unitRate)} ${this.addressScan.currency.name.toUpperCase()}`,
+              width: this.getEdgeWidth(edge.amount),
+              text: `${new CcPipe().transform(edge.amount.toString(), this.addressScan.currency.unitRate.toString())} ${this.addressScan.currency.name.toUpperCase()}`,
               toolTipText: edge.txCount + `TX (${edge.minTxTime ? formatDate(edge.minTxTime, 'short', 'en-US', '') : 'Unknown'} ~ ${edge.maxTxTime ? formatDate(edge.maxTxTime, 'short', 'en-US', '') : 'Unknown'})`
             };
           })
@@ -680,7 +680,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
       incidentId: incident.id,
     }
     this.showIncidentFormDrawer = false;
-    from(this.api.incidentAddressScanApi.createIncidentAddressScanUsingPOST(body))
+    from(this.api.incidentAddressScanApi.createIncidentAddressScan(body))
       .pipe(
         take(1)
       ).subscribe(resp => {
@@ -698,7 +698,7 @@ export class AddressScanDetailPageComponent implements OnInit, OnDestroy {
     if (!this.forwardLabelSunburstChart || !this.backwardLabelSunburstChart) {
       setTimeout(() => {
         this.isLoadingLabelSunburst = true;
-        from(this.api.addressScanApi.getAddressScanLabelSunburstUsingGET(this.addressScan.id))
+        from(this.api.addressScanApi.getAddressScanLabelSunburst(this.addressScan.id))
           .pipe(
             take(1),
             map(resp => resp.data),

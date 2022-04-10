@@ -51,7 +51,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
           displayName: user.name,
         };
       }),
-      mergeMap((cred) => from(this.api.authApi.authenticateWithGoogleUsingPOST(cred))),
+      mergeMap((cred) => from(this.api.authApi.authenticateWithGoogle(cred))),
       map(resp => resp.data)
     ).subscribe((tokenPair) => {
       this.userService.signIn(tokenPair.token);
@@ -83,7 +83,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       password: formValue.password
     };
     this.isSpinning = true;
-    from(this.api.authApi.authenticateUsingPOST(body))
+    from(this.api.authApi.authenticate(body))
       .pipe(
         take(1),
         map(resp => resp.data)

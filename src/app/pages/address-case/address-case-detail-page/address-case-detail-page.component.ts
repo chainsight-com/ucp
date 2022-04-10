@@ -141,7 +141,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     reload(id: string) {
         this.isLoadingAddressCase = true;
-        from(this.api.addressCaseApi.getAddressCaseUsingGET(id))
+        from(this.api.addressCaseApi.getAddressCase(id))
             .pipe(
                 take(1),
                 map(resp => resp.data)
@@ -157,7 +157,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     reloadCommentList() {
         this.isCommentLoading = true;
-        from(this.api.addressCaseApi.listAddressCaseCommentUsingGET(this.addressCase.id))
+        from(this.api.addressCaseApi.listAddressCaseComment(this.addressCase.id))
             .pipe(
                 take(1),
                 map(resp => resp.data),
@@ -203,7 +203,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
 
         this.isSubmittingComment = true;
-        from(this.api.addressCaseCommentApi.createAddressCaseCommentUsingPOST(body))
+        from(this.api.addressCaseCommentApi.createAddressCaseComment(body))
             .pipe(
                 take(1),
                 map(resp => resp.data),
@@ -266,7 +266,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
     private submitLevel(value: AddressCaseDtoLevelEnum) {
 
         this.isSubmittingLevel = true;
-        from(this.api.addressCaseApi.patchAddressCaseLevelUsingPATCH(this.addressCase.id, value))
+        from(this.api.addressCaseApi.patchAddressCaseLevel(this.addressCase.id, value))
             .pipe(
                 take(1),
                 map(resp => resp.data),
@@ -280,7 +280,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     private submitStatus(value: AddressCaseDtoStatusEnum) {
         this.isSubmittingStatus = true;
-        from(this.api.addressCaseApi.patchAddressCaseStatusUsingPATCH(this.addressCase.id, value))
+        from(this.api.addressCaseApi.patchAddressCaseStatus(this.addressCase.id, value))
             .pipe(
                 take(1),
                 map(resp => resp.data),
@@ -321,7 +321,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     submitCommentUpdates(item: CommentItem) {
         item.isSubmitting = true;
-        from(this.api.addressCaseCommentApi.modifyAddressCaseUsingPUT(item.data.id, {
+        from(this.api.addressCaseCommentApi.modifyAddressCase(item.data.id, {
             comment: item.currComment
         }))
             .pipe(
@@ -338,7 +338,7 @@ export class AddressCaseDetailPageComponent implements OnInit, OnChanges {
 
     deleteComment(item: CommentItem) {
         this.isCommentLoading = true;
-        from(this.api.addressCaseCommentApi.deleteAddressCaseCommentUsingDELETE(item.data.id))
+        from(this.api.addressCaseCommentApi.deleteAddressCaseComment(item.data.id))
             .pipe(
                 take(1),
                 map(resp => resp.data),

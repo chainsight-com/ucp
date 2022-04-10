@@ -97,7 +97,7 @@ export class HolderAddressTableComponent implements OnInit, OnChanges {
     if (!silent) {
       this.isLoading = true;
     }
-    from(this.api.holderAddressApi.paginateHolderAddressAddressUsingGET(this.pageIdx - 1, this.pageSize, null, this.holderId))
+    from(this.api.holderAddressApi.paginateHolderAddressAddress(this.pageIdx - 1, this.pageSize, null, this.holderId))
       .pipe(
         take(1),
         map(resp => resp.data)

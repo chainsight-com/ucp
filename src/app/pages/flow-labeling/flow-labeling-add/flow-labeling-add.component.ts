@@ -97,7 +97,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
 
     this.isSubmitting = true;
 
-    from(this.api.flowLabelingApi.createFlowLabelingUsingPOST({
+    from(this.api.flowLabelingApi.createFlowLabeling({
       currencyId: formValue.currencyId,
       method: formValue.method,
       methodOptMaxN: formValue.methodOptMaxN,
@@ -105,7 +105,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
       backwardMaxLevel: formValue.backwardMaxLevel,
       startingTime: formValue.dateRange[0],
       endingTime: formValue.dateRange[1],
-      timeoutSecs: '3600',
+      timeoutSecs: 3600,
       labelId: formValue.labelId,
       projectId: this.projectId,
       addressListBlobId: (this.fileList[0].response as BlobDto).id
@@ -129,7 +129,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
     formData.append('file', item.file as any);
     formData.append('id', '1000');
 
-    return from(this.api.blobApi.createBlobUsingPOST(item.file as any))
+    return from(this.api.blobApi.createBlob(item.file as any))
       .pipe(
         take(1),
         map(resp => resp.data)
@@ -181,7 +181,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
   }
 
   private reloadLabelCategories(projectId: string) {
-    from(this.api.labelCategoryApi.listLabelCategoriesUsingGET(projectId))
+    from(this.api.labelCategoryApi.listLabelCategories(projectId))
       .pipe(
         take(1),
         map(resp => resp.data)
@@ -192,7 +192,7 @@ export class FlowLabelingAddComponent implements OnInit, OnDestroy {
 
   private reloadLabels(categoryId: string) {
     this.form.controls.categoryId.setValue(null);
-    from(this.api.labelApi.listLabelsUsingGET(categoryId))
+    from(this.api.labelApi.listLabels(categoryId))
       .pipe(
         take(1),
         map(resp => resp.data)

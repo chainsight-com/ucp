@@ -114,7 +114,7 @@ export class AddressTableComponent implements OnInit, OnChanges {
     const body = {
       addresses: this.addresses
     }
-    from(this.api.addressApi.listAddressDetailsUsingPOST(body, this.projectId))
+    from(this.api.addressApi.listAddressDetails(body, this.projectId))
       .pipe(
         take(1),
         map(resp => resp.data),

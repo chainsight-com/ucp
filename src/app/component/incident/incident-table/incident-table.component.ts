@@ -82,7 +82,7 @@ export class IncidentTableComponent implements OnInit, OnChanges, OnDestroy {
     if (!silent) {
       this.isLoading = true;
     }
-    from(this.api.incidentApi.paginateIncidentUsingGET(this.pageIdx - 1, this.pageSize, this.projectId, this.holderId, this.currencyId, this.address, this.title))
+    from(this.api.incidentApi.paginateIncident(this.pageIdx - 1, this.pageSize, this.projectId, this.holderId, this.currencyId, this.address, this.title))
       .pipe(
         take(1),
         map(resp => resp.data)

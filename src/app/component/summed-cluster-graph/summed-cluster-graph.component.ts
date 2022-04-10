@@ -80,7 +80,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
 
 
   reload() {
-    from(this.api.addressScanApi.getAddressScanUsingGET(this.addressScanId))
+    from(this.api.addressScanApi.getAddressScan(this.addressScanId))
     .pipe(
       take(1),
       map(resp => resp.data)
@@ -94,7 +94,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
 
   reloadPage() {
     this.isLoading = true;
-    from(this.api.addressScanApi.getAddressScanClusterGraphUsingGET(this.addressScan.id, this.pageIdx, this.pageSize))
+    from(this.api.addressScanApi.getAddressScanClusterGraph(this.addressScan.id, this.pageIdx, this.pageSize))
       .pipe(
         take(1),
         map(resp => resp.data)
@@ -141,7 +141,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
         to: edge.toClusterId,
         payload: edge,
         width: 4,
-        text: `${new CcPipe().transform(edge.amount, this.addressScan.currency.unitRate).toFixed(3)}\n${this.addressScan.currency.name.toUpperCase()}`,
+        text: `${new CcPipe().transform(edge.amount.toString(), this.addressScan.currency.unitRate.toString()).toFixed(3)}\n${this.addressScan.currency.name.toUpperCase()}`,
       };
     }));
 
@@ -335,7 +335,7 @@ export class SummedClusterGraphComponent implements OnInit, OnChanges {
 
   loadNeighbor(node: ClusterNodeDto, pageIdx: number, pageSize: number, isLastUpdater: (isLast: boolean) => void) {
     this.isLoading = true;
-    from(this.api.addressScanApi.getAddressScanClusterGraphNeighborUsingGET(this.addressScanId, pageIdx, pageSize, [node.clusterId]))
+    from(this.api.addressScanApi.getAddressScanClusterGraphNeighbor(this.addressScanId, pageIdx, pageSize, [node.clusterId]))
       .pipe(
         take(1),
         map(resp => resp.data)

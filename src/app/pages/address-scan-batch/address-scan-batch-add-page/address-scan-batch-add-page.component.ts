@@ -94,7 +94,7 @@ export class AddressScanBatchAddPageComponent implements OnInit {
     const formValue = this.form.value;
 
     this.isSubmitting = true;
-    from(this.api.addressScanBatchApi.createAddressScanBatchFromBlobUsingPOST({
+    from(this.api.addressScanBatchApi.createAddressScanBatchFromBlob({
       name: formValue.name,
       projectId: this.userService.project.id,
       addressListBlobId: (this.fileList[0].response as BlobDto).id,
@@ -167,7 +167,7 @@ export class AddressScanBatchAddPageComponent implements OnInit {
     formData.append('file', item.file as any);
     formData.append('id', '1000');
 
-    return from(this.api.blobApi.createBlobUsingPOST(item.file as any))
+    return from(this.api.blobApi.createBlob(item.file as any))
       .pipe(
         take(1),
         map(resp => resp.data)
